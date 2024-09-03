@@ -98,12 +98,13 @@ private:
 	UCPlayerAttributeComponent* PlayerAttributeComp;
 
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(Replicated, VisibleAnywhere)
 	ACPlayerCharacter* PlayerCharacter;
+
 	UPROPERTY(VisibleAnywhere)
 	ACPlayerCameraActor* PlayerCameraActor;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(Replicated, VisibleAnywhere)
 	TArray<ACPlayerCharacter*> PlayerCharacters;
 
 	int32 PlayerCharacterCurrentIndex;

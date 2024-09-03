@@ -5,6 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "../Character/CPlayerCharacter.h"
 #include "CPlayerCameraActor.h"
 #include "../Components/CPlayerAttributeComponent.h"
@@ -29,6 +30,7 @@ ACPlayerController::ACPlayerController()
 
 	CHelpers::GetClass(&PlayerCameraActorClass, TEXT("/Game/Player/BP_CPlayerCameraActor"));
 
+	
 }
 
 
@@ -51,7 +53,7 @@ void ACPlayerController::BeginPlay()
 void ACPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	
+
 	InputComponent->BindAxis("MoveForward", this, &ACPlayerController::OnInputForward);
 	InputComponent->BindAxis("MoveRight", this, &ACPlayerController::OnInputRight);
 	InputComponent->BindAction("Key_1", IE_Pressed, this, &ACPlayerController::OnInputKey_1);
@@ -71,13 +73,18 @@ void ACPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	FVector Location = PlayerCharacter->GetActorLocation();
-	Location.Z += 95.f;
-	PlayerCameraActor->SetActorLocation(Location);
+	if (ensure(PlayerCharacter) && PlayerCharacter->HasAuthority())
+	{
+		FVector Location = PlayerCharacter->GetActorLocation();
+		Location.Z += 95.f;
+		PlayerCameraActor->SetActorLocation(Location);
+		 
 
+		CLog::Print(GetControlRotation(), -1, GetWorld()->GetDeltaSeconds(), FColor::Red);
+		CLog::Print(PlayerCameraActor->GetActorRotation(), -1, DeltaSeconds);
+		CLog::Print(GetNameSafe(PlayerCharacter), -1, DeltaSeconds);
+	}
 
-	CLog::Print(GetControlRotation(), -1, GetWorld()->GetDeltaSeconds(), FColor::Red);
-	CLog::Print(PlayerCameraActor->GetActorRotation(), -1, DeltaSeconds);
 }
 
 void ACPlayerController::SetPlayerCharacterCurrentIndex(int32 InIndex)
@@ -87,7 +94,7 @@ void ACPlayerController::SetPlayerCharacterCurrentIndex(int32 InIndex)
 
 void ACPlayerController::AddControlledPlayerCharacter(ACPlayerCharacter* InPlayerCharacter)
 {
-	if (InPlayerCharacter)
+	if (ensure(InPlayerCharacter))
 	{
 		PlayerCharacters.Add(InPlayerCharacter);
 	}
@@ -99,7 +106,7 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 	
 	for (int32 i = 0; i < GetMaxPlayerCharacterCount(); i++)
 	{
-		if (CharacterClasses[i])
+		if (ensure(CharacterClasses[i]))
 		{
 			TSubclassOf<ACPlayerCharacter> CharacterClass = GetCharacterClasses()[i];
 			PlayerCharacter = GetWorld()->SpawnActorDeferred<ACPlayerCharacter>(CharacterClass, StartTransform);
@@ -153,6 +160,7 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 		case EChangeMode::None:
 			PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			PlayerCharacter->GetMesh()->SetVisibility(false);
+			PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 			break;
 		case EChangeMode::Action:
 			break;
@@ -190,6 +198,7 @@ void ACPlayerController::OnInputKey_E()
 
 void ACPlayerController::OnInputForward(float Axis)
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->OnMoveForward(Axis);
 	for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
 	{
@@ -205,6 +214,7 @@ void ACPlayerController::OnInputForward(float Axis)
 
 void ACPlayerController::OnInputRight(float Axis)
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->OnMoveRight(Axis);
 	for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
 	{
@@ -287,12 +297,14 @@ void ACPlayerController::OnInputMouse_Wheel(float Axis)
 
 void ACPlayerController::OnMouseX(float Axis)
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->OnTurn(Axis);
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 }
 
 void ACPlayerController::OnMouseY(float Axis)
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->OnLookUp(Axis);
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 
@@ -325,4 +337,12 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 	PlayerCharacterCurrentIndex = InIndex;
 	PossessCharacter(NextPlayerCharacter, InMode);
 
+}
+
+void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ACPlayerController, PlayerCharacter);
+	DOREPLIFETIME(ACPlayerController, PlayerCharacters);
 }
