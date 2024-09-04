@@ -24,6 +24,7 @@ ACPlayerController::ACPlayerController()
 	//Create Actor Component
 	CHelpers::CreateActorComponent(this, &PlayerAttributeComp, "PlayerAttributeComp");
 
+
 	CurrentLocation = FVector(0, 0, 88.f);
 	CameraRotation = GetControlRotation();
 	MaxPlayerCharacterCount = 3;
@@ -37,16 +38,6 @@ ACPlayerController::ACPlayerController()
 void ACPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (PlayerCameraActorClass)
-	{
-		FTransform StartTransform;
-
-		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform);
-		PlayerCameraActor->FinishSpawning(StartTransform);
-
-		SetViewTarget(PlayerCameraActor);
-	}
 }	
 
 
@@ -78,7 +69,7 @@ void ACPlayerController::Tick(float DeltaSeconds)
 		FVector Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
 		PlayerCameraActor->SetActorLocation(Location);
-		 
+		
 
 		CLog::Print(GetControlRotation(), -1, GetWorld()->GetDeltaSeconds(), FColor::Red);
 		CLog::Print(PlayerCameraActor->GetActorRotation(), -1, DeltaSeconds);
@@ -90,6 +81,7 @@ void ACPlayerController::Tick(float DeltaSeconds)
 void ACPlayerController::SetPlayerCharacterCurrentIndex(int32 InIndex)
 {
 	PlayerCharacterCurrentIndex = InIndex;
+	
 }
 
 void ACPlayerController::AddControlledPlayerCharacter(ACPlayerCharacter* InPlayerCharacter)
@@ -100,6 +92,8 @@ void ACPlayerController::AddControlledPlayerCharacter(ACPlayerCharacter* InPlaye
 	}
 	
 }
+
+
 
 void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 {
@@ -115,6 +109,19 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 			PlayerCharacter->FinishSpawning(StartTransform);
 			AddControlledPlayerCharacter(PlayerCharacter);
 		}
+	}
+}
+
+void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
+{
+	if (PlayerCameraActorClass)
+	{
+		FTransform StartTransform;
+
+		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform);
+		PlayerCameraActor->FinishSpawning(StartTransform);
+
+		SetViewTarget(PlayerCameraActor);
 	}
 }
 
@@ -148,7 +155,7 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	}
 	SetViewTarget(PlayerCameraActor);
 
-
+	
 }
 
 void ACPlayerController::UnPossessCharacter(EChangeMode InMode)

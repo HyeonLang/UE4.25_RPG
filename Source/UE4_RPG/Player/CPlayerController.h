@@ -8,6 +8,9 @@ class ACharacter;
 class ACPlayerCharacter;
 class ACPlayerCameraActor;
 class UCPlayerAttributeComponent;
+class USceneComponent;
+class UCameraComponent;
+class USpringArmComponent;
 
 UENUM(BlueprintType)
 enum class EChangeMode : uint8
@@ -35,12 +38,14 @@ public:
 	FORCEINLINE const TArray<TSubclassOf<ACPlayerCharacter>> GetCharacterClasses() { return CharacterClasses; }
 	FORCEINLINE TArray<ACPlayerCharacter*>& GetPlayerCharacters() { return PlayerCharacters; }
 	FORCEINLINE const int32 GetPlayerCharacterCurrentIndex() { return PlayerCharacterCurrentIndex; }
+	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() { return PlayerCameraActor; }
 
 	void SetPlayerCharacterCurrentIndex(int32 InIndex);
 
 	void AddControlledPlayerCharacter(ACPlayerCharacter* InNewCharacter);
 
 	void SpawnPlayerCharacter(FTransform StartTransform);
+	void SpawnCameraActor(FTransform StartTransform);
 	void PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
 	void UnPossessCharacter(EChangeMode InMode);
 
@@ -112,4 +117,6 @@ private:
 	FVector CurrentLocation;
 	FRotator CurrentRotation;
 	FRotator CameraRotation;
+
+
 };
