@@ -106,7 +106,7 @@ private:
 	UPROPERTY(Replicated, VisibleAnywhere)
 	ACPlayerCharacter* PlayerCharacter;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(Replicated, VisibleAnywhere)
 	ACPlayerCameraActor* PlayerCameraActor;
 
 	UPROPERTY(Replicated, VisibleAnywhere)

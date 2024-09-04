@@ -38,7 +38,13 @@ ACPlayerController::ACPlayerController()
 void ACPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-}	
+
+	
+	if (ensure(PlayerCameraActor) && IsLocalController())
+	{
+		SetViewTarget(PlayerCameraActor);
+	}
+}
 
 
 void ACPlayerController::SetupInputComponent()
@@ -352,4 +358,5 @@ void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 
 	DOREPLIFETIME(ACPlayerController, PlayerCharacter);
 	DOREPLIFETIME(ACPlayerController, PlayerCharacters);
+	DOREPLIFETIME(ACPlayerController, PlayerCameraActor);
 }

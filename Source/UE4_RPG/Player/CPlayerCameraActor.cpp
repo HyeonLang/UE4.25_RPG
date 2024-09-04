@@ -15,6 +15,9 @@ ACPlayerCameraActor::ACPlayerCameraActor()
 	SpringArmComp->TargetArmLength = 500.0f;
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->bEnableCameraLag = true;
+
+	SetReplicates(true);
+	SetReplicateMovement(true);
 }
 
 void ACPlayerCameraActor::BeginPlay()
