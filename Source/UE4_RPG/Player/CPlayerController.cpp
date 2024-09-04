@@ -73,7 +73,7 @@ void ACPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (ensure(PlayerCharacter) && PlayerCharacter->HasAuthority())
+	if (PlayerCharacter && PlayerCharacter->HasAuthority())
 	{
 		FVector Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
@@ -297,14 +297,14 @@ void ACPlayerController::OnInputMouse_Wheel(float Axis)
 
 void ACPlayerController::OnMouseX(float Axis)
 {
-	if (!PlayerCharacter) return;
+	if (!PlayerCharacter || !PlayerCameraActor) return;
 	PlayerCharacter->OnTurn(Axis);
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 }
 
 void ACPlayerController::OnMouseY(float Axis)
 {
-	if (!PlayerCharacter) return;
+	if (!PlayerCharacter || !PlayerCameraActor) return;
 	PlayerCharacter->OnLookUp(Axis);
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 

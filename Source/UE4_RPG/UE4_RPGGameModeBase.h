@@ -4,6 +4,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "UE4_RPGGameModeBase.generated.h"
 
+class ACPlayerController;
+
 UCLASS()
 class UE4_RPG_API AUE4_RPGGameModeBase : public AGameModeBase
 {
@@ -13,10 +15,11 @@ public:
 	AUE4_RPGGameModeBase();
 
 protected:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void BeginPlay() override;
 
 private:
-	void SpawnAndPossessCharacters();
+	void SpawnAndPossessCharacters(ACPlayerController* NewPlayer);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")

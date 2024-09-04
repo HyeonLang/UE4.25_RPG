@@ -25,11 +25,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	
 public:	
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//~ IAbilitySystemInterface 시작
 	/** 어빌리티 시스템 컴포넌트를 반환합니다. */

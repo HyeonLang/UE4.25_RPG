@@ -47,12 +47,6 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
 
 UAbilitySystemComponent* ACPlayerCharacter::GetAbilitySystemComponent() const
 {

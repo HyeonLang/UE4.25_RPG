@@ -11,22 +11,28 @@ AUE4_RPGGameModeBase::AUE4_RPGGameModeBase()
 	StartSpawnTransform.SetLocation(FVector(0, 0, 130));
 }
 
+void AUE4_RPGGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	ACPlayerController* PlayerController = Cast<ACPlayerController>(NewPlayer);
+	SpawnAndPossessCharacters(PlayerController);
+}
+
 void AUE4_RPGGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-	SpawnAndPossessCharacters();
 }
 
-void AUE4_RPGGameModeBase::SpawnAndPossessCharacters()
+void AUE4_RPGGameModeBase::SpawnAndPossessCharacters(ACPlayerController* NewPlayer)
 {
-	ACPlayerController* PlayerController = Cast<ACPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (!PlayerController) return;
+	if (!NewPlayer) return;
 
-	PlayerController->SpawnPlayerCharacter(StartSpawnTransform);
+	NewPlayer->SpawnPlayerCharacter(StartSpawnTransform);
 
 
-	if (PlayerController->GetPlayerCharacters()[PlayerCharacterStartIndex])
+	if (NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex])
 	{
-		PlayerController->PossessCharacter(Cast<ACPlayerCharacter>(PlayerController->GetPlayerCharacters()[PlayerCharacterStartIndex]), EChangeMode::None);
+		NewPlayer->PossessCharacter(Cast<ACPlayerCharacter>(NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex]), EChangeMode::None);
 	}
 }
