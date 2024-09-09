@@ -14,4 +14,6 @@ class UE4_RPG_API UCAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 	
+public:
+	UCAbilitySystemComponent();
 };

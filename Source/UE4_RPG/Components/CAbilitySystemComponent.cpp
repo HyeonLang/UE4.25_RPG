@@ -3,3 +3,7 @@
 
 #include "CAbilitySystemComponent.h"
 
+UCAbilitySystemComponent::UCAbilitySystemComponent()
+{
+	SetIsReplicatedByDefault(true);
+}

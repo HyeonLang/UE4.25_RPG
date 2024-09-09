@@ -2,6 +2,7 @@
 
 #include "Character/CPlayerCharacter.h"
 #include "Player/CPlayerController.h"
+#include "Player/CPlayerCameraActor.h"
 #include "Components/CapsuleComponent.h"
 #include "Global.h"
 
@@ -17,11 +18,24 @@ void AUE4_RPGGameModeBase::PostLogin(APlayerController* NewPlayer)
 
 	ACPlayerController* PlayerController = Cast<ACPlayerController>(NewPlayer);
 	SpawnAndPossessCharacters(PlayerController);
+	PC = PlayerController;
 }
 
 void AUE4_RPGGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AUE4_RPGGameModeBase::StartPlay()
+{
+	Super::StartPlay();
+	ClientSetViewTarget(PC);
+}
+
+void AUE4_RPGGameModeBase::ClientSetViewTarget_Implementation(ACPlayerController* NewPlayer)
+{
+	NewPlayer->SetViewTarget(NewPlayer->PlayerCameraActor);
+	CLog::Print(*GetNameSafe(NewPlayer->PlayerCameraActor));
 }
 
 void AUE4_RPGGameModeBase::SpawnAndPossessCharacters(ACPlayerController* NewPlayer)
@@ -30,7 +44,6 @@ void AUE4_RPGGameModeBase::SpawnAndPossessCharacters(ACPlayerController* NewPlay
 
 	NewPlayer->SpawnPlayerCharacter(StartSpawnTransform);
 	NewPlayer->SpawnCameraActor(StartSpawnTransform);
-
 
 
 	if (NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex])

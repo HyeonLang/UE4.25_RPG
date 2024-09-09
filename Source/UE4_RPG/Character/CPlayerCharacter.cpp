@@ -1,5 +1,6 @@
 #include "CPlayerCharacter.h"
 
+#include "Net/UnrealNetwork.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -32,7 +33,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 
 	Cooldown_CharacterChange = 2.f;
 	bCanCharacterChange = true;
-	
+	bOnField = true;
 }
 
 void ACPlayerCharacter::BeginPlay()
@@ -44,6 +45,8 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (GetController() && GetController()->IsLocalController())
+		CLog::Print(GetCapsuleComponent()->GetCollisionEnabled(),-1,0.f,FColor::Blue);
 
 }
 
@@ -57,7 +60,7 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 {
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(ControlRotation).GetForwardVector();
-	CLog::Print(Axis,-1,GetWorld()->GetDeltaSeconds());
+
 	AddMovementInput(direction, Axis);
 }
 
@@ -94,17 +97,44 @@ void ACPlayerCharacter::OnDash()
 	//ActionComp->SetDashMode();
 }
 
-void ACPlayerCharacter::SetCharacterChangeCooldown()
+void ACPlayerCharacter::SetCharacterChangeCooldown_Implementation()
 {
 	FTimerDelegate Delegate;
 	Delegate.BindUFunction(this, "SetCanCharacterChange", true);
 	GetWorldTimerManager().SetTimer(TimerHandle_Cooldown_CharacterChange, Delegate, Cooldown_CharacterChange, false);
 }
 
-void ACPlayerCharacter::SetCanCharacterChange(bool InNew)
+void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 {
 	bCanCharacterChange = InNew;
-	CLog::Print(InNew);
 }
 
+void ACPlayerCharacter::SetOnField(bool InNew)
+{
+	bOnField = InNew;
+}
 
+void ACPlayerCharacter::OnRep_OnField()
+{
+	
+	if (bOnField)
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetVisibility(false);
+	}
+}
+
+void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ACPlayerCharacter, bOnField);
+
+	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
+	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
+}

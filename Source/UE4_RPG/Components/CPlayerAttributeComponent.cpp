@@ -3,7 +3,7 @@
 UCPlayerAttributeComponent::UCPlayerAttributeComponent()
 {
 	//	PrimaryComponentTick.bCanEverTick = true;
-
+	SetIsReplicatedByDefault(true);
 }
 
 

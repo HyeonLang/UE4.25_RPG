@@ -39,15 +39,25 @@ public:
 	FORCEINLINE TArray<ACPlayerCharacter*>& GetPlayerCharacters() { return PlayerCharacters; }
 	FORCEINLINE const int32 GetPlayerCharacterCurrentIndex() { return PlayerCharacterCurrentIndex; }
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() { return PlayerCameraActor; }
+	
 
 	void SetPlayerCharacterCurrentIndex(int32 InIndex);
 
 	void AddControlledPlayerCharacter(ACPlayerCharacter* InNewCharacter);
 
 	void SpawnPlayerCharacter(FTransform StartTransform);
+
 	void SpawnCameraActor(FTransform StartTransform);
+
 	void PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
+	UFUNCTION(Reliable, Server)
+	void ServerPossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
+
 	void UnPossessCharacter(EChangeMode InMode);
+	UFUNCTION(Reliable, Server)
+	void ServerUnPossessCharacter(EChangeMode InMode);
+	UFUNCTION(NetMulticast, Reliable)
+	void NetMulticastUnPossessCharacter(EChangeMode InMode);
 
 private:
 	void OnInputKey_R();
@@ -86,6 +96,13 @@ private:
 private:
 	void ChangePlayerCharacter(uint32 InIndex);
 
+	void HideCharacter(ACPlayerCharacter* Character);
+	void ShowCharacter(ACPlayerCharacter* Character);
+
+protected:
+	UFUNCTION()
+	void OnSetViewTarget();
+
 public:
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() const { return PlayerCameraActor; }
 
@@ -102,16 +119,17 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	UCPlayerAttributeComponent* PlayerAttributeComp;
 
+public:
+	UPROPERTY(Replicated, VisibleAnywhere)
+		ACPlayerCameraActor* PlayerCameraActor;
 private:
 	UPROPERTY(Replicated, VisibleAnywhere)
 	ACPlayerCharacter* PlayerCharacter;
 
 	UPROPERTY(Replicated, VisibleAnywhere)
-	ACPlayerCameraActor* PlayerCameraActor;
-
-	UPROPERTY(Replicated, VisibleAnywhere)
 	TArray<ACPlayerCharacter*> PlayerCharacters;
 
+	UPROPERTY(Replicated)
 	int32 PlayerCharacterCurrentIndex;
 
 	FVector CurrentLocation;

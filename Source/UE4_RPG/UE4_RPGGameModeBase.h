@@ -17,6 +17,10 @@ public:
 protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void BeginPlay() override;
+	virtual void StartPlay() override;
+protected:
+	UFUNCTION(Client, Reliable)
+	void ClientSetViewTarget(ACPlayerController* NewPlayer);
 
 private:
 	void SpawnAndPossessCharacters(ACPlayerController* NewPlayer);
@@ -26,4 +30,6 @@ private:
 	int32 PlayerCharacterStartIndex;
 
 	FTransform StartSpawnTransform;
+
+	ACPlayerController* PC;
 };

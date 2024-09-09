@@ -22,12 +22,16 @@ public:
 	UCPlayerCharacterAttributeSet();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, ReplicatedUsing = "OnRep_Health")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UCPlayerCharacterAttributeSet, Health);
+	UFUNCTION()
+	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, ReplicatedUsing = "OnRep_MaxHealth")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UCPlayerCharacterAttributeSet, MaxHealth);
+	UFUNCTION()
+	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
 
 };

@@ -31,7 +31,6 @@ ACPlayerController::ACPlayerController()
 
 	CHelpers::GetClass(&PlayerCameraActorClass, TEXT("/Game/Player/BP_CPlayerCameraActor"));
 
-	
 }
 
 
@@ -40,10 +39,15 @@ void ACPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	
-	if (ensure(PlayerCameraActor) && IsLocalController())
+	if (PlayerCameraActor && IsLocalController())
 	{
-		SetViewTarget(PlayerCameraActor);
+		FTimerHandle TH;
+		FTimerDelegate TD;
+		TD.BindUFunction(this, "OnSetViewTarget");
+		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
+		CLog::Print("SetViewTarget", -1, 10.f, FColor::Blue);
 	}
+	CLog::Print("BeginController", -1, 10.f, FColor::Red);
 }
 
 
@@ -110,9 +114,10 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 		{
 			TSubclassOf<ACPlayerCharacter> CharacterClass = GetCharacterClasses()[i];
 			PlayerCharacter = GetWorld()->SpawnActorDeferred<ACPlayerCharacter>(CharacterClass, StartTransform);
+			PlayerCharacter->FinishSpawning(StartTransform);
+			PlayerCharacter->SetOnField(false);
 			PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			PlayerCharacter->GetMesh()->SetVisibility(false);
-			PlayerCharacter->FinishSpawning(StartTransform);
 			AddControlledPlayerCharacter(PlayerCharacter);
 		}
 	}
@@ -122,7 +127,6 @@ void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
 {
 	if (PlayerCameraActorClass)
 	{
-		FTransform StartTransform;
 
 		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform);
 		PlayerCameraActor->FinishSpawning(StartTransform);
@@ -149,11 +153,20 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 
 	Rotation = GetControlRotation();
 
-	Possess(InNewCharacter);
-
-	InNewCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	InNewCharacter->GetMesh()->SetVisibility(true);
+	
+	ShowCharacter(InNewCharacter);
+	
 	PlayerCharacter = InNewCharacter;
+
+	if (!HasAuthority())
+	{
+		ServerPossessCharacter(PlayerCharacter, InMode);
+	}
+	else
+	{
+		Possess(PlayerCharacter);
+	}
+
 	if (PlayerCameraActor)
 	{
 		PlayerCameraActor->SetActorRotation(Rotation);
@@ -161,6 +174,12 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	}
 	SetViewTarget(PlayerCameraActor);
 
+	
+}
+
+void ACPlayerController::ServerPossessCharacter_Implementation(ACPlayerCharacter* InNewCharacter, EChangeMode InMode)
+{
+	PossessCharacter(InNewCharacter, InMode);
 	
 }
 
@@ -182,14 +201,56 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 		default:
 			break;
 		}
+		
+		HideCharacter(PlayerCharacter);
+		
 
-		PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		PlayerCharacter->GetMesh()->SetVisibility(false);
-		PlayerCharacter->SetCanCharacterChange(false);
-		PlayerCharacter->SetCharacterChangeCooldown();
+		ACPlayerCharacter* PCI = PlayerCharacter;
+		for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
+		{
+			ACPlayerCharacter* PC = PlayerCharacters[i];
+			if (PC == PCI) continue;
+			if (PC) {
+				PC->SetActorLocation(PlayerCharacter->GetActorLocation());
+				PC->SetActorRotation(PlayerCharacter->GetActorRotation());
+			}
+		}
 
-		UnPossess();
+		if (IsLocalController())
+		{
+			PlayerCharacter->SetCanCharacterChange(false);
+			PlayerCharacter->SetCharacterChangeCooldown();
+		}
+
+		if (!HasAuthority())
+		{
+			ServerUnPossessCharacter(InMode);
+		}
+		else
+		{
+			UnPossess();
+		}
 	}
+}
+
+void ACPlayerController::ServerUnPossessCharacter_Implementation(EChangeMode InMode)
+{
+	NetMulticastUnPossessCharacter(InMode);
+	UnPossessCharacter(InMode);
+}
+
+void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMode InMode)
+{
+	/*for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
+	{
+
+		if (i == PlayerCharacterCurrentIndex) continue; 
+		ACPlayerCharacter* PC = PlayerCharacters[i];
+		if (PC) {
+			PC->SetActorLocation(PlayerCharacter->GetActorLocation());
+			PC->SetActorRotation(PlayerCharacter->GetActorRotation());
+		}
+	}*/
 }
 
 
@@ -213,31 +274,13 @@ void ACPlayerController::OnInputForward(float Axis)
 {
 	if (!PlayerCharacter) return;
 	PlayerCharacter->OnMoveForward(Axis);
-	for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
-	{
-		
-		if (i == PlayerCharacterCurrentIndex) continue;
-		ACPlayerCharacter* PC = PlayerCharacters[i];
-		if (PC) {
-			PC->SetActorLocation(PlayerCharacter->GetActorLocation());
-			PC->SetActorRotation(PlayerCharacter->GetActorRotation());
-		}
-	}
+	
 }
 
 void ACPlayerController::OnInputRight(float Axis)
 {
 	if (!PlayerCharacter) return;
 	PlayerCharacter->OnMoveRight(Axis);
-	for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
-	{
-		if (i == PlayerCharacterCurrentIndex) continue;
-		ACPlayerCharacter* PC = PlayerCharacters[i];
-		if (PC) {
-			PC->SetActorLocation(PlayerCharacter->GetActorLocation());
-			PC->SetActorRotation(PlayerCharacter->GetActorRotation());
-		}
-	}
 }
 
 void ACPlayerController::OnJump()
@@ -336,7 +379,8 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 
 	if (!ensure(NextPlayerCharacter)) return;
 
-	/*if ((!NextPlayerCharacter->GetCanCharacterChange())
+	if ((!NextPlayerCharacter->GetCanCharacterChange())) return;
+	/*
 		|| NextPlayerCharacter->GetActionComponent()->IsDeadMode()) 
 		return;
 
@@ -352,6 +396,25 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 
 }
 
+void ACPlayerController::HideCharacter(ACPlayerCharacter* HideCharacter)
+{
+	HideCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HideCharacter->GetMesh()->SetVisibility(false);
+	HideCharacter->SetOnField(false);
+}
+
+void ACPlayerController::ShowCharacter(ACPlayerCharacter* ShowCharacter)
+{
+	ShowCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	ShowCharacter->GetMesh()->SetVisibility(true);
+	ShowCharacter->SetOnField(true);
+}
+
+void ACPlayerController::OnSetViewTarget()
+{
+	SetViewTarget(PlayerCameraActor);
+}
+
 void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -359,4 +422,5 @@ void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 	DOREPLIFETIME(ACPlayerController, PlayerCharacter);
 	DOREPLIFETIME(ACPlayerController, PlayerCharacters);
 	DOREPLIFETIME(ACPlayerController, PlayerCameraActor);
+	DOREPLIFETIME(ACPlayerController, PlayerCharacterCurrentIndex);
 }

@@ -1,4 +1,4 @@
-# UE4.25_ActionGame
+# UE4.25_RPG
 
  2주차 구현
 gamemodebase : playercharacter들을 스폰하고 controller에 possess

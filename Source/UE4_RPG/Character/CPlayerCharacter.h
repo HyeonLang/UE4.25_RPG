@@ -57,15 +57,19 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Component")
 	FORCEINLINE UCActionComponent* GetActionComponent() const { return ActionComp; }
 
-	UFUNCTION(BlueprintCallable, Category = "Cooldown")
-	void SetCharacterChangeCooldown();
-
 public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
 	FORCEINLINE bool GetCanCharacterChange() const { return bCanCharacterChange; }
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Reliable, Server, Category = "Cooldown")
+	void SetCharacterChangeCooldown();
+
+	UFUNCTION(Reliable, Server, Category = "Cooldown")
 	void SetCanCharacterChange(bool InNew = true);
+	
+	
+	void SetOnField(bool InNew);
+
 protected:
 
 protected:
@@ -88,9 +92,18 @@ protected:
 protected:
 	bool bCanJump;
 
+	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
+	bool bOnField;
+
+	UFUNCTION()
+	void OnRep_OnField();
 private:
 	FTimerHandle TimerHandle_Cooldown_CharacterChange;
+
+	UPROPERTY(Replicated)
 	float Cooldown_CharacterChange;
+
+	UPROPERTY(Replicated)
 	bool bCanCharacterChange;
 
 };
