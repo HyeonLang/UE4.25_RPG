@@ -4,3 +4,4 @@
 
 #include "CoreMinimal.h"
 
+DECLARE_STATS_GROUP(TEXT("My State"), STATGROUP_TORE, STATCAT_Advanced);

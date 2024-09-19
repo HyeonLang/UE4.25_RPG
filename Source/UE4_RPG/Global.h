@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UE4_RPG.h"
+
 #include "DrawDebugHelpers.h"
 
 #include "Kismet/KismetSystemLibrary.h"

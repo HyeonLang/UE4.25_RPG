@@ -6,4 +6,5 @@
 UCAbilitySystemComponent::UCAbilitySystemComponent()
 {
 	SetIsReplicatedByDefault(true);
+	SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 }

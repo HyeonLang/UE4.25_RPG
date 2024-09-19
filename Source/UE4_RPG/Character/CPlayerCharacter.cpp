@@ -39,6 +39,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 void ACPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AttributeSet = GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>();
 	
 }
 
@@ -137,4 +139,5 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 
 	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
+	DOREPLIFETIME(ACPlayerCharacter, AttributeSet);
 }

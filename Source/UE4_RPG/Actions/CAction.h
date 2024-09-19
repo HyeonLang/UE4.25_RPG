@@ -7,6 +7,20 @@
 
 class UCActionComponent;
 
+USTRUCT()
+struct FActionRepData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	bool bIsRunning;
+
+	UPROPERTY()
+	AActor* Instigator;
+};
+
+
 UCLASS()
 class UE4_RPG_API UCAction : public UObject
 {
@@ -14,6 +28,13 @@ class UE4_RPG_API UCAction : public UObject
 
 public:
 	UCAction();
+
+	// Object류 클래스 리플리케이트 준비작업
+	// 액터가 아닌 오브젝트상속 클래스의 리플리케이트를 도와줌
+	FORCEINLINE virtual bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
@@ -27,6 +48,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
+
+	void SetOwningComponent(UCActionComponent* NewActionComp);
 
 	UWorld* GetWorld() const override;
 
@@ -42,6 +65,7 @@ public:
 	bool bAutoStart;
 
 protected:
+	// Gameplay tags
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayTag")
 	FGameplayTagContainer GrantTags;
 
@@ -49,9 +73,23 @@ protected:
 	FGameplayTagContainer BlockedTags;
 
 
+	//Rep
+	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
+	FActionRepData RepData;
+
+	UFUNCTION()
+	void OnRep_RepData();
+
+	UPROPERTY(Replicated)
+	UCActionComponent* ActionComp;
+
+	UPROPERTY(Replicated)
+	float TimeStarted;
 
 protected:
-	bool bIsRunning;
+	//Icon
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
 
 	
 };
