@@ -85,7 +85,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Attribute")
+	UPROPERTY(Replicated, VisibleDefaultsOnly, Category = "Attribute")
 	const UCPlayerCharacterAttributeSet* AttributeSet;
 
 
