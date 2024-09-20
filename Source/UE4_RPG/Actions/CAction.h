@@ -80,7 +80,7 @@ protected:
 	UFUNCTION()
 	void OnRep_RepData();
 
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	UCActionComponent* ActionComp;
 
 	UPROPERTY(Replicated)
