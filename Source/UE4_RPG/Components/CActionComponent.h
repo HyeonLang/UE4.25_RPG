@@ -73,7 +73,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	TArray<TSubclassOf<UCAction>> DefaultActions;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	TArray<UCAction*> Actions;
 
 };

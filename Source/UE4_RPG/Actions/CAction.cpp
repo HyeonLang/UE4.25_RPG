@@ -2,6 +2,7 @@
 
 #include "Net/UnrealNetwork.h"
 
+#include "Global.h"
 #include "Components/CActionComponent.h"
 
 UCAction::UCAction()
@@ -80,6 +81,7 @@ UCActionComponent* UCAction::GetOwningComponent() const
 void UCAction::SetOwningComponent(UCActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
+	CLog::Print(GetNameSafe(ActionComp));
 }
 
 // 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
@@ -107,6 +109,6 @@ void UCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UCAction, RepData);
-	//DOREPLIFETIME(UCAction, ActionComp);
+	DOREPLIFETIME(UCAction, ActionComp);
 	DOREPLIFETIME(UCAction, TimeStarted);
 }

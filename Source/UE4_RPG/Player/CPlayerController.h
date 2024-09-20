@@ -93,6 +93,9 @@ private:
 	void OnMouseX(float Axis);
 	void OnMouseY(float Axis);
 
+	void OnStartSprint();
+	void OnStopSprint();
+
 private:
 	void ChangePlayerCharacter(uint32 InIndex);
 

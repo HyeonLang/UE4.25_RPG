@@ -21,7 +21,7 @@ public:
 };
 
 
-UCLASS()
+UCLASS(Blueprintable)
 class UE4_RPG_API UCAction : public UObject
 {
 	GENERATED_BODY()
@@ -53,7 +53,7 @@ public:
 
 	UWorld* GetWorld() const override;
 
-protected:
+public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UCActionComponent* GetOwningComponent() const;
 
@@ -80,7 +80,7 @@ protected:
 	UFUNCTION()
 	void OnRep_RepData();
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	UCActionComponent* ActionComp;
 
 	UPROPERTY(Replicated)

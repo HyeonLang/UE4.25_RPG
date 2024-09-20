@@ -47,6 +47,9 @@ public:
 
 	void OnDash();
 
+	void StartSprint();
+	void StopSprint();
+
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Component")
 	FORCEINLINE UCAimingComponent* GetAimingComponent() const { return AimingComp; }
@@ -71,6 +74,7 @@ public:
 	void SetOnField(bool InNew);
 
 protected:
+
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")

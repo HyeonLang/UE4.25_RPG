@@ -40,6 +40,7 @@ void UCActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	//FString Message = GetNameSafe(GetOwner()) + " : " + ActiveGamePlayTags.ToStringSimple();
 	//GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::White, Message);
+	
 }
 
 bool UCActionComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
@@ -182,7 +183,7 @@ void UCActionComponent::ServerStopAction_Implementation(AActor* Instigator, FNam
 	StopActionByName(Instigator, ActionName);
 }
 
-void UCActionComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+void UCActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 

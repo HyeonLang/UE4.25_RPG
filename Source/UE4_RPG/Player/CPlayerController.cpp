@@ -47,7 +47,6 @@ void ACPlayerController::BeginPlay()
 		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
 		CLog::Print("SetViewTarget", -1, 10.f, FColor::Blue);
 	}
-	CLog::Print("BeginController", -1, 10.f, FColor::Red);
 }
 
 
@@ -68,6 +67,9 @@ void ACPlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("Mouse_X", this, &ACPlayerController::OnMouseX);
 	InputComponent->BindAxis("Mouse_Y", this, &ACPlayerController::OnMouseY);
+
+	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnStartSprint);
+	InputComponent->BindAction("SecondaryAction", IE_Released, this, &ACPlayerController::OnStopSprint);
 }
 
 void ACPlayerController::Tick(float DeltaSeconds)
@@ -364,6 +366,16 @@ void ACPlayerController::OnMouseY(float Axis)
 	PlayerCharacter->OnLookUp(Axis);
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 
+}
+
+void ACPlayerController::OnStartSprint()
+{
+	PlayerCharacter->StartSprint();
+}
+
+void ACPlayerController::OnStopSprint()
+{
+	PlayerCharacter->StopSprint();
 }
 
 void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)

@@ -47,8 +47,8 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (GetController() && GetController()->IsLocalController())
-		CLog::Print(GetCapsuleComponent()->GetCollisionEnabled(),-1,0.f,FColor::Blue);
+	//if (GetController() && GetController()->IsLocalController())
+		//CLog::Print(GetCapsuleComponent()->GetCollisionEnabled(),-1,0.f,FColor::Blue);
 
 }
 
@@ -130,6 +130,17 @@ void ACPlayerCharacter::OnRep_OnField()
 		GetMesh()->SetVisibility(false);
 	}
 }
+
+void ACPlayerCharacter::StartSprint()
+{
+	ActionComp->StartActionByName(this, "Sprint");
+}
+
+void ACPlayerCharacter::StopSprint()
+{
+	ActionComp->StopActionByName(this, "Sprint");
+}
+
 
 void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
