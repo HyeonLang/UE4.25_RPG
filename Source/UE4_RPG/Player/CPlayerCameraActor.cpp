@@ -12,7 +12,7 @@ ACPlayerCameraActor::ACPlayerCameraActor()
 	CHelpers::CreateSceneComponent(this, &CameraComp, "CameraComp", SpringArmComp);
 
 	//-> SpringArmComp
-	SpringArmComp->TargetArmLength = 500.0f;
+	SpringArmComp->TargetArmLength = 450.0f;
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->bEnableCameraLag = true;
 
