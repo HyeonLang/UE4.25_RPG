@@ -5,6 +5,8 @@
 
 UCAimingComponent::UCAimingComponent()
 {
+	SetIsReplicatedByDefault(true);
+
 	DistanceWeight = 1.f;
 	CameraDirectionWeight = 1.f;
 

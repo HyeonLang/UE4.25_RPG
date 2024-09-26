@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "CPlayerCharacter.generated.h"
 
 class UCameraComponent;
@@ -51,14 +52,16 @@ public:
 	void StopSprint();
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Component")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCAimingComponent* GetAimingComponent() const { return AimingComp; }
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Component")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCStateComponent* GetStateComponent() const { return StateComp; }
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Component")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCActionComponent* GetActionComponent() const { return ActionComp; }
+
+
 
 public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
@@ -74,6 +77,7 @@ public:
 	void SetOnField(bool InNew);
 	UFUNCTION(BlueprintCallable)
 	void SetCanJump(bool InNew);
+
 protected:
 
 
@@ -111,5 +115,6 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bCanCharacterChange;
+
 
 };

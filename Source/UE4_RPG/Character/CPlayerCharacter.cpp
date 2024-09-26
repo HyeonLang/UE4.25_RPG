@@ -36,7 +36,9 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bOnField = true;
 	bCanJump = true;
 	
+	
 	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+
 }
 
 void ACPlayerCharacter::BeginPlay()

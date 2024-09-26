@@ -2,6 +2,7 @@
 
 #include "../Global.h"
 #include "CPlayerCharacter.h"
+#include "Components/CStateComponent.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -41,4 +42,32 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	RotationLastTick = PlayerCharacter->GetActorRotation();
 
 	bFullBody = GetCurveValue(TEXT("FullBody")) > 0.0f ? true : false;
+
+	
+	if (bIsInAir)
+	{
+		PlayerCharacter->GetStateComponent()->SetJumpingMode();
+	}
+	else
+	{
+
+		if (Speed >= 450.f)
+		{
+			PlayerCharacter->GetStateComponent()->SetSprintingMode();
+		}
+		else if (Speed >= 150.f)
+		{
+			PlayerCharacter->GetStateComponent()->SetRunningMode();
+		}
+		else if (Speed >= 50.f)
+		{
+			PlayerCharacter->GetStateComponent()->SetWalkingMode();
+		}
+		else
+		{
+			PlayerCharacter->GetStateComponent()->SetIdleMode();
+		}
+	}
+
+
 }

@@ -4,13 +4,15 @@
 #include "Components/ActorComponent.h"
 #include "CStateComponent.generated.h"
 
+class ACPlayerCharacter;
+
 UENUM(BlueprintType)
-enum class EStateType : uint8
+enum class EMovementStateType : uint8
 {
-	Normal, Immunity, Unstoppable, Invulnerability, Max
+	Idle, Walking, Running, Sprinting, Jumping, Flying, Max
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMovementStateTypeChanged, EMovementStateType, InPrevType, EMovementStateType, InNewType);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE4_RPG_API UCStateComponent : public UActorComponent
@@ -24,34 +26,51 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE EStateType GetStateType() { return StateType; }
+	FORCEINLINE EMovementStateType GetStateType() { return MovementStateType; }
 
 public:
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsNormalMode() { return StateType == EStateType::Normal; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsIdleMode() { return MovementStateType == EMovementStateType::Idle; }
 
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsImmunityMode() { return StateType == EStateType::Immunity; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsWalkingMode() { return MovementStateType == EMovementStateType::Walking; }
 
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsUnstoppableMode() { return StateType == EStateType::Unstoppable; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsRunningMode() { return MovementStateType == EMovementStateType::Running; }
 
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsInvulnerabilityMode() { return StateType == EStateType::Invulnerability; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsSprintingMode() { return MovementStateType == EMovementStateType::Sprinting; }
 
-	void SetNormalMode();
-	void SetImmunityMode();
-	void SetUnstoppableMode();
-	void SetInvulnerabilityMode();
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsFlyingMode() { return MovementStateType == EMovementStateType::Jumping; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool IsJumpingMode() { return MovementStateType == EMovementStateType::Jumping; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetIdleMode();
+	UFUNCTION(BlueprintCallable)
+	void SetWalkingMode();
+	UFUNCTION(BlueprintCallable)
+	void SetRunningMode();
+	UFUNCTION(BlueprintCallable)
+	void SetSprintingMode();
+	UFUNCTION(BlueprintCallable)
+	void SetJumpingMode();
+	UFUNCTION(BlueprintCallable)
+	void SetFlyingMode();
 	
 private:
-	void ChangeStateType(EStateType InNewType);
+	void ChangeMovementStateType(EMovementStateType InNewType);
 
 public:
 	UPROPERTY(BlueprintAssignable)
-	FStateTypeChanged OnStateTypeChanged;
+	FMovementStateTypeChanged OnMovementStateTypeChanged;
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "MovementState")
+	EMovementStateType MovementStateType;
 
 private:
-	EStateType StateType;
+	ACPlayerCharacter* PlayerCharacter;
 		
 };

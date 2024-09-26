@@ -1,8 +1,12 @@
 #include "CStateComponent.h"
 
+#include "Character/CPlayerCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 UCStateComponent::UCStateComponent()
 {
-	
+	SetIsReplicatedByDefault(true);
+	MovementStateType = EMovementStateType::Idle;
 }
 
 
@@ -10,34 +14,56 @@ void UCStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	PlayerCharacter = Cast<ACPlayerCharacter>(GetOwner());
 	
 }
 
 
-void UCStateComponent::SetNormalMode()
+void UCStateComponent::SetIdleMode()
 {
+	ChangeMovementStateType(EMovementStateType::Idle);
 }
 
-void UCStateComponent::SetImmunityMode()
+void UCStateComponent::SetWalkingMode()
 {
+	ChangeMovementStateType(EMovementStateType::Walking);
 }
 
-void UCStateComponent::SetUnstoppableMode()
+void UCStateComponent::SetRunningMode()
 {
+	ChangeMovementStateType(EMovementStateType::Running);
 }
 
-void UCStateComponent::SetInvulnerabilityMode()
+void UCStateComponent::SetSprintingMode()
 {
+	ChangeMovementStateType(EMovementStateType::Sprinting);
 }
 
-void UCStateComponent::ChangeStateType(EStateType InNewType)
+void UCStateComponent::SetJumpingMode()
 {
-	EStateType Prev = StateType;
-	StateType = InNewType;
-	
-	if (OnStateTypeChanged.IsBound())
+	ChangeMovementStateType(EMovementStateType::Jumping);
+}
+
+void UCStateComponent::SetFlyingMode()
+{
+	ChangeMovementStateType(EMovementStateType::Flying);
+}
+
+void UCStateComponent::ChangeMovementStateType(EMovementStateType InNewType)
+{
+	EMovementStateType Prev = MovementStateType;
+	MovementStateType = InNewType;
+
+	if (OnMovementStateTypeChanged.IsBound())
 	{
-		OnStateTypeChanged.Broadcast(Prev, InNewType);
+		OnMovementStateTypeChanged.Broadcast(Prev, InNewType);
 	}
 }
+
+//void UCStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	//DOREPLIFETIME(UCStateComponent, MovementStateType);
+//}
+
