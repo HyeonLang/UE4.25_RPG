@@ -60,7 +60,7 @@ void ACPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Key_2", IE_Pressed, this, &ACPlayerController::OnInputKey_2);
 	InputComponent->BindAction("Key_3", IE_Pressed, this, &ACPlayerController::OnInputKey_3);
 
-	InputComponent->BindAction("Jump", IE_Pressed, this, &ACPlayerController::OnJump);
+	InputComponent->BindAction("SpaceBar", IE_Pressed, this, &ACPlayerController::OnSpaceBar);
 
 	InputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ACPlayerController::OnPrimaryAction);
 	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
@@ -285,8 +285,9 @@ void ACPlayerController::OnInputRight(float Axis)
 	PlayerCharacter->OnMoveRight(Axis);
 }
 
-void ACPlayerController::OnJump()
+void ACPlayerController::OnSpaceBar()
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->OnJump();
 }
 

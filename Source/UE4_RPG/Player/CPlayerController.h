@@ -68,7 +68,7 @@ private:
 	void OnInputForward(float Axis);
 	void OnInputRight(float Axis);
 
-	void OnJump();
+	void OnSpaceBar();
 
 	void OnInputKey_1();
 	void OnInputKey_2();

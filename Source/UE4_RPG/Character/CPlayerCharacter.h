@@ -70,9 +70,10 @@ public:
 	UFUNCTION(Reliable, Server, Category = "Cooldown")
 	void SetCanCharacterChange(bool InNew = true);
 	
-	
+	UFUNCTION(BlueprintCallable)
 	void SetOnField(bool InNew);
-
+	UFUNCTION(BlueprintCallable)
+	void SetCanJump(bool InNew);
 protected:
 
 
@@ -94,6 +95,7 @@ protected:
 
 
 protected:
+	UPROPERTY(Replicated)
 	bool bCanJump;
 
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")

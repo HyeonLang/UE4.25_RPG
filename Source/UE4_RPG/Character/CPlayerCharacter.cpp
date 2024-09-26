@@ -34,6 +34,9 @@ ACPlayerCharacter::ACPlayerCharacter()
 	Cooldown_CharacterChange = 2.f;
 	bCanCharacterChange = true;
 	bOnField = true;
+	bCanJump = true;
+	
+	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
 void ACPlayerCharacter::BeginPlay()
@@ -91,7 +94,7 @@ void ACPlayerCharacter::OnLookUp(float Axis)
 void ACPlayerCharacter::OnJump()
 {
 	if (!bCanJump) return;
-	Jump();
+	ActionComp->StartActionByName(this, "Jump");
 }
 
 void ACPlayerCharacter::OnDash()
@@ -114,6 +117,11 @@ void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 void ACPlayerCharacter::SetOnField(bool InNew)
 {
 	bOnField = InNew;
+}
+
+void ACPlayerCharacter::SetCanJump(bool InNew)
+{
+	bCanJump = InNew;
 }
 
 void ACPlayerCharacter::OnRep_OnField()
