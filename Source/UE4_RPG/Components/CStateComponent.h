@@ -26,7 +26,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE EMovementStateType GetStateType() { return MovementStateType; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE EMovementStateType GetMovementStateType() { return MovementStateType; }
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -59,18 +60,23 @@ public:
 	void SetJumpingMode();
 	UFUNCTION(BlueprintCallable)
 	void SetFlyingMode();
-	
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE float GetMaxSpeed(EMovementStateType SpeedType) const { return MaxSpeeds[(uint8)SpeedType]; }
+
 private:
 	void ChangeMovementStateType(EMovementStateType InNewType);
 
 public:
 	UPROPERTY(BlueprintAssignable)
 	FMovementStateTypeChanged OnMovementStateTypeChanged;
-protected:
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "MovementState")
 	EMovementStateType MovementStateType;
 
 private:
 	ACPlayerCharacter* PlayerCharacter;
+
+	TArray<float> MaxSpeeds;
 		
 };

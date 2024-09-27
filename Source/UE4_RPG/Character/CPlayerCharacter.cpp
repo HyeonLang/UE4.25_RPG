@@ -35,7 +35,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bCanCharacterChange = true;
 	bOnField = true;
 	bCanJump = true;
-	
+
+	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	
 	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 

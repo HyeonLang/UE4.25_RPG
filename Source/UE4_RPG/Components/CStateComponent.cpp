@@ -7,6 +7,13 @@ UCStateComponent::UCStateComponent()
 {
 	SetIsReplicatedByDefault(true);
 	MovementStateType = EMovementStateType::Idle;
+
+	MaxSpeeds.Add(0.f);
+	MaxSpeeds.Add(100.f);
+	MaxSpeeds.Add(500.f);
+	MaxSpeeds.Add(850.f);
+	MaxSpeeds.Add(500.f);
+	MaxSpeeds.Add(500.f);
 }
 
 
