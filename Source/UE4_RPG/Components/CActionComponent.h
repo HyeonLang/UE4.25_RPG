@@ -52,6 +52,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool StopActionByName(AActor* Instigator, FName ActionName);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Action")
+	FORCEINLINE TArray<UCAction*> GetActions() const { return Actions; }
+
 protected:
 	UFUNCTION(Reliable, Server)
 	void ServerStartAction(AActor* Instigator, FName ActionName);
