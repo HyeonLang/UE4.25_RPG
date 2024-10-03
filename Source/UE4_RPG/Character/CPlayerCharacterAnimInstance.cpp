@@ -31,7 +31,7 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (!PlayerCharacter) return;
 
-	bIsInAir = CharacterMovementComp->IsFalling();
+	bIsInAir = CharacterMovementComp->IsFalling() | CharacterMovementComp->IsFlying();
 	
 	Speed = PlayerCharacter->GetVelocity().Size2D();
 	bIsAccelerating = (Speed - PreSpeed > 0.f) ? true : false;
