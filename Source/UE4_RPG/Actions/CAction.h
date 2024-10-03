@@ -3,9 +3,13 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayTagContainer.h"
+
+#include "CActionData.h"
+
 #include "CAction.generated.h"
 
 class UCActionComponent;
+class UCActionData;
 
 USTRUCT()
 struct FActionRepData
@@ -50,6 +54,7 @@ public:
 	bool IsRunning() const;
 
 	void SetOwningComponent(UCActionComponent* NewActionComp);
+	void SetActionDatas();
 
 	UWorld* GetWorld() const override;
 
@@ -91,5 +96,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
 	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
 
+	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
+	TSubclassOf<UCActionData> ActionDataClass;*/
+
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
+	UCActionData* ActionDataAssets;
+
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = "Datas")
+	TArray<FActionData> ActionDatas;
 	
 };

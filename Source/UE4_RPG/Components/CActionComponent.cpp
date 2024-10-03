@@ -76,6 +76,7 @@ void UCActionComponent::AddAction(AActor* Instigator, TSubclassOf<UCAction> Acti
 	if (ensure(NewAction))
 	{
 		NewAction->SetOwningComponent(this);
+		NewAction->SetActionDatas();
 
 		Actions.Add(NewAction); // 서버에서 등록 한 후 Actions 리플리케이트
 

@@ -4,13 +4,13 @@
 #include "Engine/DataAsset.h"
 #include "CActionData.generated.h"
 
-class ACDoAction;
 class UAnimMontage;
 class UParticleSystem;
-
+class ACPlayerChracter;
+class UCAction;
 
 USTRUCT(BlueprintType)
-struct FMontageData
+struct FActionMontageData
 {
 	GENERATED_BODY()
 
@@ -26,25 +26,50 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bCanMove = true;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool bLookForward = false;
 };
 
 USTRUCT(BlueprintType)
-struct FActionData : public FMontageData
+struct FActionEffectData
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
-	float Power = 1.f;
-
 	UPROPERTY(EditDefaultsOnly)
 	FTransform EffectTransform;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UParticleSystem> Effects;
 
+};
+
+USTRUCT(BlueprintType)
+struct FActionCameraData
+{
+	GENERATED_BODY()
+
+public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCameraShake> ShakeClass;
+};
+
+
+USTRUCT(BlueprintType)
+struct FActionData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FActionMontageData> MontageDatas;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FActionEffectData> EffectDatas;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FActionCameraData> CameraDatas;
 
 };
 
@@ -54,10 +79,9 @@ class UE4_RPG_API UCActionData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	void BeginPlay(ACharacter* InOwnerCharacter);
+	void BeginPlay(UCAction* InOwnerAction, TArray<FActionData>& OutActionDatas);
 	
-
 public:
-	UPROPERTY(EditAnywhere, Category = "DoAction")
+	UPROPERTY(EditAnywhere, Category = "Actions")
 	TArray<FActionData> ActionDatas;
 };

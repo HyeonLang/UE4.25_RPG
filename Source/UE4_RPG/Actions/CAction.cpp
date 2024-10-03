@@ -84,6 +84,14 @@ void UCAction::SetOwningComponent(UCActionComponent* NewActionComp)
 	
 }
 
+void UCAction::SetActionDatas()
+{
+	if (ActionDataAssets)
+	{
+		ActionDataAssets->BeginPlay(this, ActionDatas);
+	}
+}
+
 // 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
 void UCAction::OnRep_RepData()
 {
@@ -110,5 +118,6 @@ void UCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(UCAction, RepData);
 	DOREPLIFETIME(UCAction, ActionComp);
+	DOREPLIFETIME(UCAction, ActionDatas);
 	DOREPLIFETIME(UCAction, TimeStarted);
 }
