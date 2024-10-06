@@ -71,6 +71,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FActionCameraData> CameraDatas;
 
+	UPROPERTY(EditAnywhere)
+	float AttackRange;
 };
 
 UCLASS()

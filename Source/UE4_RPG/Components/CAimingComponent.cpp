@@ -33,7 +33,7 @@ void UCAimingComponent::SetCameraDirectionWeight(float InValue)
 	CameraDirectionWeight = InValue;
 }
 
-void UCAimingComponent::GetAimTargetDirection(const float InRange, const bool InIsBossMode, FRotator& OutDirection, AActor* OutTarget)
+void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const float InRange, const bool InIsBossMode)
 {
 	AActor* Player = GetOwner();
 

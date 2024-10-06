@@ -52,6 +52,9 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	bFullBody = GetCurveValue(TEXT("FullBody")) > 0.0f ? true : false;
 
+	PlayerCharacter->IsActiveMontage = IsAnyMontagePlaying();
+	
+
 	
 	if (bIsInAir)
 	{

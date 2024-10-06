@@ -3,11 +3,13 @@
 #include "Net/UnrealNetwork.h"
 
 #include "Global.h"
+#include "Character/CPlayerCharacter.h"
 #include "Components/CActionComponent.h"
+#include "Components/CAimingComponent.h"
 
 UCAction::UCAction()
 {
-
+	ComboIndex = 0;
 }
 
 bool UCAction::CanStart_Implementation(AActor* Instigator)
@@ -35,6 +37,12 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantTags);
 
+	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
+	if (PC)
+	{
+		PC->bCanMove = ActionDatas[ComboIndex].MontageDatas[0].bCanMove;
+	}
+
 	// 서버일 경우
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
@@ -53,6 +61,12 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantTags);
+
+	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
+	if (PC)
+	{
+		PC->bCanMove = true;
+	}
 
 	// 서버일 경우
 	RepData.bIsRunning = false;
@@ -76,6 +90,13 @@ UWorld* UCAction::GetWorld() const
 UCActionComponent* UCAction::GetOwningComponent() const
 {
 	return ActionComp;
+}
+
+void UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
+{
+	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
+
+	AimingComp->GetAimTargetDirection(OutDirection, OutTarget, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
 }
 
 void UCAction::SetOwningComponent(UCActionComponent* NewActionComp)

@@ -35,6 +35,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bCanCharacterChange = true;
 	bOnField = true;
 	bCanJump = true;
+	bCanMove = true;
 
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	
@@ -66,6 +67,13 @@ UAbilitySystemComponent* ACPlayerCharacter::GetAbilitySystemComponent() const
 
 void ACPlayerCharacter::OnMoveForward(float Axis)
 {
+	if (!bCanMove) return;
+
+	if (IsActiveMontage && !FMath::IsNearlyZero(Axis))
+	{
+		ServerStopAnimMontage();
+	}
+
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(ControlRotation).GetForwardVector();
 
@@ -74,6 +82,13 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 
 void ACPlayerCharacter::OnMoveRight(float Axis)
 {
+	if (!bCanMove) return;
+
+	if (IsActiveMontage && !FMath::IsNearlyZero(Axis))
+	{
+		ServerStopAnimMontage();
+	}
+
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector direction = FQuat(ControlRotation).GetRightVector();
 
@@ -117,6 +132,17 @@ void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 	bCanCharacterChange = InNew;
 }
 
+void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
+{
+	StopAnimMontage(AnimMontage);
+	NetMulticastStopAnimMontage(AnimMontage);
+}
+
+void ACPlayerCharacter::NetMulticastStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
+{
+	StopAnimMontage(AnimMontage);
+}
+
 void ACPlayerCharacter::SetOnField(bool InNew)
 {
 	bOnField = InNew;
@@ -152,6 +178,11 @@ void ACPlayerCharacter::StopSprint()
 	ActionComp->StopActionByName(this, "Sprint");
 }
 
+void ACPlayerCharacter::StartNormalAttack()
+{
+	ActionComp->StartActionByName(this, "NormalAttack");
+}
+
 
 void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -162,4 +193,6 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, AttributeSet);
+	DOREPLIFETIME(ACPlayerCharacter, bCanMove);
+	DOREPLIFETIME(ACPlayerCharacter, bCanJump);
 }

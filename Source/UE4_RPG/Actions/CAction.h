@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
+
 	void SetOwningComponent(UCActionComponent* NewActionComp);
 	void SetActionDatas();
 
@@ -105,5 +108,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = "Datas")
 	TArray<FActionData> ActionDatas;
-	
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Combo")
+	int32 ComboIndex;
 };

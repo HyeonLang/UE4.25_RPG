@@ -81,11 +81,6 @@ void ACPlayerController::Tick(float DeltaSeconds)
 		FVector Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
 		PlayerCameraActor->SetActorLocation(Location);
-		
-
-		CLog::Print(GetControlRotation(), -1, GetWorld()->GetDeltaSeconds(), FColor::Red);
-		CLog::Print(PlayerCameraActor->GetActorRotation(), -1, DeltaSeconds);
-		CLog::Print(GetNameSafe(PlayerCharacter), -1, DeltaSeconds);
 	}
 
 }
@@ -324,6 +319,10 @@ void ACPlayerController::OnInputKey_Z()
 
 void ACPlayerController::OnPrimaryAction()
 {
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->StartNormalAttack();
+	}
 }
 
 void ACPlayerController::OnSecondaryAction()

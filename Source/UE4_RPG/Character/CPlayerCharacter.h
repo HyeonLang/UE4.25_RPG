@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "CPlayerCharacter.generated.h"
 
+class UAnimMontage;
 class UCameraComponent;
 class USpringArmComponent;
 class UCAimingComponent;
@@ -51,6 +52,8 @@ public:
 	void StartSprint();
 	void StopSprint();
 
+	void StartNormalAttack();
+
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCAimingComponent* GetAimingComponent() const { return AimingComp; }
@@ -72,14 +75,27 @@ public:
 
 	UFUNCTION(Reliable, Server, Category = "Cooldown")
 	void SetCanCharacterChange(bool InNew = true);
+
+	UFUNCTION(Reliable, Server, Category = "Montage")
+	void ServerStopAnimMontage(UAnimMontage* AnimMontage = nullptr);
+
+	UFUNCTION(NetMulticast, Reliable, Category = "Montage")
+	void NetMulticastStopAnimMontage(UAnimMontage* AnimMontage = nullptr);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetOnField(bool InNew);
 	UFUNCTION(BlueprintCallable)
 	void SetCanJump(bool InNew);
 
-protected:
+public:
+	UPROPERTY()
+	bool IsActiveMontage;
 
+	UPROPERTY(Replicated)
+	bool bCanJump;
+
+	UPROPERTY(Replicated)
+	bool bCanMove;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
@@ -99,8 +115,6 @@ protected:
 
 
 protected:
-	UPROPERTY(Replicated)
-	bool bCanJump;
 
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
 	bool bOnField;
