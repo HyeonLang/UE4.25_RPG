@@ -87,7 +87,6 @@ void ACPlayerCharacter::OnMoveRight(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
-		ActionComp->bCanStopMontagePostAction = false;
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
