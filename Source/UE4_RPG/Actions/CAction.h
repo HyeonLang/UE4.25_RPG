@@ -106,7 +106,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
 	UCActionData* ActionDataAssets;
 
-	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = "Datas")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Datas")
 	TArray<FActionData> ActionDatas;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Combo")

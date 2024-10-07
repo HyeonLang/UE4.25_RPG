@@ -15,22 +15,22 @@ struct FActionMontageData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	UAnimMontage* AnimMontage;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	float PlayRate = 1.f;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	FName StartSection;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	bool bCanMove = true;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	bool bLookForward = false;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	bool bCanStopMontagePostAction = false;
 
 };
@@ -41,10 +41,10 @@ struct FActionEffectData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	FTransform EffectTransform;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UParticleSystem> Effects;
 
 };
@@ -55,7 +55,7 @@ struct FActionCameraData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UCameraShake> ShakeClass;
 };
 
@@ -66,16 +66,16 @@ struct FActionData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FActionMontageData> MontageDatas;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FActionEffectData> EffectDatas;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FActionCameraData> CameraDatas;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	float AttackRange;
 };
 
@@ -88,6 +88,6 @@ public:
 	void BeginPlay(UCAction* InOwnerAction, TArray<FActionData>& OutActionDatas);
 	
 public:
-	UPROPERTY(EditAnywhere, Category = "Actions")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Actions")
 	TArray<FActionData> ActionDatas;
 };
