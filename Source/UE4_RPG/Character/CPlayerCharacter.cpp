@@ -40,7 +40,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	
 	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-
 }
 
 void ACPlayerCharacter::BeginPlay()
@@ -69,9 +68,10 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 {
 	if (!bCanMove) return;
 
-	if (IsActiveMontage && !FMath::IsNearlyZero(Axis))
+	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
+		ActionComp->bCanStopMontagePostAction = false;
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -83,10 +83,11 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 void ACPlayerCharacter::OnMoveRight(float Axis)
 {
 	if (!bCanMove) return;
-
-	if (IsActiveMontage && !FMath::IsNearlyZero(Axis))
+	
+	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
+		ActionComp->bCanStopMontagePostAction = false;
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -135,12 +136,14 @@ void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
 {
 	StopAnimMontage(AnimMontage);
+	ActionComp->bCanStopMontagePostAction = false;
 	NetMulticastStopAnimMontage(AnimMontage);
 }
 
 void ACPlayerCharacter::NetMulticastStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
 {
 	StopAnimMontage(AnimMontage);
+	ActionComp->bCanStopMontagePostAction = false;
 }
 
 void ACPlayerCharacter::SetOnField(bool InNew)

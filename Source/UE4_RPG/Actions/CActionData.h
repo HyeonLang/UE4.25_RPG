@@ -29,6 +29,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	bool bLookForward = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool bCanStopMontagePostAction = false;
+
 };
 
 USTRUCT(BlueprintType)

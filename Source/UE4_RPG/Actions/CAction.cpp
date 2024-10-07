@@ -36,10 +36,11 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantTags);
-
 	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
-	if (PC)
+
+	if (PC && ActionDatas.IsValidIndex(ComboIndex))
 	{
+		Comp->bCanStopMontagePostAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
 		PC->bCanMove = ActionDatas[ComboIndex].MontageDatas[0].bCanMove;
 	}
 
@@ -61,8 +62,8 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantTags);
-
 	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
+
 	if (PC)
 	{
 		PC->bCanMove = true;

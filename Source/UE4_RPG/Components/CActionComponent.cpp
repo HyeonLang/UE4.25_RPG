@@ -13,7 +13,7 @@ DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_
 UCActionComponent::UCActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
+	bCanStopMontagePostAction = false;
 	// 컴포넌트 리플리케이트
 	SetIsReplicatedByDefault(true);
 }

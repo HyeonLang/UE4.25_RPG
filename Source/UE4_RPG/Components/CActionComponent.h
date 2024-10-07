@@ -63,6 +63,9 @@ protected:
 	void ServerStopAction(AActor* Instigator, FName ActionName);
 
 public:
+	UPROPERTY(BlueprintReadWrite, Category = "Montage")
+	bool bCanStopMontagePostAction;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "GameplayTag")
 	FGameplayTagContainer ActiveGameplayTags;
 

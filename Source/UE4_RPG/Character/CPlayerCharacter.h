@@ -113,7 +113,6 @@ protected:
 	UPROPERTY(Replicated, VisibleDefaultsOnly, Category = "Attribute")
 	const UCPlayerCharacterAttributeSet* AttributeSet;
 
-
 protected:
 
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
@@ -129,6 +128,4 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bCanCharacterChange;
-
-
 };

@@ -10,10 +10,6 @@ void UCActionData::BeginPlay(UCAction* InOwnerAction, TArray<FActionData>& OutAc
 	for (int32 i = 0; i < ActionDatas.Num(); i++)
 	{
 		OutActionDatas.Add(ActionDatas[i]);
-		if (OutActionDatas.IsValidIndex(i))
-		{
-
-			CLog::Print("OnACtionData");
-		}
 	}
+
 }
