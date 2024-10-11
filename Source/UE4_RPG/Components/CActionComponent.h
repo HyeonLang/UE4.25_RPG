@@ -50,7 +50,7 @@ public:
 	void RemoveAction(UCAction* ActionToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	bool StartActionByName(AActor* Instigator, FName ActionName);
+	bool StartActionByName(AActor* Instigator, FName ActionName, bool bBaseAction = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool StopActionByName(AActor* Instigator, FName ActionName);

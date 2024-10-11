@@ -125,7 +125,7 @@ void UCActionComponent::RemoveAction(UCAction* ActionToRemove)
 	Actions.Remove(ActionToRemove);
 }
 
-bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
+bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, bool bBaseAction)
 {
 	SCOPE_CYCLE_COUNTER(STAT_StartActionByName); // 인사이트 성능 확인용
 
@@ -147,7 +147,7 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 
 				Action->CurrentComboActionName = CurrentComboAction->NextComboActionName;
 
-				StartActionByName(Instigator, Action->CurrentComboActionName);
+				StartActionByName(Instigator, Action->CurrentComboActionName, false);
 
 
 				if (GetActionByName(Action->CurrentComboActionName)->NextComboActionName == "None")
@@ -165,6 +165,11 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 				Message = Message + Msg;
 				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, Message);
 				continue;
+			}
+
+			if (bBaseAction)
+			{
+				ComboReset(Action, ActionName);
 			}
 
 			// 1.로컬에서 실행시키고 2. 서버로 보냄 (조작감)
