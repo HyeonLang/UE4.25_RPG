@@ -45,7 +45,6 @@ void ACPlayerController::BeginPlay()
 		FTimerDelegate TD;
 		TD.BindUFunction(this, "OnSetViewTarget");
 		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
-		CLog::Print("SetViewTarget", -1, 10.f, FColor::Blue);
 	}
 }
 

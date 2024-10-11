@@ -35,7 +35,6 @@ void AUE4_RPGGameModeBase::StartPlay()
 void AUE4_RPGGameModeBase::ClientSetViewTarget_Implementation(ACPlayerController* NewPlayer)
 {
 	NewPlayer->SetViewTarget(NewPlayer->PlayerCameraActor);
-	CLog::Print(*GetNameSafe(NewPlayer->PlayerCameraActor));
 }
 
 void AUE4_RPGGameModeBase::SpawnAndPossessCharacters(ACPlayerController* NewPlayer)

@@ -53,9 +53,6 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//if (GetController() && GetController()->IsLocalController())
-		//CLog::Print(GetCapsuleComponent()->GetCollisionEnabled(),-1,0.f,FColor::Blue);
-
 }
 
 
@@ -71,7 +68,6 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
-		ActionComp->bCanStopMontagePostAction = false;
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -87,6 +83,7 @@ void ACPlayerCharacter::OnMoveRight(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
+		
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);

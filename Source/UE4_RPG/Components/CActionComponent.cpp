@@ -80,7 +80,8 @@ void UCActionComponent::AddAction(AActor* Instigator, TSubclassOf<UCAction> Acti
 
 		Actions.Add(NewAction); // 서버에서 등록 한 후 Actions 리플리케이트
 
-		if (NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator)))
+		FString msg;
+		if (NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator, msg)))
 		{
 			NewAction->StartAction(Instigator);
 		}
@@ -92,6 +93,19 @@ UCAction* UCActionComponent::GetAction(TSubclassOf<UCAction> ActionClass) const
 	for (UCAction* Action : Actions)
 	{
 		if (Action && Action->IsA(ActionClass))
+		{
+			return Action;
+		}
+	}
+
+	return nullptr;
+}
+
+UCAction* UCActionComponent::GetActionByName(FName InActionName) const
+{
+	for (UCAction* Action : Actions)
+	{
+		if (Action && Action->ActionName == InActionName)
 		{
 			return Action;
 		}
@@ -119,9 +133,36 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			if (!Action->CanStart(Instigator))
+			if (Action->GetCanCombo()) // NextCombo
 			{
-				FString Message = FString::Printf(TEXT("Faild to run : %s"), *ActionName.ToString());
+				FName CurrentComboActionName = Action->CurrentComboActionName;
+				Action->SetCanCombo(false);
+
+				UCAction* CurrentComboAction = GetActionByName(CurrentComboActionName);
+
+				if (CurrentComboAction->IsRunning())
+				{
+					StopActionByName(Instigator, CurrentComboAction->ActionName);
+				}
+
+				Action->CurrentComboActionName = CurrentComboAction->NextComboActionName;
+
+				StartActionByName(Instigator, Action->CurrentComboActionName);
+
+
+				if (GetActionByName(Action->CurrentComboActionName)->NextComboActionName == "None")
+				{
+					Action->CurrentComboActionName = ActionName;
+				}
+
+				return false;
+			}
+
+			FString Msg;
+			if (!Action->CanStart(Instigator, Msg))
+			{
+				FString Message = FString::Printf(TEXT("Faild to run : %s :"), *ActionName.ToString());
+				Message = Message + Msg;
 				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, Message);
 				continue;
 			}
@@ -177,6 +218,11 @@ bool UCActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 	}
 
 	return false;
+}
+
+void UCActionComponent::ComboReset(UCAction* InAction, FName ResetName)
+{
+	InAction->CurrentComboActionName = ResetName;
 }
 
 void UCActionComponent::ServerStopAction_Implementation(AActor* Instigator, FName ActionName)

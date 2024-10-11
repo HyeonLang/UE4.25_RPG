@@ -44,6 +44,9 @@ public:
 	UCAction* GetAction(TSubclassOf<UCAction> ActionClass) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
+	UCAction* GetActionByName(FName InActionName) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
 	void RemoveAction(UCAction* ActionToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
@@ -54,6 +57,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Action")
 	FORCEINLINE TArray<UCAction*> GetActions() const { return Actions; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combo")
+	void ComboReset(UCAction* InAction, FName ResetName);
 
 protected:
 	UFUNCTION(Reliable, Server)

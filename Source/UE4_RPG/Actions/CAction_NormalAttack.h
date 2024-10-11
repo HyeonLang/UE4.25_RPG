@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actions/CAction.h"
+
 #include "CAction_NormalAttack.generated.h"
 
 class UAnimMontage;

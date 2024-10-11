@@ -48,7 +48,7 @@ public:
 	void StopAction(AActor* Instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
-	bool CanStart(AActor* Instigator);
+	bool CanStart(AActor* Instigator, FString& OutMsg);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
@@ -56,21 +56,34 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
 
+	UFUNCTION(BlueprintCallable, Category = "Combo")
+	void SetCanCombo(bool InNew);
+
 	void SetOwningComponent(UCActionComponent* NewActionComp);
 	void SetActionDatas();
 
 	UWorld* GetWorld() const override;
 
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UCActionComponent* GetOwningComponent() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combo")
+	FORCEINLINE bool GetCanCombo() const { return bCanCombo; }
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combo")
+	FName NextComboActionName;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combo")
+	FName CurrentComboActionName;
 
 protected:
 	// Gameplay tags
@@ -109,6 +122,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Datas")
 	TArray<FActionData> ActionDatas;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Combo")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
 	int32 ComboIndex;
+
+	bool bCanCombo;
+
 };

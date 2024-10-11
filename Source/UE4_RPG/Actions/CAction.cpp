@@ -10,12 +10,14 @@
 UCAction::UCAction()
 {
 	ComboIndex = 0;
+	bCanCombo = false;
 }
 
-bool UCAction::CanStart_Implementation(AActor* Instigator)
+bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 {
 	if (IsRunning())
 	{
+		OutMsg = "IsRunning";
 		return false;
 	}
 
@@ -23,6 +25,7 @@ bool UCAction::CanStart_Implementation(AActor* Instigator)
 
 	if (Comp->ActiveGameplayTags.HasAny(BlockedTags))
 	{
+		OutMsg = "BlockedTags";
 		return false;
 	}
 
@@ -31,22 +34,21 @@ bool UCAction::CanStart_Implementation(AActor* Instigator)
 
 void UCAction::StartAction_Implementation(AActor* Instigator)
 {
-
 	UE_LOG(LogTemp, Log, TEXT("Started : %s"), *GetNameSafe(this));
 
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantTags);
 	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
 
+	// 서버일 경우
+	RepData.bIsRunning = true;
+	RepData.Instigator = Instigator;
+
 	if (PC && ActionDatas.IsValidIndex(ComboIndex))
 	{
 		Comp->bCanStopMontagePostAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
 		PC->bCanMove = ActionDatas[ComboIndex].MontageDatas[0].bCanMove;
 	}
-
-	// 서버일 경우
-	RepData.bIsRunning = true;
-	RepData.Instigator = Instigator;
 
 	if (Comp->GetOwnerRole() == ROLE_Authority) // 서버라면 서버에서만 실행
 	{
@@ -72,6 +74,7 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	// 서버일 경우
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
+
 
 	Comp->OnActionStopped.Broadcast(Comp, this);
 }
@@ -100,6 +103,11 @@ void UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AAct
 	AimingComp->GetAimTargetDirection(OutDirection, OutTarget, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
 }
 
+void UCAction::SetCanCombo(bool InNew)
+{
+	bCanCombo = InNew;
+}
+
 void UCAction::SetOwningComponent(UCActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
@@ -112,6 +120,7 @@ void UCAction::SetActionDatas()
 	{
 		ActionDataAssets->BeginPlay(this, ActionDatas);
 	}
+	CurrentComboActionName = ActionName;
 }
 
 // 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
