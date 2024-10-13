@@ -85,6 +85,22 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Combo")
 	FName CurrentComboActionName;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
+	void PlayMontageDataAction(FActionMontageData MontageData, ACPlayerCharacter* Instigator, bool bBindEndedDelegate = false);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
+	void PlayMontageAction(UAnimMontage* Montage, ACPlayerCharacter* Instigator, bool bBindEndedDelegate = false);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
+	void InterruptedAction();
+
+
+protected:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
+	void BindOnMontageEndedDelegate(UAnimMontage* Montage, ACPlayerCharacter* Instigator);
+
+	UFUNCTION()
+	void OnMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
 protected:
 	// Gameplay tags
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayTag")

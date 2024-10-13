@@ -81,11 +81,15 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnActionStateChanged OnActionStopped;
 
+	UPROPERTY(BlueprintReadWrite)
+	UCAction* ActiveMontageAction;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	TArray<TSubclassOf<UCAction>> DefaultActions;
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	TArray<UCAction*> Actions;
+
 
 };

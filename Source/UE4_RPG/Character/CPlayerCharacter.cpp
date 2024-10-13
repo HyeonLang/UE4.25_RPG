@@ -83,7 +83,6 @@ void ACPlayerCharacter::OnMoveRight(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
-		
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -132,6 +131,7 @@ void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
 {
 	StopAnimMontage(AnimMontage);
+	CLog::Print(ActionComp->bCanStopMontagePostAction ? "True" : "Fasle");
 	ActionComp->bCanStopMontagePostAction = false;
 	NetMulticastStopAnimMontage(AnimMontage);
 }

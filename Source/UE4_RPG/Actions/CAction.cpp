@@ -96,6 +96,58 @@ UCActionComponent* UCAction::GetOwningComponent() const
 	return ActionComp;
 }
 
+void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageData, ACPlayerCharacter* Instigator, bool bBindEndedDelegate)
+{
+	if (!ensure(MontageData.AnimMontage)) return;
+
+	/*if (bBindEndedDelegate)
+	{
+		BindOnMontageEndedDelegate(MontageData.AnimMontage, Instigator);
+	}
+	*/
+
+	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
+	{
+		GetOwningComponent()->ActiveMontageAction->InterruptedAction();
+	}
+
+	GetOwningComponent()->ActiveMontageAction = this;
+
+	Instigator->PlayAnimMontage
+	(
+		MontageData.AnimMontage,
+		MontageData.PlayRate,
+		MontageData.StartSection
+	);
+
+
+}
+
+void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator, bool bBindEndedDelegate)
+{
+	if (!ensure(Montage)) return;
+
+	/*if (bBindEndedDelegate)
+	{
+		BindOnMontageEndedDelegate(MontageData.AnimMontage, Instigator);
+	}
+	*/
+
+	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
+	{
+		GetOwningComponent()->ActiveMontageAction->InterruptedAction();
+	}
+
+	GetOwningComponent()->ActiveMontageAction = this;
+
+	Instigator->PlayAnimMontage
+	(
+		Montage
+	);
+
+
+}
+
 void UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
 	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
@@ -120,7 +172,40 @@ void UCAction::SetActionDatas()
 	{
 		ActionDataAssets->BeginPlay(this, ActionDatas);
 	}
+
 	CurrentComboActionName = ActionName;
+}
+
+void UCAction::BindOnMontageEndedDelegate_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator)
+{
+	FOnMontageEnded OnMontageEndedDelegate;
+
+	OnMontageEndedDelegate.BindUFunction(this, FName("OnMontageEnded"));
+	CLog::Print(OnMontageEndedDelegate.IsBound() ? "true" : "false");
+	UAnimInstance* AnimInstance = Instigator->GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_SetEndDelegate(OnMontageEndedDelegate, Montage);
+	}
+}
+
+void UCAction::InterruptedAction_Implementation()
+{
+	UCActionComponent* Comp = GetOwningComponent();
+	if (Comp)
+	{
+		StopAction(Comp->GetOwner());
+	}
+}
+
+void UCAction::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	CLog::Print("OnMontageEnded");
+	UCActionComponent* Comp = GetOwningComponent();
+	if (Comp)
+	{
+		StopAction(Comp->GetOwner());
+	}
 }
 
 // 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
