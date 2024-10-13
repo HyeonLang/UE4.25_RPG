@@ -44,10 +44,11 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
 
-	if (PC && ActionDatas.IsValidIndex(ComboIndex))
+	if (PC && ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0))
 	{
 		Comp->bCanStopMontagePostAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
-		PC->bCanMove = ActionDatas[ComboIndex].MontageDatas[0].bCanMove;
+		if (!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
+			PC->CanMoveCount++;
 	}
 
 	if (Comp->GetOwnerRole() == ROLE_Authority) // 서버라면 서버에서만 실행
@@ -68,7 +69,9 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 
 	if (PC)
 	{
-		PC->bCanMove = true;
+		//PC->bCanMove = true;
+		if (ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0) &&!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
+			PC->CanMoveCount--;
 	}
 
 	// 서버일 경우

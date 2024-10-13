@@ -55,6 +55,7 @@ void ACPlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("MoveForward", this, &ACPlayerController::OnInputForward);
 	InputComponent->BindAxis("MoveRight", this, &ACPlayerController::OnInputRight);
+
 	InputComponent->BindAction("Key_1", IE_Pressed, this, &ACPlayerController::OnInputKey_1);
 	InputComponent->BindAction("Key_2", IE_Pressed, this, &ACPlayerController::OnInputKey_2);
 	InputComponent->BindAction("Key_3", IE_Pressed, this, &ACPlayerController::OnInputKey_3);
@@ -63,6 +64,9 @@ void ACPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ACPlayerController::OnPrimaryAction);
 	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
+
+	InputComponent->BindAction("Key_E", IE_Pressed, this, &ACPlayerController::OnInputKey_E);
+
 
 	InputComponent->BindAxis("Mouse_X", this, &ACPlayerController::OnMouseX);
 	InputComponent->BindAxis("Mouse_Y", this, &ACPlayerController::OnMouseY);
@@ -264,6 +268,8 @@ void ACPlayerController::OnInputKey_Q()
 
 void ACPlayerController::OnInputKey_E()
 {
+	if (!PlayerCharacter) return;
+	PlayerCharacter->StartResonanceSkill();
 }
 
 void ACPlayerController::OnInputForward(float Axis)

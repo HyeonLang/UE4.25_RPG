@@ -35,8 +35,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 	bCanCharacterChange = true;
 	bOnField = true;
 	bCanJump = true;
-	bCanMove = true;
-
+	//bCanMove = true;
+	CanMoveCount = 0;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	
 	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
@@ -63,7 +63,7 @@ UAbilitySystemComponent* ACPlayerCharacter::GetAbilitySystemComponent() const
 
 void ACPlayerCharacter::OnMoveForward(float Axis)
 {
-	if (!bCanMove) return;
+	if (CanMoveCount) return;
 
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
@@ -78,7 +78,7 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 
 void ACPlayerCharacter::OnMoveRight(float Axis)
 {
-	if (!bCanMove) return;
+	if (CanMoveCount) return;
 	
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
@@ -107,7 +107,7 @@ void ACPlayerCharacter::OnLookUp(float Axis)
 
 void ACPlayerCharacter::OnJump()
 {
-	if (!bCanJump) return;
+	if (CanMoveCount) return;
 	ActionComp->StartActionByName(this, "Jump");
 }
 
@@ -152,6 +152,11 @@ void ACPlayerCharacter::SetCanJump(bool InNew)
 	bCanJump = InNew;
 }
 
+void ACPlayerCharacter::SetCanMove(bool InNew)
+{
+	CanMoveCount = InNew;
+}
+
 void ACPlayerCharacter::OnRep_OnField()
 {
 	
@@ -182,6 +187,11 @@ void ACPlayerCharacter::StartNormalAttack()
 	ActionComp->StartActionByName(this, "NormalAttack");
 }
 
+void ACPlayerCharacter::StartResonanceSkill()
+{
+	ActionComp->StartActionByName(this, "ResonanceSkill");
+}
+
 
 void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -192,6 +202,6 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, AttributeSet);
-	DOREPLIFETIME(ACPlayerCharacter, bCanMove);
+	//DOREPLIFETIME(ACPlayerCharacter, bCanMove);
 	DOREPLIFETIME(ACPlayerCharacter, bCanJump);
 }

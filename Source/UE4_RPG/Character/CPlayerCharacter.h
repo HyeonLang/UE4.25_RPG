@@ -53,6 +53,7 @@ public:
 	void StopSprint();
 
 	void StartNormalAttack();
+	void StartResonanceSkill();
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
@@ -70,6 +71,8 @@ public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
 	FORCEINLINE bool GetCanCharacterChange() const { return bCanCharacterChange; }
 
+	FORCEINLINE int32 GetCanMoveCount() const { return CanMoveCount; }
+
 	UFUNCTION(BlueprintCallable, Reliable, Server, Category = "Cooldown")
 	void SetCharacterChangeCooldown();
 
@@ -86,6 +89,8 @@ public:
 	void SetOnField(bool InNew);
 	UFUNCTION(BlueprintCallable)
 	void SetCanJump(bool InNew);
+	UFUNCTION(BlueprintCallable)
+	void SetCanMove(bool InNew);
 
 public:
 	UPROPERTY()
@@ -94,8 +99,8 @@ public:
 	UPROPERTY(Replicated)
 	bool bCanJump;
 
-	UPROPERTY(Replicated)
-	bool bCanMove;
+	UPROPERTY()
+	int32 CanMoveCount;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")

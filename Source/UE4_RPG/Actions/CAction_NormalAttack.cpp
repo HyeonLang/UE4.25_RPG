@@ -7,7 +7,7 @@
 
 UCAction_NormalAttack::UCAction_NormalAttack()
 {
-	
+	ActionName = "NormalAttack";
 }
 
 void UCAction_NormalAttack::StartAction_Implementation(AActor* Instigator)

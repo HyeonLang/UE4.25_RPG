@@ -54,7 +54,7 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	PlayerCharacter->IsActiveMontage = IsAnyMontagePlaying();
 	
-
+	
 	
 	if (bIsInAir)
 	{
