@@ -9,8 +9,16 @@
 
 UCAction::UCAction()
 {
+	bTickable = true;
+	bTickableWhenPaused = false;
+
 	ComboIndex = 0;
 	bCanCombo = false;
+}
+
+
+void UCAction::Tick(float DeltaTime)
+{
 }
 
 bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
@@ -225,6 +233,7 @@ void UCAction::OnRep_RepData()
 		StopAction(RepData.Instigator);
 	}
 }
+
 
 bool UCAction::IsRunning() const
 {

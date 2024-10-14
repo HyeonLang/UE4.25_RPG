@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayTagContainer.h"
+#include "Tickable.h"
 
 #include "CActionData.h"
 
@@ -26,7 +27,7 @@ public:
 
 
 UCLASS(Blueprintable)
-class UE4_RPG_API UCAction : public UObject
+class UE4_RPG_API UCAction : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,20 @@ public:
 	{
 		return true;
 	}
+
+public:
+	// Tick
+	virtual void Tick(float DeltaTime) override;
+	FORCEINLINE bool IsTickable() const override { return bTickable; }
+	FORCEINLINE bool IsTickableWhenPaused() const override { return bTickableWhenPaused; }
+	FORCEINLINE TStatId GetStatId() const override { return TStatId(); }
+
+protected:
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Tick")
+	bool bTickable;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Tick")
+	bool bTickableWhenPaused;
+
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
@@ -60,7 +75,7 @@ public:
 	void SetCanCombo(bool InNew);
 
 	void SetOwningComponent(UCActionComponent* NewActionComp);
-	void SetActionDatas();
+	virtual void SetActionDatas();
 
 	UWorld* GetWorld() const override;
 

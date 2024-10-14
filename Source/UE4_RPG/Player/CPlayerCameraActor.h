@@ -20,8 +20,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE const UCameraComponent* GetCameraComp() { return CameraComp; }
-	FORCEINLINE const USpringArmComponent* GetSpringArmComp() { return SpringArmComp; }
+	FORCEINLINE UCameraComponent* GetCameraComp() const { return CameraComp; }
+	FORCEINLINE USpringArmComponent* GetSpringArmComp() const { return SpringArmComp; }
 
 	void OnTurn();
 	void OnLookUp();
