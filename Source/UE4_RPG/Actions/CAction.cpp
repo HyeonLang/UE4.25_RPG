@@ -21,6 +21,14 @@ void UCAction::Tick(float DeltaTime)
 {
 }
 
+void UCAction::Initialize()
+{
+	SetActionDatas();
+
+	CurrentComboActionName = ActionName;
+}
+
+
 bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 {
 	if (IsRunning())
@@ -77,7 +85,6 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 
 	if (PC)
 	{
-		//PC->bCanMove = true;
 		if (ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0) &&!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
 			PC->CanMoveCount--;
 	}
@@ -111,12 +118,6 @@ void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageDa
 {
 	if (!ensure(MontageData.AnimMontage)) return;
 
-	/*if (bBindEndedDelegate)
-	{
-		BindOnMontageEndedDelegate(MontageData.AnimMontage, Instigator);
-	}
-	*/
-
 	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
 	{
 		GetOwningComponent()->ActiveMontageAction->InterruptedAction();
@@ -137,12 +138,6 @@ void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageDa
 void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator, bool bBindEndedDelegate)
 {
 	if (!ensure(Montage)) return;
-
-	/*if (bBindEndedDelegate)
-	{
-		BindOnMontageEndedDelegate(MontageData.AnimMontage, Instigator);
-	}
-	*/
 
 	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
 	{
@@ -183,8 +178,6 @@ void UCAction::SetActionDatas()
 	{
 		ActionDataAssets->BeginPlay(this, ActionDatas);
 	}
-
-	CurrentComboActionName = ActionName;
 }
 
 void UCAction::BindOnMontageEndedDelegate_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator)

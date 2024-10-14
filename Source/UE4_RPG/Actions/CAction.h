@@ -6,6 +6,7 @@
 #include "Tickable.h"
 
 #include "CActionData.h"
+#include "Interfaces/CInitializable.h"
 
 #include "CAction.generated.h"
 
@@ -27,7 +28,7 @@ public:
 
 
 UCLASS(Blueprintable)
-class UE4_RPG_API UCAction : public UObject, public FTickableGameObject
+class UE4_RPG_API UCAction : public UObject, public FTickableGameObject, public ICInitializable
 {
 	GENERATED_BODY()
 
@@ -46,7 +47,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	FORCEINLINE bool IsTickable() const override { return bTickable; }
 	FORCEINLINE bool IsTickableWhenPaused() const override { return bTickableWhenPaused; }
-	FORCEINLINE TStatId GetStatId() const override { return TStatId(); }
+	FORCEINLINE TStatId GetStatId() const override { return UObject::GetStatID(); }
 
 protected:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Tick")
@@ -54,6 +55,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Tick")
 	bool bTickableWhenPaused;
 
+public:
+	virtual void Initialize() override;
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
