@@ -192,6 +192,11 @@ void ACPlayerCharacter::StartResonanceSkill()
 	ActionComp->StartActionByName(this, "ResonanceSkill");
 }
 
+void ACPlayerCharacter::StartResonanceLiberation()
+{
+	ActionComp->StartActionByName(this, "ResonanceLiberation");
+}
+
 
 void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {

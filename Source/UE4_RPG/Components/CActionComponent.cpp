@@ -40,6 +40,12 @@ void UCActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	/*FString Message = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
 	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::White, Message);*/
+
+	for (UCAction* Action : Actions)
+	{
+		if (Action)
+			Action->ActionTick(DeltaTime);
+	}
 	
 }
 

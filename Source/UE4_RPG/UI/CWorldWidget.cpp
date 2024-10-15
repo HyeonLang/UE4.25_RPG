@@ -17,6 +17,7 @@ void UCWorldWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		ScreenPosition /= ViewportScale;
 
 		if (ParentSizeBox)
+
 		{
 			ParentSizeBox->SetRenderTranslation(ScreenPosition);
 		}

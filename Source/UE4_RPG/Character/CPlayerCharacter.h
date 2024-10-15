@@ -54,6 +54,7 @@ public:
 
 	void StartNormalAttack();
 	void StartResonanceSkill();
+	void StartResonanceLiberation();
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")

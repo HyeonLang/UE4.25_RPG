@@ -124,7 +124,8 @@ private:
 
 public:
 	UPROPERTY(Replicated, VisibleAnywhere)
-		ACPlayerCameraActor* PlayerCameraActor;
+	ACPlayerCameraActor* PlayerCameraActor;
+
 private:
 	UPROPERTY(Replicated, VisibleAnywhere)
 	ACPlayerCharacter* PlayerCharacter;

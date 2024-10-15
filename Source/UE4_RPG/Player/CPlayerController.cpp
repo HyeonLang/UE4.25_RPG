@@ -66,6 +66,7 @@ void ACPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
 
 	InputComponent->BindAction("Key_E", IE_Pressed, this, &ACPlayerController::OnInputKey_E);
+	InputComponent->BindAction("Key_R", IE_Pressed, this, &ACPlayerController::OnInputKey_R);
 
 
 	InputComponent->BindAxis("Mouse_X", this, &ACPlayerController::OnMouseX);
@@ -81,9 +82,18 @@ void ACPlayerController::Tick(float DeltaSeconds)
 
 	if (PlayerCharacter && PlayerCharacter->HasAuthority())
 	{
-		FVector Location = PlayerCharacter->GetActorLocation();
+		FVector Location;
+		if (PlayerCharacter->GetMesh()->GetBoneIndex("Bip001") == INDEX_NONE)
+		{
+			Location = PlayerCharacter->GetActorLocation();
+		}
+		else
+		{
+			Location = PlayerCharacter->GetMesh()->GetBoneLocation("Bip001");
+		}
 		Location.Z += 95.f;
 		PlayerCameraActor->SetActorLocation(Location);
+		
 	}
 
 }
@@ -256,6 +266,8 @@ void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMo
 
 void ACPlayerController::OnInputKey_R()
 {
+	if (!PlayerCharacter) return;
+	PlayerCharacter->StartResonanceLiberation();
 }
 
 void ACPlayerController::OnInputKey_F()

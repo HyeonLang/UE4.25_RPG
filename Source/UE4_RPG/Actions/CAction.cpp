@@ -9,15 +9,12 @@
 
 UCAction::UCAction()
 {
-	bTickable = true;
-	bTickableWhenPaused = false;
-
 	ComboIndex = 0;
 	bCanCombo = false;
 }
 
 
-void UCAction::Tick(float DeltaTime)
+void UCAction::ActionTick_Implementation(float DeltaTime)
 {
 }
 
@@ -157,7 +154,7 @@ void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerC
 void UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
 	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
-
+	
 	AimingComp->GetAimTargetDirection(OutDirection, OutTarget, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
 }
 
