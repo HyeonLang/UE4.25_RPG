@@ -83,14 +83,17 @@ void ACPlayerController::Tick(float DeltaSeconds)
 	if (PlayerCharacter && PlayerCharacter->HasAuthority())
 	{
 		FVector Location;
-		if (PlayerCharacter->GetMesh()->GetBoneIndex("Bip001") == INDEX_NONE)
+
+		/*if (PlayerCharacter->GetMesh()->GetBoneIndex("Bip001") == INDEX_NONE)
 		{
 			Location = PlayerCharacter->GetActorLocation();
 		}
 		else
-		{
+		{		
 			Location = PlayerCharacter->GetMesh()->GetBoneLocation("Bip001");
-		}
+		}*/
+
+		Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
 		PlayerCameraActor->SetActorLocation(Location);
 		
