@@ -203,8 +203,6 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 		switch (InMode)
 		{
 		case EChangeMode::None:
-			PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			PlayerCharacter->GetMesh()->SetVisibility(false);
 			PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 			break;
 		case EChangeMode::Action:
@@ -291,7 +289,6 @@ void ACPlayerController::OnInputForward(float Axis)
 {
 	if (!PlayerCharacter) return;
 	PlayerCharacter->OnMoveForward(Axis);
-	
 }
 
 void ACPlayerController::OnInputRight(float Axis)
@@ -376,14 +373,18 @@ void ACPlayerController::OnInputMouse_Wheel(float Axis)
 void ACPlayerController::OnMouseX(float Axis)
 {
 	if (!PlayerCharacter || !PlayerCameraActor) return;
+
 	PlayerCharacter->OnTurn(Axis);
+	
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 }
 
 void ACPlayerController::OnMouseY(float Axis)
 {
 	if (!PlayerCharacter || !PlayerCameraActor) return;
+
 	PlayerCharacter->OnLookUp(Axis);
+	
 	PlayerCameraActor->SetActorRotation(GetControlRotation());
 
 }
@@ -400,6 +401,7 @@ void ACPlayerController::OnStopSprint()
 
 void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 {
+	if ((int32)InIndex >= MaxPlayerCharacterCount) return;
 	if (!ensure(PlayerCharacter)) return;
 
 	/*if (PlayerCharacter->GetActionComponent()->IsUltimateMode() 
