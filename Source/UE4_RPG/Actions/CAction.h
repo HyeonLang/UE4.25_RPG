@@ -82,7 +82,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Combo")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
 	FName NextComboActionName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
