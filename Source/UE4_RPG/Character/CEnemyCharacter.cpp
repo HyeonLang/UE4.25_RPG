@@ -18,7 +18,6 @@ ACEnemyCharacter::ACEnemyCharacter()
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
 	CHelpers::CreateActorComponent<UCActionComponent>(this, &ActionComp, "ActionComp");
 	CHelpers::CreateActorComponent<UCAbilitySystemComponent>(this, &AbilitySystemComp, "AbilitySystemComp");
-
 }
 
 void ACEnemyCharacter::BeginPlay()

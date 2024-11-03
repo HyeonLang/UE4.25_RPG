@@ -19,9 +19,12 @@ void UCPlayerCharacterAnimInstance::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	PlayerCharacter = Cast<ACPlayerCharacter>(TryGetPawnOwner());
-	ActionComp = PlayerCharacter->GetActionComponent();
-	CharacterMovementComp = PlayerCharacter->GetCharacterMovement();
-	BaseRotationRate = CharacterMovementComp->RotationRate;
+	if (PlayerCharacter)
+	{
+		ActionComp = PlayerCharacter->GetActionComponent();
+		CharacterMovementComp = PlayerCharacter->GetCharacterMovement();
+		BaseRotationRate = CharacterMovementComp->RotationRate;
+	}
 
 }
 

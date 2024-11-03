@@ -66,11 +66,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	FRotator BaseRotationRate;
-
 	
 
-	//bool bIsAttacking;
-	
 	float PreSpeed;
 	float LeanIntensityScale;
 
