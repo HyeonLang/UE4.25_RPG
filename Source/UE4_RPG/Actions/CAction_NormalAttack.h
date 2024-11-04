@@ -30,5 +30,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Target")
 	FRotator TargetDerection;
 	
-
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	bool bUseWeapon;
 };

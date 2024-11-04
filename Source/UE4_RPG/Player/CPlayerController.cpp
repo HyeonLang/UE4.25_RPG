@@ -433,7 +433,7 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 void ACPlayerController::HideCharacter(ACPlayerCharacter* HideCharacter)
 {
 	HideCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	HideCharacter->GetMesh()->SetVisibility(false);
+	HideCharacter->SetAllVisibility(false);
 	HideCharacter->SetOnField(false);
 }
 

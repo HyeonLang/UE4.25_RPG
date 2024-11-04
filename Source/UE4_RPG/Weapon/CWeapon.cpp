@@ -25,7 +25,7 @@ void ACWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	SkeletalMeshComp->SetVisibility(false);
+	SkeletalMeshComp->SetVisibility(true);
 }
 
 // Called every frame
@@ -56,8 +56,9 @@ void ACWeapon::ActorAttachTo_Implementation(FName InSoketName)
 {
 	AttachToComponent
 	(
-		OwnerCharacter->GetMesh(),
-		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
+		Cast<ACharacter>(GetOwner())->GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+		//FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
 		InSoketName
 	);
 }
@@ -66,8 +67,9 @@ void ACWeapon::ComponentAttachTo_Implementation(USceneComponent* InComponent, FN
 {
 	InComponent->AttachToComponent
 	(
-		OwnerCharacter->GetMesh(),
-		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
+		Cast<ACharacter>(GetOwner())->GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true),
+		//FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
 		InSoketName
 	);
 }

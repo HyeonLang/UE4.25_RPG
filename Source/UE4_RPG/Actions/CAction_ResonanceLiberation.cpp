@@ -5,6 +5,7 @@
 #include "Character/CPlayerCharacter.h"
 #include "Components/CActionComponent.h"
 
+
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -65,6 +66,8 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 
 	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
 
+
+
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
 	if (InstigatorCharacter)
 	{
@@ -75,6 +78,8 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 void UCAction_ResonanceLiberation::StopAction_Implementation(AActor* Instigator)
 {
 	Super::StopAction_Implementation(Instigator);
+
+	
 }
 
 void UCAction_ResonanceLiberation::SetPlayingCameraOffset(FVector NewOffset)

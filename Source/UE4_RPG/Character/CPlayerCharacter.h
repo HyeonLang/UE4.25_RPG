@@ -15,6 +15,7 @@ class UCActionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCPlayerCharacterAttributeSet;
+class ACWeapon;
 
 
 UCLASS()
@@ -66,7 +67,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCActionComponent* GetActionComponent() const { return ActionComp; }
 
-
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	FORCEINLINE ACWeapon* GetWeapon() const { return Weapon; }
 
 public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
@@ -85,6 +87,9 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable, Category = "Montage")
 	void NetMulticastStopAnimMontage(UAnimMontage* AnimMontage = nullptr);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAllVisibility(bool bNewVisibility);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetOnField(bool InNew);
@@ -119,13 +124,23 @@ protected:
 	UPROPERTY(Replicated, VisibleDefaultsOnly, Category = "Attribute")
 	const UCPlayerCharacterAttributeSet* AttributeSet;
 
-protected:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ACWeapon> WeaponClass;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	ACWeapon* Weapon;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
+	FName WeaponSocket;
+
+protected:
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
 	bool bOnField;
 
 	UFUNCTION()
 	void OnRep_OnField();
+
+
 private:
 	FTimerHandle TimerHandle_Cooldown_CharacterChange;
 

@@ -13,6 +13,7 @@
 #include "../Components/CActionComponent.h"
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CPlayerCharacterAttributeSet.h"
+#include "Weapon/CWeapon.h"
 
 
 ACPlayerCharacter::ACPlayerCharacter()
@@ -40,6 +41,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	
 	GetMesh()->MeshComponentUpdateFlag = (uint8)EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	WeaponSocket = TEXT("WeaponProp02_Socket");
 }
 
 void ACPlayerCharacter::BeginPlay()
@@ -47,7 +49,13 @@ void ACPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	AttributeSet = GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>();
-	
+
+	if (WeaponClass)
+	{
+		Weapon = GetWorld()->SpawnActor<ACWeapon>(WeaponClass, GetActorTransform());
+		Weapon->SetOwner(this);
+		Weapon->ActorAttachTo(WeaponSocket);
+	}
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -142,6 +150,18 @@ void ACPlayerCharacter::NetMulticastStopAnimMontage_Implementation(UAnimMontage*
 	ActionComp->bCanStopMontagePostAction = false;
 }
 
+void ACPlayerCharacter::SetAllVisibility(bool bNewVisibility)
+{
+	GetMesh()->SetVisibility(bNewVisibility);
+	if (Weapon)
+	{
+		if (bNewVisibility)
+			Weapon->OnEquip_Implementation();
+		else
+			Weapon->OnUnequip_Implementation();
+	}
+}
+
 void ACPlayerCharacter::SetOnField(bool InNew)
 {
 	bOnField = InNew;
@@ -168,7 +188,7 @@ void ACPlayerCharacter::OnRep_OnField()
 	else
 	{
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMesh()->SetVisibility(false);
+		SetAllVisibility(false);
 	}
 }
 
