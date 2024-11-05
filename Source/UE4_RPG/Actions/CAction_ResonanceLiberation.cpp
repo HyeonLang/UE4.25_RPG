@@ -4,7 +4,7 @@
 #include "Player/CPlayerController.h"
 #include "Character/CPlayerCharacter.h"
 #include "Components/CActionComponent.h"
-
+#include "Weapon/CWeapon.h"
 
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -66,9 +66,9 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 
 	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
 
-
-
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+	InstigatorCharacter->GetWeapon()->OnEquip();
+
 	if (InstigatorCharacter)
 	{
 		PlayCameraAction_Implementation(InstigatorCharacter);

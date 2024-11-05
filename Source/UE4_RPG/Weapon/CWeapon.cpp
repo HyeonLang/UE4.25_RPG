@@ -25,7 +25,7 @@ void ACWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	SkeletalMeshComp->SetVisibility(true);
+	SkeletalMeshComp->SetVisibility(false);
 }
 
 // Called every frame

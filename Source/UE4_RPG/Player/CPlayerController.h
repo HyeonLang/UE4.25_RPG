@@ -12,6 +12,7 @@ class USceneComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
+
 UENUM(BlueprintType)
 enum class EChangeMode : uint8
 {
@@ -50,14 +51,19 @@ public:
 	void SpawnCameraActor(FTransform StartTransform);
 
 	void PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
+
 	UFUNCTION(Reliable, Server)
 	void ServerPossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
 
 	void UnPossessCharacter(EChangeMode InMode);
+
 	UFUNCTION(Reliable, Server)
 	void ServerUnPossessCharacter(EChangeMode InMode);
+
 	UFUNCTION(NetMulticast, Reliable)
 	void NetMulticastUnPossessCharacter(EChangeMode InMode);
+
+	bool GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor = nullptr) const;
 
 private:
 	void OnInputKey_R();

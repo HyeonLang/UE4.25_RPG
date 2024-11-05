@@ -3,6 +3,8 @@
 #include "CAction_NormalAttack.h"
 #include "Components/CActionComponent.h"
 #include "Components/CAimingComponent.h"
+#include "Character/CPlayerCharacter.h"
+#include "Weapon/CWeapon.h"
 
 
 UCAction_NormalAttack::UCAction_NormalAttack()
@@ -19,6 +21,9 @@ void UCAction_NormalAttack::StartAction_Implementation(AActor* Instigator)
 
 
 	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
+
+	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+	InstigatorCharacter->GetWeapon()->OnEquip();
 
 	
 }

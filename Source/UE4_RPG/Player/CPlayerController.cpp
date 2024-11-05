@@ -129,7 +129,8 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 			PlayerCharacter = GetWorld()->SpawnActorDeferred<ACPlayerCharacter>(CharacterClass, StartTransform);
 			PlayerCharacter->FinishSpawning(StartTransform);
 			PlayerCharacter->SetOnField(false);
-			PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			//PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			PlayerCharacter->GetCapsuleComponent()->SetCollisionProfileName("BehindPlayerCharacter");
 			PlayerCharacter->GetMesh()->SetVisibility(false);
 			AddControlledPlayerCharacter(PlayerCharacter);
 		}
@@ -151,7 +152,7 @@ void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
 void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode)
 {
 	FRotator Rotation;
-
+	FVector Location;
 	switch (InMode)
 	{
 	case EChangeMode::None:
@@ -165,11 +166,15 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	}
 
 	Rotation = GetControlRotation();
+	
+	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor))
+	{
+		InNewCharacter->SetActorLocation(Location);
+	}
 
-	
 	ShowCharacter(InNewCharacter);
-	
 	PlayerCharacter = InNewCharacter;
+
 
 	if (!HasAuthority())
 	{
@@ -264,6 +269,22 @@ void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMo
 	}*/
 }
 
+
+bool ACPlayerController::GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor) const
+{
+
+	float Distance = 150.f;
+
+	if (TargetActor)
+	{
+		FVector ChangeVector = PlayerCameraActor->GetActorRightVector().GetSafeNormal();
+		OutLocation = (ChangeVector * Distance) + PlayerActor->GetActorLocation();
+		CLog::Print(GetNameSafe(TargetActor));
+		return true;
+	}
+
+	return false;
+}
 
 void ACPlayerController::OnInputKey_R()
 {
@@ -432,14 +453,16 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 
 void ACPlayerController::HideCharacter(ACPlayerCharacter* HideCharacter)
 {
-	HideCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//HideCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HideCharacter->GetCapsuleComponent()->SetCollisionProfileName("BehindPlayerCharacter");
 	HideCharacter->SetAllVisibility(false);
 	HideCharacter->SetOnField(false);
 }
 
 void ACPlayerController::ShowCharacter(ACPlayerCharacter* ShowCharacter)
 {
-	ShowCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//ShowCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	ShowCharacter->GetCapsuleComponent()->SetCollisionProfileName("PlayerCharacter");
 	ShowCharacter->GetMesh()->SetVisibility(true);
 	ShowCharacter->SetOnField(true);
 }

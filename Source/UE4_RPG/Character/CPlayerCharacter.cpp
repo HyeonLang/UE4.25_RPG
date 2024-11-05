@@ -76,6 +76,7 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
+		Weapon->OnUnequip();
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -90,6 +91,7 @@ void ACPlayerCharacter::OnMoveRight(float Axis)
 	
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
+		Weapon->OnUnequip();
 		ServerStopAnimMontage();
 	}
 
@@ -182,12 +184,14 @@ void ACPlayerCharacter::OnRep_OnField()
 	
 	if (bOnField)
 	{
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetCapsuleComponent()->SetCollisionProfileName("PlayerCharacter");
 		GetMesh()->SetVisibility(true);
 	}
 	else
 	{
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionProfileName("BehindPlayerCharacter");
 		SetAllVisibility(false);
 	}
 }

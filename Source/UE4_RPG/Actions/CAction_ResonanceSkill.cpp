@@ -2,6 +2,8 @@
 
 
 #include "CAction_ResonanceSkill.h"
+#include "Character/CPlayerCharacter.h"
+#include "Weapon/CWeapon.h"
 
 
 UCAction_ResonanceSkill::UCAction_ResonanceSkill()
@@ -16,6 +18,9 @@ void UCAction_ResonanceSkill::StartAction_Implementation(AActor* Instigator)
 
 
 	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
+
+	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+	InstigatorCharacter->GetWeapon()->OnEquip();
 }
 
 void UCAction_ResonanceSkill::StopAction_Implementation(AActor* Instigator)

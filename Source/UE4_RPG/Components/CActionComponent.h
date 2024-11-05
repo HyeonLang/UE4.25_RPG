@@ -91,5 +91,4 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	TArray<UCAction*> Actions;
 
-
 };

@@ -7,6 +7,8 @@ UCAimingComponent::UCAimingComponent()
 {
 	SetIsReplicatedByDefault(true);
 
+	TargetActor = nullptr;
+
 	DistanceWeight = 1.f;
 	CameraDirectionWeight = 1.f;
 
@@ -36,6 +38,7 @@ void UCAimingComponent::SetCameraDirectionWeight(float InValue)
 void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const float InRange, const bool InIsBossMode)
 {
 	AActor* Player = GetOwner();
+	ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Player);
 
 	if (ensure(Player))
 	{
@@ -43,10 +46,23 @@ void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* Ou
 
 		FCollisionObjectQueryParams ObjectQueryParams;
 		ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn); 
+
 		// Todo. 공격 상호작용 액터 ECollisionChannel 추가
 
 		FCollisionQueryParams CollisionQueryParams;
-		CollisionQueryParams.AddIgnoredActor(Player);
+		ACPlayerController* PCTemp;
+		PCTemp = Cast<ACPlayerController>(PlayerCharacter->GetController());
+		if (PCTemp)
+		{
+			for (int i = 0; i < PCTemp->GetPlayerCharacters().Num(); i++)
+			{
+				CollisionQueryParams.AddIgnoredActor(PCTemp->GetPlayerCharacters()[i]);
+			}
+		}
+		else
+		{
+			CollisionQueryParams.AddIgnoredActor(Player);
+		}
 
 		if (GetWorld()->OverlapMultiByObjectType(OverlapResults, Player->GetActorLocation(), Player->GetActorRotation().Quaternion(), ObjectQueryParams, FCollisionShape::MakeSphere(InRange), CollisionQueryParams))
 		{
@@ -56,6 +72,8 @@ void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* Ou
 			for (int i = 0; i < OverlapResults.Num(); i++)
 			{
 				AActor* Target = OverlapResults[i].GetActor();
+				if (Cast<ACPlayerCharacter>(Target)) continue;
+
 				FVector Direction = Target->GetActorLocation() - Player->GetActorLocation();
 
 				float Dot;
@@ -85,14 +103,18 @@ void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* Ou
 				TargetDatas.push(Pair);
 			}
 			
-			OutTarget = TargetDatas.top().second;
-			OutDirection = (OutTarget->GetActorLocation() - Player->GetActorLocation()).Rotation();
+			if (!TargetDatas.empty())
+			{
+				OutTarget = TargetDatas.top().second;
+				OutDirection = (OutTarget->GetActorLocation() - Player->GetActorLocation()).Rotation();
+			}
 		}
 		else
 		{
 			OutDirection = Player->GetActorRotation();
 			OutTarget = nullptr;
 		}
+		TargetActor = OutTarget;
 	}
 }
 

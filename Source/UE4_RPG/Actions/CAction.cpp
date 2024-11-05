@@ -86,6 +86,11 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 			PC->CanMoveCount--;
 	}
 
+	if (PC->GetAimingComponent()->TargetActor)
+	{
+		PC->GetAimingComponent()->TargetActor = nullptr;
+	}
+
 	// 서버일 경우
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;

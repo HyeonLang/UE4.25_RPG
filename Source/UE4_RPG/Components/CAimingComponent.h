@@ -46,5 +46,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weight")
 	float DistanceBaseScore;
+
+public:
+	AActor* TargetActor;
 		
 };
