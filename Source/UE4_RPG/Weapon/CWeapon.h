@@ -33,9 +33,16 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ComponentAttachTo(USceneComponent* InComponent, FName InSoketName);
 
+public:
+	UPROPERTY(VisibleDefaultsOnly)
+	USceneComponent* MidComp;
+	UPROPERTY(VisibleDefaultsOnly)
+	USceneComponent* StartComp;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* RootComp;
+	
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	USkeletalMeshComponent* SkeletalMeshComp;

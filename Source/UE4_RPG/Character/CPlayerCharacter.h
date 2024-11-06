@@ -16,6 +16,7 @@ class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCPlayerCharacterAttributeSet;
 class ACWeapon;
+class UCAction;
 
 
 UCLASS()
@@ -56,6 +57,7 @@ public:
 	void StartNormalAttack();
 	void StartResonanceSkill();
 	void StartResonanceLiberation();
+
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")

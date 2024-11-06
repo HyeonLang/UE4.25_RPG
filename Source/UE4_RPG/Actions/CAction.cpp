@@ -69,7 +69,10 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 		TimeStarted = GetWorld()->TimeSeconds; // 시작 시간
 	}
 
-	Comp->OnActionStarted.Broadcast(Comp, this);
+	if (Comp->OnActionStarted.IsBound())
+	{
+		Comp->OnActionStarted.Broadcast(Comp, this);
+	}
 }
 
 void UCAction::StopAction_Implementation(AActor* Instigator)
@@ -95,8 +98,10 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
 
-
-	Comp->OnActionStopped.Broadcast(Comp, this);
+	if (Comp->OnActionStopped.IsBound())
+	{
+		Comp->OnActionStopped.Broadcast(Comp, this);
+	}
 }
 
 

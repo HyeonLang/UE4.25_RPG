@@ -63,7 +63,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void NetMulticastUnPossessCharacter(EChangeMode InMode);
 
-	bool GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor = nullptr) const;
+	bool GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor = nullptr, EChangeMode InMode = EChangeMode::None) const;
 
 private:
 	void OnInputKey_R();
@@ -106,6 +106,8 @@ private:
 	void ChangePlayerCharacter(uint32 InIndex);
 
 	void HideCharacter(ACPlayerCharacter* Character);
+	UFUNCTION()
+	void OnActionStopped_HideCharacter(UCActionComponent* OwningComp, UCAction* Action);
 	void ShowCharacter(ACPlayerCharacter* Character);
 
 protected:

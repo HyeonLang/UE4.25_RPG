@@ -64,6 +64,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE float GetMaxSpeed(EMovementStateType SpeedType) const { return MaxSpeeds[(uint8)SpeedType]; }
 
+
 private:
 	void ChangeMovementStateType(EMovementStateType InNewType);
 

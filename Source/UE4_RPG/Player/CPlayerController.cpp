@@ -5,6 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameplayTagContainer.h"
 #include "Net/UnrealNetwork.h"
 #include "../Character/CPlayerCharacter.h"
 #include "CPlayerCameraActor.h"
@@ -13,6 +14,7 @@
 #include "../Components/CAimingComponent.h"
 #include "../Components/CStateComponent.h"
 #include "../Components/CActionComponent.h"
+#include "Actions/CAction.h"
 
 
 
@@ -153,6 +155,14 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 {
 	FRotator Rotation;
 	FVector Location;
+
+	Rotation = GetControlRotation();
+	
+	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor, InMode))
+	{
+		InNewCharacter->SetActorLocation(Location);
+	}
+
 	switch (InMode)
 	{
 	case EChangeMode::None:
@@ -160,16 +170,10 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	case EChangeMode::Action:
 		break;
 	case EChangeMode::Concerto:
+
 		break;
 	default:
 		break;
-	}
-
-	Rotation = GetControlRotation();
-	
-	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor))
-	{
-		InNewCharacter->SetActorLocation(Location);
 	}
 
 	ShowCharacter(InNewCharacter);
@@ -205,21 +209,21 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 {
 	if (PlayerCharacter)
 	{
+		PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
+		
 		switch (InMode)
 		{
 		case EChangeMode::None:
-			PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
+			HideCharacter(PlayerCharacter);
 			break;
 		case EChangeMode::Action:
 			break;
 		case EChangeMode::Concerto:
+			PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
 			break;
 		default:
 			break;
 		}
-		
-		HideCharacter(PlayerCharacter);
-		
 
 		ACPlayerCharacter* PCI = PlayerCharacter;
 		for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
@@ -270,12 +274,12 @@ void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMo
 }
 
 
-bool ACPlayerController::GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor) const
+bool ACPlayerController::GetChangeCharacterLocation(FVector& OutLocation, AActor* PlayerActor, AActor* TargetActor, EChangeMode InMode) const
 {
 
 	float Distance = 150.f;
 
-	if (TargetActor)
+	if (TargetActor || InMode == EChangeMode::Concerto)
 	{
 		FVector ChangeVector = PlayerCameraActor->GetActorRightVector().GetSafeNormal();
 		OutLocation = (ChangeVector * Distance) + PlayerActor->GetActorLocation();
@@ -425,11 +429,6 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 	if ((int32)InIndex >= MaxPlayerCharacterCount) return;
 	if (!ensure(PlayerCharacter)) return;
 
-	/*if (PlayerCharacter->GetActionComponent()->IsUltimateMode() 
-		|| PlayerCharacter->GetActionComponent()->IsStunMode() 
-		|| PlayerCharacter->GetActionComponent()->IsDyingMode()) 
-		return;*/
-
 	ACPlayerCharacter* NextPlayerCharacter = Cast<ACPlayerCharacter>(PlayerCharacters[InIndex]);
 
 	if (!ensure(NextPlayerCharacter)) return;
@@ -440,11 +439,21 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 		return;
 
 
-	if (PlayerCharacter->GetActionComponent()->IsActionMode())
-	{
-		InMode = EChangeMode::Action;
+
 	}*/
+	if (PlayerCharacter->GetActionComponent()->ActiveGameplayTags.HasTag(FGameplayTag::RequestGameplayTag("Action.ResonanceLiberation"))) return;
+
 	EChangeMode InMode = EChangeMode::None;
+
+	FGameplayTagContainer ActionTags;
+	ActionTags.AddTag(FGameplayTag::RequestGameplayTag("Action.Attack"));
+	ActionTags.AddTag(FGameplayTag::RequestGameplayTag("Action.ResonanceSkill"));
+	if (PlayerCharacter->GetActionComponent()->ActiveGameplayTags.HasAny(ActionTags))
+	{
+		InMode = EChangeMode::Concerto;
+	}
+
+
 	UnPossessCharacter(InMode);
 	PlayerCharacterCurrentIndex = InIndex;
 	PossessCharacter(NextPlayerCharacter, InMode);
@@ -457,6 +466,15 @@ void ACPlayerController::HideCharacter(ACPlayerCharacter* HideCharacter)
 	HideCharacter->GetCapsuleComponent()->SetCollisionProfileName("BehindPlayerCharacter");
 	HideCharacter->SetAllVisibility(false);
 	HideCharacter->SetOnField(false);
+}
+
+void ACPlayerController::OnActionStopped_HideCharacter(UCActionComponent* OwningComp, UCAction* Action)
+{
+	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(OwningComp->GetOwner());
+
+	if (PC) HideCharacter(PC);
+
+	OwningComp->OnActionStopped.RemoveDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
 }
 
 void ACPlayerController::ShowCharacter(ACPlayerCharacter* ShowCharacter)

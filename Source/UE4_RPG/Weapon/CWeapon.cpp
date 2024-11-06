@@ -14,6 +14,8 @@ ACWeapon::ACWeapon()
 	CHelpers::CreateSceneComponent(this, &RootComp, "RootComp");
 	CHelpers::CreateActorComponent(this, &SkeletalMeshComp, "SkeletalMeshComp");
 	SkeletalMeshComp->AttachToComponent(RootComp, FAttachmentTransformRules::KeepRelativeTransform);
+	CHelpers::CreateSceneComponent(this, &MidComp, "MidComp", RootComp);
+	CHelpers::CreateSceneComponent(this, &StartComp, "StartComp", RootComp);
 
 	SetReplicates(true);
 	SetReplicateMovement(true);
