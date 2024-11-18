@@ -123,9 +123,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;
 
-	UPROPERTY(Replicated, VisibleDefaultsOnly, Category = "Attribute")
-	const UCPlayerCharacterAttributeSet* AttributeSet;
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<ACWeapon> WeaponClass;
 

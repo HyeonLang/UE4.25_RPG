@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
-#include "AbilitySystemComponent.h"
+#include "CCharacterAttributeSet.h"
 #include "CEnemyCharacterAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -14,24 +14,11 @@
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 UCLASS()
-class UE4_RPG_API UCEnemyCharacterAttributeSet : public UAttributeSet
+class UE4_RPG_API UCEnemyCharacterAttributeSet : public UCCharacterAttributeSet
 {
 	GENERATED_BODY()
 
 public:
 	UCEnemyCharacterAttributeSet();
-
-protected:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, ReplicatedUsing = "OnRep_Health")
-	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UCEnemyCharacterAttributeSet, Health);
-	UFUNCTION()
-	virtual void OnRep_Health(const FGameplayAttributeData& OldHealth);
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, ReplicatedUsing = "OnRep_MaxHealth")
-	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UCEnemyCharacterAttributeSet, MaxHealth);
-	UFUNCTION()
-	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
 	
 };

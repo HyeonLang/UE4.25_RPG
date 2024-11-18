@@ -32,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Aiming")
 	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const float InRange, const bool InIsBossMode);
 
+	//UFUNCTION(BlueprintCallable, Category = "Aiming");
+
 private:
 	float CalcWeight(float Dot, float Distance, float InRange);
 

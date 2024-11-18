@@ -48,7 +48,7 @@ void ACPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributeSet = GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>();
+	AbilitySystemComp->AttributeSet = const_cast<UCPlayerCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>());
 
 	if (WeaponClass)
 	{
@@ -230,7 +230,6 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 
 	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
 	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
-	DOREPLIFETIME(ACPlayerCharacter, AttributeSet);
 	//DOREPLIFETIME(ACPlayerCharacter, bCanMove);
 	DOREPLIFETIME(ACPlayerCharacter, bCanJump);
 }

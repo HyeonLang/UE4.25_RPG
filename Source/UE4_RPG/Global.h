@@ -10,3 +10,5 @@
 
 #include "Utilities/CLog.h"
 #include "Utilities/CHelpers.h"
+
+#include "Game/CFunctionLibrary.h"
