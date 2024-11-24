@@ -5,6 +5,7 @@
 #include "CWeapon.generated.h"
 
 class ACharacter;
+class UCapsuleComponent;
 
 UCLASS()
 class UE4_RPG_API ACWeapon : public AActor
@@ -34,6 +35,13 @@ public:
 	void ComponentAttachTo(USceneComponent* InComponent, FName InSoketName);
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void OnCollision();
+
+	UFUNCTION(BlueprintCallable)
+	void OffCollision();
+
+public:
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* MidComp;
 	UPROPERTY(VisibleDefaultsOnly)
@@ -43,9 +51,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* RootComp;
 	
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	USkeletalMeshComponent* SkeletalMeshComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+	UCapsuleComponent* CapsuleComp;
 
 	UPROPERTY(BlueprintReadOnly)
 	ACharacter* OwnerCharacter;

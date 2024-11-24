@@ -15,6 +15,7 @@ class UCActionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCEnemyCharacterAttributeSet;
+class UCWorldWidget;
 
 UCLASS()
 class UE4_RPG_API ACEnemyCharacter : public ACharacter, public IAbilitySystemInterface
@@ -34,6 +35,10 @@ public:
 	/** 어빌리티 시스템 컴포넌트를 반환합니다. */
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ IAbilitySystemInterface 끝
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "State")
+	void OnAttackBegin();
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
@@ -56,7 +61,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;
 
-	UPROPERTY(Replicated, VisibleDefaultsOnly, Category = "Attribute")
-	const UCEnemyCharacterAttributeSet* AttributeSet;
+	// UI
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+
+	UCWorldWidget* HealthBarWidget;
 
 };

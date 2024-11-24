@@ -10,6 +10,7 @@
 #include "../Components/CActionComponent.h"
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
+#include "UI/CWorldWidget.h"
 
 ACEnemyCharacter::ACEnemyCharacter()
 {
@@ -24,12 +25,15 @@ void ACEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributeSet = GetAbilitySystemComponent()->GetSetChecked<UCEnemyCharacterAttributeSet>();
-}
+	AbilitySystemComp->AttributeSet = const_cast<UCEnemyCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCEnemyCharacterAttributeSet>());
 
+
+	OnAttackBegin();
+}
 void ACEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 
 }
 
@@ -38,14 +42,32 @@ UAbilitySystemComponent* ACEnemyCharacter::GetAbilitySystemComponent() const
 	return AbilitySystemComp;
 }
 
+void ACEnemyCharacter::OnAttackBegin_Implementation()
+{
+	// HP bar Create
+	if (HealthBarWidget == nullptr)
+	{
+		HealthBarWidget = CreateWidget<UCWorldWidget>(GetWorld(), HealthBarWidgetClass);
+		if (HealthBarWidget)
+		{
+			HealthBarWidget->AttachToActor = this;
+			HealthBarWidget->AddToViewport();
+		}
+	}
+
+}
+
 void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta)
 {
+	if (Delta < 0.f)
+	{
+
+	}
+
 }
 
 
-void ACEnemyCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ACEnemyCharacter, AttributeSet);
-}
+//void ACEnemyCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//}

@@ -4,6 +4,7 @@
 #include "CWeapon.h"
 #include "Global.h"
 #include "Character/CPlayerCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ACWeapon::ACWeapon()
@@ -14,8 +15,13 @@ ACWeapon::ACWeapon()
 	CHelpers::CreateSceneComponent(this, &RootComp, "RootComp");
 	CHelpers::CreateActorComponent(this, &SkeletalMeshComp, "SkeletalMeshComp");
 	SkeletalMeshComp->AttachToComponent(RootComp, FAttachmentTransformRules::KeepRelativeTransform);
+	CHelpers::CreateSceneComponent(this, &CapsuleComp, "CapsuleComp", RootComp);
 	CHelpers::CreateSceneComponent(this, &MidComp, "MidComp", RootComp);
 	CHelpers::CreateSceneComponent(this, &StartComp, "StartComp", RootComp);
+
+	CapsuleComp->SetRelativeLocation(FVector(60, 0, 0));
+	CapsuleComp->SetRelativeRotation(FRotator(90, 0, 0));
+	CapsuleComp->SetCapsuleHalfHeight(90.f);
 
 	SetReplicates(true);
 	SetReplicateMovement(true);
@@ -28,6 +34,8 @@ void ACWeapon::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	SkeletalMeshComp->SetVisibility(false);
+
+	//OffCollision();
 }
 
 // Called every frame
@@ -35,6 +43,16 @@ void ACWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ACWeapon::OnCollision()
+{
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void ACWeapon::OffCollision()
+{
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ACWeapon::OnEquip_Implementation()

@@ -43,6 +43,7 @@ public:
 
 public:
 	virtual void Initialize() override;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Tick")
 	void ActionTick(float DeltaTime);
 
@@ -59,19 +60,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
-	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
-
+public:
 	UFUNCTION(BlueprintCallable, Category = "Combo")
 	void SetCanCombo(bool InNew);
 
 	void SetOwningComponent(UCActionComponent* NewActionComp);
+
 	virtual void SetActionDatas();
 
 	UWorld* GetWorld() const override;
 
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
+
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UCActionComponent* GetOwningComponent() const;
 
@@ -85,14 +88,18 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
 	FName NextComboActionName;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	bool bAutoStart;
-
 	UPROPERTY(BlueprintReadWrite, Category = "Combo")
 	FName CurrentComboActionName;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	bool bAutoStart;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Action")
+	TArray<AActor*> IgnoreActors;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
 	void PlayMontageDataAction(FActionMontageData MontageData, ACPlayerCharacter* Instigator, bool bBindEndedDelegate = false);
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Montage")
 	void PlayMontageAction(UAnimMontage* Montage, ACPlayerCharacter* Instigator, bool bBindEndedDelegate = false);
 
@@ -134,9 +141,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
 	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
 
-	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
-	TSubclassOf<UCActionData> ActionDataClass;*/
-
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
 	UCActionData* ActionDataAssets;
@@ -149,4 +153,8 @@ protected:
 
 	bool bCanCombo;
 
+
+
+	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
+	TSubclassOf<UCActionData> ActionDataClass;*/
 };

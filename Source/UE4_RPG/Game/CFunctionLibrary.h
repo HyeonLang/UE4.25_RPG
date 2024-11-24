@@ -15,4 +15,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static bool ApplyDirectionDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult);
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static TArray<FHitResult> SphereTraceForAttackTarget(TArray<AActor*>& InIgnoreActors, FVector Location, float Radius, UObject* InWorld);
+
+	//UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	//static TArray<FHitResult> CapsuleTraceForAttackTarget(TArray<AActor*>& InIgnoreActors, FVector);
+
+	//UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	//static TArray<FHitResult> BoxTraceForAttackTarget(TArray<AActor*>& InIgnoreActors, FVector);
 };

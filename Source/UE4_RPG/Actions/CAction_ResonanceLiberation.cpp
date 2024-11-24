@@ -67,7 +67,11 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
 
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
-	InstigatorCharacter->GetWeapon()->OnEquip();
+
+	if (InstigatorCharacter->GetWeapon())
+	{
+		InstigatorCharacter->GetWeapon()->OnEquip();
+	}
 
 	if (InstigatorCharacter)
 	{

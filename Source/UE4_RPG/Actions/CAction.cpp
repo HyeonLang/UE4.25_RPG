@@ -94,6 +94,8 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 		PC->GetAimingComponent()->TargetActor = nullptr;
 	}
 
+	IgnoreActors.Empty();
+
 	// 서버일 경우
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;

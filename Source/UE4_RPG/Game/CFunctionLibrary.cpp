@@ -1,6 +1,8 @@
 #include "CFunctionLibrary.h"
 #include "Components/CAbilitySystemComponent.h"
+#include "Global.h"
 
+#define ISDEBUGLINE true
 
 bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
@@ -27,3 +29,24 @@ bool UCFunctionLibrary::ApplyDirectionDamage(AActor* DamageCauser, AActor* Targe
 
 	return false;
 }
+
+TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*>& InIgnoreActors, FVector Location, float Radius, UObject* InWorld)
+{
+	TArray<FHitResult> HitResults;
+
+	bool bHit = UKismetSystemLibrary::SphereTraceMulti(
+		InWorld,
+		Location,
+		Location,
+		Radius,
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		false,
+		InIgnoreActors,
+		EDrawDebugTrace::ForDuration,
+		HitResults,
+		ISDEBUGLINE
+		);
+	
+	return HitResults;
+}
+
