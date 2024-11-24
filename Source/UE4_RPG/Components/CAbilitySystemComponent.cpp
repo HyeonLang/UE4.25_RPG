@@ -44,6 +44,8 @@ bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float 
 		if (!FMath::IsNearlyZero(ActualDelta))
 		{
 			NetMulticastHealthChanged(InstigatorActor, AttributeSet->GetHealth(), ActualDelta);
+			if (OnHealthChanged.IsBound())
+				OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
 		}
 
 		/*if (ActualDela < 0.f && Health <= 0.f)
@@ -61,7 +63,8 @@ bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float 
 
 void UCAbilitySystemComponent::NetMulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
 {
-	OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
+	if (OnHealthChanged.IsBound())
+		OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
 }
 
 bool UCAbilitySystemComponent::IsAlive() const
