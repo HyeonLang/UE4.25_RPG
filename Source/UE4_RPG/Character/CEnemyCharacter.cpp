@@ -8,13 +8,16 @@
 #include "../Global.h"
 #include "../Components/CStateComponent.h"
 #include "../Components/CActionComponent.h"
+#include "Components/CWorldWidgetComponent.h"
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
-#include "UI/CWorldWidget.h"
+#include "UI/CScreenWidget.h"
 
 ACEnemyCharacter::ACEnemyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	CHelpers::CreateSceneComponent<UCWorldWidgetComponent>(this, &WidgetComp, "WidgetComp", RootComponent);
 
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
 	CHelpers::CreateActorComponent<UCActionComponent>(this, &ActionComp, "ActionComp");
@@ -23,9 +26,11 @@ ACEnemyCharacter::ACEnemyCharacter()
 
 void ACEnemyCharacter::BeginPlay()
 {
+	// 위젯등에서의 Attribute 사용을 위해 가장먼저 생성 
+	AbilitySystemComp->AttributeSet = const_cast<UCEnemyCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCEnemyCharacterAttributeSet>());
 	Super::BeginPlay();
 
-	AbilitySystemComp->AttributeSet = const_cast<UCEnemyCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCEnemyCharacterAttributeSet>());
+	WidgetComp->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 
 
 	OnAttackBegin();
@@ -44,16 +49,7 @@ UAbilitySystemComponent* ACEnemyCharacter::GetAbilitySystemComponent() const
 
 void ACEnemyCharacter::OnAttackBegin_Implementation()
 {
-	// HP bar Create
-	if (HealthBarWidget == nullptr)
-	{
-		HealthBarWidget = CreateWidget<UCWorldWidget>(GetWorld(), HealthBarWidgetClass);
-		if (HealthBarWidget)
-		{
-			HealthBarWidget->AttachToActor = this;
-			HealthBarWidget->AddToViewport();
-		}
-	}
+	
 
 }
 

@@ -8,6 +8,7 @@
 
 class UAnimMontage;
 class UCameraComponent;
+class UUserWidget;
 class USpringArmComponent;
 class UCAimingComponent;
 class UCStateComponent;
@@ -15,7 +16,7 @@ class UCActionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCEnemyCharacterAttributeSet;
-class UCWorldWidget;
+class UCWorldWidgetComponent;
 
 UCLASS()
 class UE4_RPG_API ACEnemyCharacter : public ACharacter, public IAbilitySystemInterface
@@ -61,10 +62,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;
 
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
+	UCWorldWidgetComponent* WidgetComp;
+
 	// UI
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
-	UCWorldWidget* HealthBarWidget;
+	UUserWidget* HealthBarWidget;
 
 };
