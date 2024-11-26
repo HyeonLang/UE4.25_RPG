@@ -434,13 +434,7 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 	if (!ensure(NextPlayerCharacter)) return;
 
 	if ((!NextPlayerCharacter->GetCanCharacterChange())) return;
-	/*
-		|| NextPlayerCharacter->GetActionComponent()->IsDeadMode()) 
-		return;
-
-
-
-	}*/
+	
 	if (PlayerCharacter->GetActionComponent()->ActiveGameplayTags.HasTag(FGameplayTag::RequestGameplayTag("Action.ResonanceLiberation"))) return;
 
 	EChangeMode InMode = EChangeMode::None;

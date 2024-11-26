@@ -72,6 +72,7 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 	if (Comp->OnActionStarted.IsBound())
 	{
 		Comp->OnActionStarted.Broadcast(Comp, this);
+		Comp->OnActionStarted.Clear();
 	}
 }
 
@@ -103,6 +104,7 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	if (Comp->OnActionStopped.IsBound())
 	{
 		Comp->OnActionStopped.Broadcast(Comp, this);
+		Comp->OnActionStopped.Clear();
 	}
 }
 
