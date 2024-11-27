@@ -2,6 +2,7 @@
 #include "../Character/CPlayerCharacter.h"
 #include "../Player/CPlayerController.h"
 #include "../Player/CPlayerCameraActor.h"
+#include "Global.h"
 
 UCAimingComponent::UCAimingComponent()
 {
@@ -35,7 +36,7 @@ void UCAimingComponent::SetCameraDirectionWeight(float InValue)
 	CameraDirectionWeight = InValue;
 }
 
-void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const float InRange, const bool InIsBossMode)
+AActor* UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, const float InRange, const bool InIsBossMode)
 {
 	AActor* Player = GetOwner();
 	ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Player);
@@ -105,17 +106,19 @@ void UCAimingComponent::GetAimTargetDirection(FRotator& OutDirection, AActor* Ou
 			
 			if (!TargetDatas.empty())
 			{
-				OutTarget = TargetDatas.top().second;
-				OutDirection = (OutTarget->GetActorLocation() - Player->GetActorLocation()).Rotation();
+				TargetActor = TargetDatas.top().second;
+				FRotator Direction = FRotator(Player->GetActorRotation().Pitch, (TargetActor->GetActorLocation() - Player->GetActorLocation()).GetSafeNormal().Rotation().Yaw, Player->GetActorRotation().Roll);
+				OutDirection = Direction;
 			}
 		}
 		else
 		{
 			OutDirection = Player->GetActorRotation();
-			OutTarget = nullptr;
+			TargetActor = nullptr;
 		}
-		TargetActor = OutTarget;
 	}
+
+	return TargetActor;
 }
 
 float UCAimingComponent::CalcWeight(float Dot, float Distance, float InRange)

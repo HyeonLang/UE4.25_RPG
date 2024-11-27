@@ -36,10 +36,17 @@ public:
 
 
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Target")
-	AActor* TargetActor;
-	UPROPERTY(BlueprintReadWrite, Category = "Target")
-	FRotator TargetDerection;
+	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_Target")
+		AActor* TargetActor;
+
+	UFUNCTION()
+		void OnRep_Target();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_TargetDerection")
+		FRotator TargetDerection;
+
+	UFUNCTION()
+		void OnRep_TargetDerection();
 
 private:
 	UPROPERTY(Replicated)

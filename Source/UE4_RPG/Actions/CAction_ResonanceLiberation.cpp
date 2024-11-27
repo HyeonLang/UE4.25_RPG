@@ -64,7 +64,13 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 {
 	Super::StartAction_Implementation(Instigator);
 
-	GetAimTargetDirection(TargetDerection, TargetActor, false); // Todo. bossmode fix
+	if (GetOwningComponent()->GetOwnerRole() == ROLE_Authority)
+	{
+		if (GetAimTargetDirection(TargetDerection, TargetActor, false))// Todo. bossmode fix
+		{
+			Instigator->SetActorRotation(TargetDerection);
+		}
+	}
 
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
 
@@ -82,13 +88,21 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 void UCAction_ResonanceLiberation::StopAction_Implementation(AActor* Instigator)
 {
 	Super::StopAction_Implementation(Instigator);
-
 	
 }
 
 void UCAction_ResonanceLiberation::SetPlayingCameraOffset(FVector NewOffset)
 {
 	PlayingCameraOffset = NewOffset;
+}
+
+void UCAction_ResonanceLiberation::OnRep_Target()
+{
+}
+
+void UCAction_ResonanceLiberation::OnRep_TargetDerection()
+{
+	GetOwningComponent()->GetOwner()->SetActorRotation(TargetDerection);
 }
 
 
@@ -121,4 +135,6 @@ void UCAction_ResonanceLiberation::GetLifetimeReplicatedProps(TArray<class FLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UCAction_ResonanceLiberation, LiberationCameraActor);
+	DOREPLIFETIME(UCAction_ResonanceLiberation, TargetActor);
+	DOREPLIFETIME(UCAction_ResonanceLiberation, TargetDerection);
 }

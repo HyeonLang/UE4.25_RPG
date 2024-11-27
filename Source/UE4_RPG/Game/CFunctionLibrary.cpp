@@ -1,5 +1,6 @@
 #include "CFunctionLibrary.h"
 #include "Components/CAbilitySystemComponent.h"
+#include "Engine/EngineTypes.h"
 #include "Global.h"
 
 #define ISDEBUGLINE true
@@ -30,23 +31,137 @@ bool UCFunctionLibrary::ApplyDirectionDamage(AActor* DamageCauser, AActor* Targe
 	return false;
 }
 
-TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*>& InIgnoreActors, FVector Location, float Radius, UObject* InWorld)
+TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, float Radius, UObject* InWorld)
 {
-	TArray<FHitResult> HitResults;
+	TArray<FHitResult> TargetResults;
 
-	bool bHit = UKismetSystemLibrary::SphereTraceMulti(
+	TArray<FHitResult> HitResults;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody)));
+	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
+	
+	
+	bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(
 		InWorld,
 		Location,
 		Location,
 		Radius,
-		UEngineTypes::ConvertToTraceType(ECC_Visibility),
+		ObjectTypes,
 		false,
 		InIgnoreActors,
 		EDrawDebugTrace::ForDuration,
 		HitResults,
-		ISDEBUGLINE
+		true
 		);
+
+	if (!bHit) return TargetResults;
+
+	TArray<AActor*> DetectedActor;
+
+	for (auto HitResult : HitResults)
+	{
+		AActor* HittedActor = HitResult.GetActor();
+		if (DetectedActor.Contains(HittedActor))
+		{
+			continue;
+		}
+		else
+		{
+			DetectedActor.Add(HittedActor);
+			TargetResults.Add(HitResult);
+		}
+	}
 	
-	return HitResults;
+
+	return TargetResults;
+}
+
+TArray<FHitResult> UCFunctionLibrary::CapsuleTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, float Radius, float HalfHeight, UObject* InWorld)
+{
+	TArray<FHitResult> TargetResults;
+
+	TArray<FHitResult> HitResults;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody)));
+	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
+
+	bool bHit = UKismetSystemLibrary::CapsuleTraceMultiForObjects(
+		InWorld,
+		Location,
+		Location,
+		Radius,
+		HalfHeight,
+		ObjectTypes,
+		false,
+		InIgnoreActors,
+		EDrawDebugTrace::ForDuration,
+		HitResults,
+		true
+	);
+
+	if (!bHit) return TargetResults;
+
+	TArray<AActor*> DetectedActor;
+
+	for (auto HitResult : HitResults)
+	{
+		AActor* HittedActor = HitResult.GetActor();
+		if (DetectedActor.Contains(HittedActor))
+		{
+			continue;
+		}
+		else
+		{
+			DetectedActor.Add(HittedActor);
+			TargetResults.Add(HitResult);
+		}
+	}
+
+	return TargetResults;
+}
+
+TArray<FHitResult> UCFunctionLibrary::BoxTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, FVector HalfSize, FRotator Orientation, UObject* InWorld)
+{
+
+	TArray<FHitResult> TargetResults;
+
+	TArray<FHitResult> HitResults;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody)));
+	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
+
+	bool bHit = UKismetSystemLibrary::BoxTraceMultiForObjects(
+		InWorld,
+		Location,
+		Location,
+		HalfSize,
+		Orientation,
+		ObjectTypes,
+		false,
+		InIgnoreActors,
+		EDrawDebugTrace::ForDuration,
+		HitResults,
+		true
+	);
+
+	if (!bHit) return TargetResults;
+
+	TArray<AActor*> DetectedActor;
+
+	for (auto HitResult : HitResults)
+	{
+		AActor* HittedActor = HitResult.GetActor();
+		if (DetectedActor.Contains(HittedActor))
+		{
+			continue;
+		}
+		else
+		{
+			DetectedActor.Add(HittedActor);
+			TargetResults.Add(HitResult);
+		}
+	}
+
+	return TargetResults;
 }
 

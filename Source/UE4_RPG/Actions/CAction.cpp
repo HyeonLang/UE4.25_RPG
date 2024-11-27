@@ -6,6 +6,7 @@
 #include "Character/CPlayerCharacter.h"
 #include "Components/CActionComponent.h"
 #include "Components/CAimingComponent.h"
+#include "Character/CEnemyCharacter.h"
 
 UCAction::UCAction()
 {
@@ -165,11 +166,26 @@ void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerC
 
 }
 
-void UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
+bool UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
 	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
-	
-	AimingComp->GetAimTargetDirection(OutDirection, OutTarget, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
+	OutTarget = AimingComp->GetAimTargetDirection(OutDirection, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
+
+	if (OutTarget)
+	{
+		ACEnemyCharacter* EnemyTarget = Cast<ACEnemyCharacter>(OutTarget);
+		if (!EnemyTarget)
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool UCAction::SetAimTargetLocation_Implementation(AActor* InTarget, const bool InIsBossMode)
+{
+	return false;
 }
 
 void UCAction::SetCanCombo(bool InNew)

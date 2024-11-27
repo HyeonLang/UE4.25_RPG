@@ -24,10 +24,15 @@ public:
 	void Attack_Elapsed(ACharacter* InstigatorCharacter);
 
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Target")
+	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_Target")
 	AActor* TargetActor;
-	UPROPERTY(BlueprintReadWrite, Category = "Target")
+
+	UFUNCTION()
+	void OnRep_Target();
+
+	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_TargetDerection")
 	FRotator TargetDerection;
 
-
+	UFUNCTION()
+	void OnRep_TargetDerection();
 };

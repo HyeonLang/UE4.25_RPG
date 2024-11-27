@@ -30,7 +30,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Aiming")
-	void GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const float InRange, const bool InIsBossMode);
+	AActor* GetAimTargetDirection(FRotator& OutDirection, const float InRange, const bool InIsBossMode);
 
 	//UFUNCTION(BlueprintCallable, Category = "Aiming");
 
