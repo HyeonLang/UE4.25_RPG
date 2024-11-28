@@ -1,9 +1,28 @@
 #include "CFunctionLibrary.h"
 #include "Components/CAbilitySystemComponent.h"
+#include "Character/CPlayerCharacter.h"
+#include "Player/CPlayerController.h"
 #include "Engine/EngineTypes.h"
 #include "Global.h"
 
 #define ISDEBUGLINE true
+#define TRACEDEBUGTYPE EDrawDebugTrace::ForDuration
+
+TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UActorComponent* Comp)
+{
+
+	ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Comp->GetOwner());
+	if (PlayerCharacter)
+	{
+		ACPlayerController* PlayerController = Cast<ACPlayerController>(PlayerCharacter->GetController());
+		if (PlayerController)
+		{
+			return PlayerController->GetPlayerCharacters();
+		}
+	}
+
+	return TArray<ACPlayerCharacter*>();
+}
 
 bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
@@ -49,7 +68,7 @@ TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*>
 		ObjectTypes,
 		false,
 		InIgnoreActors,
-		EDrawDebugTrace::ForDuration,
+		TRACEDEBUGTYPE,
 		HitResults,
 		true
 		);
@@ -84,7 +103,6 @@ TArray<FHitResult> UCFunctionLibrary::CapsuleTraceForAttackTarget(TArray<AActor*
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody)));
 	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
-
 	bool bHit = UKismetSystemLibrary::CapsuleTraceMultiForObjects(
 		InWorld,
 		Location,
@@ -94,7 +112,7 @@ TArray<FHitResult> UCFunctionLibrary::CapsuleTraceForAttackTarget(TArray<AActor*
 		ObjectTypes,
 		false,
 		InIgnoreActors,
-		EDrawDebugTrace::ForDuration,
+		TRACEDEBUGTYPE,
 		HitResults,
 		true
 	);
@@ -139,7 +157,7 @@ TArray<FHitResult> UCFunctionLibrary::BoxTraceForAttackTarget(TArray<AActor*> In
 		ObjectTypes,
 		false,
 		InIgnoreActors,
-		EDrawDebugTrace::ForDuration,
+		TRACEDEBUGTYPE,
 		HitResults,
 		true
 	);

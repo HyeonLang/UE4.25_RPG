@@ -54,6 +54,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void StopAction(AActor* Instigator);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void Attack_Elapsed(ACharacter* InstigatorCharacter, int32 AttackIndex = 0);
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* Instigator, FString& OutMsg);
 

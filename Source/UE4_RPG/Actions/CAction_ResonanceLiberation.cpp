@@ -74,13 +74,12 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
 
-	if (InstigatorCharacter->GetWeapon())
+	if (InstigatorCharacter && InstigatorCharacter->GetWeapon())
 	{
 		InstigatorCharacter->GetWeapon()->OnEquip();
-	}
+	
 
-	if (InstigatorCharacter)
-	{
+		LiberationCameraActor->SetActorRotation(FRotator(InstigatorCharacter->GetActorRotation().Pitch, InstigatorCharacter->GetActorRotation().Yaw - 180.f, InstigatorCharacter->GetActorRotation().Roll));
 		PlayCameraAction_Implementation(InstigatorCharacter);
 	}
 }
@@ -125,9 +124,6 @@ void UCAction_ResonanceLiberation::EndCameraAction_Implementation(ACPlayerCharac
 	PlayerController->SetViewTarget(PlayerController->PlayerCameraActor);
 }
 
-void UCAction_ResonanceLiberation::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter)
-{
-}
 
 
 void UCAction_ResonanceLiberation::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

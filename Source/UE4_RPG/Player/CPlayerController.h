@@ -38,6 +38,7 @@ public:
 	FORCEINLINE int32 GetMaxPlayerCharacterCount() { return MaxPlayerCharacterCount; }
 	FORCEINLINE const TArray<TSubclassOf<ACPlayerCharacter>> GetCharacterClasses() { return CharacterClasses; }
 	FORCEINLINE TArray<ACPlayerCharacter*>& GetPlayerCharacters() { return PlayerCharacters; }
+	FORCEINLINE ACPlayerCharacter* GetPlayerCharacter() { return PlayerCharacter; }
 	FORCEINLINE const int32 GetPlayerCharacterCurrentIndex() { return PlayerCharacterCurrentIndex; }
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() { return PlayerCameraActor; }
 	
@@ -50,15 +51,15 @@ public:
 
 	void SpawnCameraActor(FTransform StartTransform);
 
-	void PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
+	void PossessCharacter(ACPlayerCharacter* InNewCharacter, FVector CurrentVelocity,  EChangeMode InMode);
 
 	UFUNCTION(Reliable, Server)
-	void ServerPossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode);
+	void ServerPossessCharacter(ACPlayerCharacter* InNewCharacter, FVector CurrentVelocity, EChangeMode InMode);
 
-	void UnPossessCharacter(EChangeMode InMode);
+	void UnPossessCharacter(FVector& OutVelocity, EChangeMode InMode);
 
 	UFUNCTION(Reliable, Server)
-	void ServerUnPossessCharacter(EChangeMode InMode);
+	void ServerUnPossessCharacter(FVector OutVelocity, EChangeMode InMode);
 
 	UFUNCTION(NetMulticast, Reliable)
 	void NetMulticastUnPossessCharacter(EChangeMode InMode);

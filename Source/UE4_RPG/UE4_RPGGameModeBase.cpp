@@ -48,7 +48,7 @@ void AUE4_RPGGameModeBase::SpawnAndPossessCharacters(ACPlayerController* NewPlay
 	if (NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex])
 	{
 
-		NewPlayer->PossessCharacter(Cast<ACPlayerCharacter>(NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex]), EChangeMode::None);
+		NewPlayer->PossessCharacter(Cast<ACPlayerCharacter>(NewPlayer->GetPlayerCharacters()[PlayerCharacterStartIndex]), FVector(0, 0, 0), EChangeMode::None);
 	}
 	
 }

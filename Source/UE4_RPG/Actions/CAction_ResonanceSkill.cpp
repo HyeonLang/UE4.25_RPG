@@ -54,10 +54,6 @@ void UCAction_ResonanceSkill::OnRep_TargetDerection()
 }
 
 
-void UCAction_ResonanceSkill::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter)
-{
-}
-
 void UCAction_ResonanceSkill::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

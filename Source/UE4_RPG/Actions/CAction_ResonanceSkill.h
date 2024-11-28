@@ -19,10 +19,6 @@ public:
 	virtual void StartAction_Implementation(AActor* Instigator) override;
 	virtual void StopAction_Implementation(AActor* Instigator) override;
 
-public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void Attack_Elapsed(ACharacter* InstigatorCharacter);
-
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_Target")
 	AActor* TargetActor;

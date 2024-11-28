@@ -151,12 +151,10 @@ void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
 	}
 }
 
-void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, EChangeMode InMode)
+void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVector CurrentVelocity, EChangeMode InMode)
 {
-	FRotator Rotation;
 	FVector Location;
-
-	Rotation = GetControlRotation();
+	FRotator Rotation = GetControlRotation();
 	
 	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor, InMode))
 	{
@@ -166,15 +164,16 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	switch (InMode)
 	{
 	case EChangeMode::None:
+		InNewCharacter->GetRootComponent()->ComponentVelocity = CurrentVelocity;
 		break;
 	case EChangeMode::Action:
 		break;
 	case EChangeMode::Concerto:
-
 		break;
 	default:
 		break;
 	}
+
 
 	ShowCharacter(InNewCharacter);
 	PlayerCharacter = InNewCharacter;
@@ -182,7 +181,7 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 
 	if (!HasAuthority())
 	{
-		ServerPossessCharacter(PlayerCharacter, InMode);
+		ServerPossessCharacter(InNewCharacter, CurrentVelocity, InMode);
 	}
 	else
 	{
@@ -199,13 +198,13 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, ECh
 	
 }
 
-void ACPlayerController::ServerPossessCharacter_Implementation(ACPlayerCharacter* InNewCharacter, EChangeMode InMode)
+void ACPlayerController::ServerPossessCharacter_Implementation(ACPlayerCharacter* InNewCharacter, FVector CurrentVelocity, EChangeMode InMode)
 {
-	PossessCharacter(InNewCharacter, InMode);
+	PossessCharacter(InNewCharacter, CurrentVelocity, InMode);
 	
 }
 
-void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
+void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode InMode)
 {
 	if (PlayerCharacter)
 	{
@@ -244,7 +243,7 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 
 		if (!HasAuthority())
 		{
-			ServerUnPossessCharacter(InMode);
+			ServerUnPossessCharacter(OutVelocity, InMode);
 		}
 		else
 		{
@@ -253,10 +252,10 @@ void ACPlayerController::UnPossessCharacter(EChangeMode InMode)
 	}
 }
 
-void ACPlayerController::ServerUnPossessCharacter_Implementation(EChangeMode InMode)
+void ACPlayerController::ServerUnPossessCharacter_Implementation(FVector OutVelocity, EChangeMode InMode)
 {
 	NetMulticastUnPossessCharacter(InMode);
-	UnPossessCharacter(InMode);
+	UnPossessCharacter(OutVelocity, InMode);
 }
 
 void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMode InMode)
@@ -447,10 +446,10 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 		InMode = EChangeMode::Concerto;
 	}
 
-
-	UnPossessCharacter(InMode);
+	FVector Velocity;
+	UnPossessCharacter(Velocity, InMode);
 	PlayerCharacterCurrentIndex = InIndex;
-	PossessCharacter(NextPlayerCharacter, InMode);
+	PossessCharacter(NextPlayerCharacter, Velocity, InMode);
 
 }
 

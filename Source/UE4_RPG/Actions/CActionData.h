@@ -77,6 +77,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	float AttackRange;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	float DamageRange;
 };
 
 UCLASS()

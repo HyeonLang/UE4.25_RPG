@@ -53,10 +53,6 @@ void UCAction_NormalAttack::OnRep_TargetDerection()
 }
 
 
-void UCAction_NormalAttack::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter)
-{
-}
-
 
 void UCAction_NormalAttack::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {

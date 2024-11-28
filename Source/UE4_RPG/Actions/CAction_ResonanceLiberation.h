@@ -28,8 +28,6 @@ public:
 	void SetPlayingCameraOffset(FVector NewOffset);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void Attack_Elapsed(ACharacter* InstigatorCharacter);
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void PlayCameraAction(ACPlayerCharacter* InstigatorCharacter);
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EndCameraAction(ACPlayerCharacter* InstigatorCharacter);

@@ -4,12 +4,17 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "CFunctionLibrary.generated.h"
 
+class ACPlayerCharacter;
+
 UCLASS()
 class UE4_RPG_API UCFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static TArray<ACPlayerCharacter*> GetPlayerCharactersByComponent(UActorComponent* Comp);
+
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static bool ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount);
 

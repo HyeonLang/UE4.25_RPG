@@ -255,6 +255,10 @@ void UCAction::OnRep_RepData()
 }
 
 
+void UCAction::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, int32 AttackIndex)
+{
+}
+
 bool UCAction::IsRunning() const
 {
 	return RepData.bIsRunning;

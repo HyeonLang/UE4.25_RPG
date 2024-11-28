@@ -22,6 +22,9 @@ ACEnemyCharacter::ACEnemyCharacter()
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
 	CHelpers::CreateActorComponent<UCActionComponent>(this, &ActionComp, "ActionComp");
 	CHelpers::CreateActorComponent<UCAbilitySystemComponent>(this, &AbilitySystemComp, "AbilitySystemComp");
+
+	GetMesh()->SetCollisionProfileName("CharacterMesh");
+	GetCapsuleComponent()->SetCollisionProfileName("EnemyCharacter");
 }
 
 void ACEnemyCharacter::BeginPlay()
