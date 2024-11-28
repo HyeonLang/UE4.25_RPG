@@ -141,7 +141,7 @@ void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
 void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
 {
 	StopAnimMontage(AnimMontage);
-	CLog::Print(ActionComp->bCanStopMontagePostAction ? "True" : "Fasle");
+	//CLog::Print(ActionComp->bCanStopMontagePostAction ? "True" : "Fasle");
 	ActionComp->bCanStopMontagePostAction = false;
 	NetMulticastStopAnimMontage(AnimMontage);
 }

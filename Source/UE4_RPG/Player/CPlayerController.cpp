@@ -86,15 +86,6 @@ void ACPlayerController::Tick(float DeltaSeconds)
 	{
 		FVector Location;
 
-		/*if (PlayerCharacter->GetMesh()->GetBoneIndex("Bip001") == INDEX_NONE)
-		{
-			Location = PlayerCharacter->GetActorLocation();
-		}
-		else
-		{		
-			Location = PlayerCharacter->GetMesh()->GetBoneLocation("Bip001");
-		}*/
-
 		Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
 		PlayerCameraActor->SetActorLocation(Location);
@@ -155,6 +146,16 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVe
 {
 	FVector Location;
 	FRotator Rotation = GetControlRotation();
+
+	if (IsLocalController())
+	{
+		UCAction* RunningAction = InNewCharacter->GetActionComponent()->ActiveMontageAction;
+		if (RunningAction && RunningAction->IsRunning())
+		{
+			InNewCharacter->GetActionComponent()->StopActionByName(InNewCharacter, RunningAction->ActionName);
+			InNewCharacter->ServerStopAnimMontage();
+		}
+	}
 	
 	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor, InMode))
 	{
@@ -165,6 +166,7 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVe
 	{
 	case EChangeMode::None:
 		InNewCharacter->GetRootComponent()->ComponentVelocity = CurrentVelocity;
+		//InNewCharacter->GetCharacterMovement()->Velocity = CurrentVelocity;
 		break;
 	case EChangeMode::Action:
 		break;
@@ -208,6 +210,7 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 {
 	if (PlayerCharacter)
 	{
+		OutVelocity = PlayerCharacter->GetCharacterMovement()->Velocity;
 		PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 		
 		switch (InMode)
@@ -260,16 +263,6 @@ void ACPlayerController::ServerUnPossessCharacter_Implementation(FVector OutVelo
 
 void ACPlayerController::NetMulticastUnPossessCharacter_Implementation(EChangeMode InMode)
 {
-	/*for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
-	{
-
-		if (i == PlayerCharacterCurrentIndex) continue; 
-		ACPlayerCharacter* PC = PlayerCharacters[i];
-		if (PC) {
-			PC->SetActorLocation(PlayerCharacter->GetActorLocation());
-			PC->SetActorRotation(PlayerCharacter->GetActorRotation());
-		}
-	}*/
 }
 
 
