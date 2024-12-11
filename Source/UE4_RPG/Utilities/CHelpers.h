@@ -67,4 +67,22 @@ public:
 	{
 		*OutComponent = InActor->CreateDefaultSubobject<T>(InName);
 	}
+
+	template<typename T>
+	static T* ConvertSoftToHardObject(TSoftObjectPtr<T> SoftTexturePtr)
+	{
+		T* Texture = nullptr;
+		// UTexture2D 로드
+		if (SoftTexturePtr.IsValid()) // 이미 로드된 경우
+		{
+			Texture = SoftTexturePtr.Get();
+			
+		}
+		else // 아직 로드되지 않은 경우
+		{
+			Texture = SoftTexturePtr.LoadSynchronous();
+		}
+
+		return Texture;
+	}
 };

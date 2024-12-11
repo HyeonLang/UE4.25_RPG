@@ -49,6 +49,13 @@ void ACPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	AbilitySystemComp->AttributeSet = const_cast<UCPlayerCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>());
+	if (AbilitySystemComp->AttributeSet)
+	{
+		if (AbilitySystemComp->OnAttributeSetFinished.IsBound())
+		{
+			AbilitySystemComp->OnAttributeSetFinished.Broadcast(AbilitySystemComp);
+		}
+	}
 
 	if (WeaponClass)
 	{
@@ -56,6 +63,8 @@ void ACPlayerCharacter::BeginPlay()
 		Weapon->SetOwner(this);
 		Weapon->ActorAttachTo(WeaponSocket);
 	}
+
+	GetActionComponent()->OnActionCreateFinished.AddDynamic(this, &ACPlayerCharacter::OnActionCreateFinished);
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -67,6 +76,16 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 UAbilitySystemComponent* ACPlayerCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComp;
+}
+
+TSoftObjectPtr<UTexture2D> ACPlayerCharacter::GetIcon_Implementation() const
+{
+	return Icon;
+}
+
+void ACPlayerCharacter::SetOwnerController(ACPlayerController* InController)
+{
+	OwnerController = InController;
 }
 
 void ACPlayerCharacter::OnMoveForward(float Axis)
@@ -179,6 +198,20 @@ void ACPlayerCharacter::SetCanMove(bool InNew)
 	CanMoveCount = InNew;
 }
 
+void ACPlayerCharacter::OnActionCreateFinished_Implementation(UCActionComponent* OwningComp)
+{
+	if (OwnerController)
+	{
+		for (int i = 0; i < OwnerController->GetPlayerCharacters().Num(); i++)
+		{
+			if (OwnerController->GetPlayerCharacters()[i]->GetActionComponent() == OwningComp)
+			{
+
+			}
+		}
+	}
+}
+
 void ACPlayerCharacter::OnRep_OnField()
 {
 	
@@ -232,4 +265,5 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
 	//DOREPLIFETIME(ACPlayerCharacter, bCanMove);
 	DOREPLIFETIME(ACPlayerCharacter, bCanJump);
+	DOREPLIFETIME(ACPlayerCharacter, OwnerController);
 }

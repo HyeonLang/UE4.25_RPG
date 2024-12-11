@@ -48,6 +48,8 @@ void ACPlayerController::BeginPlay()
 		TD.BindUFunction(this, "OnSetViewTarget");
 		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
 	}
+
+	
 }
 
 
@@ -125,6 +127,7 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 			//PlayerCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			PlayerCharacter->GetCapsuleComponent()->SetCollisionProfileName("BehindPlayerCharacter");
 			PlayerCharacter->GetMesh()->SetVisibility(false);
+			PlayerCharacter->SetOwnerController(this);
 			AddControlledPlayerCharacter(PlayerCharacter);
 		}
 	}
@@ -414,6 +417,15 @@ void ACPlayerController::OnStartSprint()
 void ACPlayerController::OnStopSprint()
 {
 	PlayerCharacter->StopSprint();
+}
+
+void ACPlayerController::OnActionCreateFinished(UCActionComponent* OwningComp)
+{
+	BindActionWidgets(OwningComp);
+}
+
+void ACPlayerController::BindActionWidgets_Implementation(UCActionComponent* OwningComp)
+{
 }
 
 void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)

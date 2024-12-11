@@ -7,6 +7,7 @@
 #include "Components/CActionComponent.h"
 #include "Components/CAimingComponent.h"
 #include "Character/CEnemyCharacter.h"
+#include "Game/CCooldownManager.h"
 
 UCAction::UCAction()
 {
@@ -17,13 +18,25 @@ UCAction::UCAction()
 
 void UCAction::ActionTick_Implementation(float DeltaTime)
 {
+	if (CooldownManager)
+	{
+		CooldownManager->CooldownTick(DeltaTime);
+		
+	/*	if (ActionDatas.Num() > 0 && ActionDatas[0].Cooldown > 0)
+			CLog::Print(CooldownManager->GetRemainingCooldown(), -1, DeltaTime, FColor::Red);*/
+	}
 }
 
 void UCAction::Initialize()
 {
 	SetActionDatas();
-
+	CooldownManager = NewObject<UCCooldownManager>(this);
 	CurrentComboActionName = ActionName;
+}
+
+TSoftObjectPtr<UTexture2D> UCAction::GetIcon_Implementation() const
+{
+	return Icon;
 }
 
 
@@ -32,6 +45,12 @@ bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 	if (IsRunning())
 	{
 		OutMsg = "IsRunning";
+		return false;
+	}
+
+	if (CooldownManager->IsCooldownActive())
+	{
+		OutMsg = "Cooldown";
 		return false;
 	}
 
@@ -68,12 +87,14 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 	if (Comp->GetOwnerRole() == ROLE_Authority) // 서버라면 서버에서만 실행
 	{
 		TimeStarted = GetWorld()->TimeSeconds; // 시작 시간
+
+		if (ActionDatas.IsValidIndex(ComboIndex))
+			StartCooldown(ActionDatas[ComboIndex].Cooldown);
 	}
 
 	if (Comp->OnActionStarted.IsBound())
 	{
 		Comp->OnActionStarted.Broadcast(Comp, this);
-		Comp->OnActionStarted.Clear();
 	}
 }
 
@@ -105,7 +126,6 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	if (Comp->OnActionStopped.IsBound())
 	{
 		Comp->OnActionStopped.Broadcast(Comp, this);
-		Comp->OnActionStopped.Clear();
 	}
 }
 
@@ -264,6 +284,14 @@ bool UCAction::IsRunning() const
 	return RepData.bIsRunning;
 }
 
+void UCAction::StartCooldown_Implementation(float BaseCooldown)
+{
+	if (FMath::IsNearlyZero(BaseCooldown)) return;
+
+	CooldownManager->StartCooldown(BaseCooldown);
+	// 부모를 제일 마지막에 호출하여 쿨타임 계산후 쿨다운 실행
+}
+
 void UCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -272,4 +300,5 @@ void UCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLi
 	DOREPLIFETIME(UCAction, ActionComp);
 	DOREPLIFETIME(UCAction, ActionDatas);
 	DOREPLIFETIME(UCAction, TimeStarted);
+	DOREPLIFETIME(UCAction, CooldownManager);
 }

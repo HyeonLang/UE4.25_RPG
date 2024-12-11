@@ -87,7 +87,7 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	if (ActionComp)
 	{
-		if (JumpClass)
+		if (JumpClass && ActionComp->GetAction(JumpClass))
 		{
 			if (ActionComp->GetAction(JumpClass)->IsRunning() && CharacterMovementComp->IsWalking())
 			{

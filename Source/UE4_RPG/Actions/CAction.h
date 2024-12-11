@@ -6,11 +6,13 @@
 
 #include "CActionData.h"
 #include "Interfaces/CInitializable.h"
+#include "Interfaces/CIconInterface.h"
 
 #include "CAction.generated.h"
 
 class UCActionComponent;
 class UCActionData;
+class UCCooldownManager;
 
 USTRUCT()
 struct FActionRepData
@@ -27,7 +29,7 @@ public:
 
 
 UCLASS(Blueprintable)
-class UE4_RPG_API UCAction : public UObject, public ICInitializable
+class UE4_RPG_API UCAction : public UObject, public ICInitializable, public ICIconInterface
 {
 	GENERATED_BODY()
 
@@ -40,9 +42,11 @@ public:
 	{
 		return true;
 	}
-
+	
 public:
 	virtual void Initialize() override;
+
+	virtual TSoftObjectPtr<UTexture2D> GetIcon_Implementation() const override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Tick")
 	void ActionTick(float DeltaTime);
@@ -59,6 +63,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* Instigator, FString& OutMsg);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Action")
+	void StartCooldown(float BaseCooldown);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
@@ -88,6 +95,9 @@ public:
 	FORCEINLINE bool GetCanCombo() const { return bCanCombo; }
 
 public:
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = "Cooldown")
+	UCCooldownManager* CooldownManager;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
 
@@ -146,7 +156,6 @@ protected:
 	//Icon
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
 	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
-
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
 	UCActionData* ActionDataAssets;

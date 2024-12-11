@@ -6,7 +6,7 @@
 
 class UAnimMontage;
 class UParticleSystem;
-class ACPlayerChracter;
+class ACPlayerCharacter;
 class UCAction;
 
 USTRUCT(BlueprintType)
@@ -80,6 +80,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	float DamageRange;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	float Cooldown;
 };
 
 UCLASS()

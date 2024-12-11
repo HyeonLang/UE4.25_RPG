@@ -4,8 +4,10 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayTagContainer.h"
+#include "Interfaces/CIconInterface.h"
 #include "CPlayerCharacter.generated.h"
 
+class ACPlayerController;
 class UAnimMontage;
 class UCameraComponent;
 class USpringArmComponent;
@@ -20,7 +22,7 @@ class UCAction;
 
 
 UCLASS()
-class UE4_RPG_API ACPlayerCharacter : public ACharacter, public IAbilitySystemInterface
+class UE4_RPG_API ACPlayerCharacter : public ACharacter, public IAbilitySystemInterface, public ICIconInterface
 {
 	GENERATED_BODY()
 
@@ -37,6 +39,10 @@ public:
 	/** 어빌리티 시스템 컴포넌트를 반환합니다. */
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ IAbilitySystemInterface 끝
+
+	virtual TSoftObjectPtr<UTexture2D> GetIcon_Implementation() const override;
+
+	void SetOwnerController(ACPlayerController* Controller);
 
 	
 public:
@@ -100,6 +106,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(bool InNew);
 
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnActionCreateFinished(UCActionComponent* OwningComp);
+
 public:
 	UPROPERTY()
 	bool IsActiveMontage;
@@ -111,6 +121,9 @@ public:
 	int32 CanMoveCount;
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleDefaultsOnly, Category = "Controller")
+	ACPlayerController* OwnerController;
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAimingComponent* AimingComp;
 
@@ -132,6 +145,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
 	FName WeaponSocket;
 
+	//Icon
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
+
 protected:
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
 	bool bOnField;
@@ -140,7 +157,7 @@ protected:
 	void OnRep_OnField();
 
 
-private:
+protected:
 	FTimerHandle TimerHandle_Cooldown_CharacterChange;
 
 	UPROPERTY(Replicated)

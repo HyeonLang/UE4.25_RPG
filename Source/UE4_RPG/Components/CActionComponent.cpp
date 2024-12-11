@@ -5,6 +5,7 @@
 
 #include "Global.h"
 #include "Actions/CAction.h"
+#include "Game/CCooldownManager.h"
 
 
 DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_TORE);
@@ -18,6 +19,11 @@ UCActionComponent::UCActionComponent()
 	SetIsReplicatedByDefault(true);
 }
 
+void UCActionComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+}
 
 void UCActionComponent::BeginPlay()
 {
@@ -28,9 +34,15 @@ void UCActionComponent::BeginPlay()
 	{
 		for (TSubclassOf<UCAction> ActionClass : DefaultActions)
 		{
-			AddAction(GetOwner(), ActionClass); 
+			AddAction(GetOwner(), ActionClass);
 		}
 	}
+
+	if (OnActionCreateFinished.IsBound())
+	{
+		OnActionCreateFinished.Broadcast(this);
+	}
+
 }
 
 
@@ -58,6 +70,11 @@ bool UCActionComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* B
 		if (Action)
 		{
 			bChangedSomething |= Channel->ReplicateSubobject(Action, *Bunch, *RepFlags);
+
+			if (Action->CooldownManager)
+			{
+				bChangedSomething |= Channel->ReplicateSubobject(Action->CooldownManager, *Bunch, *RepFlags);
+			}
 		}
 	}
 

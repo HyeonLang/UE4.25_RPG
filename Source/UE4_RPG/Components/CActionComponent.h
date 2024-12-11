@@ -8,14 +8,7 @@
 class UCAction;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActionStateChanged, UCActionComponent*, OwningComp, UCAction*, Action);
-
-//UENUM(BlueprintType)
-//enum class EActionType : uint8
-//{
-//	Idle, Dash, Action, Ultimate, Hitted, Stun, Dying, Dead, Max
-//};
-
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActionTypeChanged, EActionType, InPrevType, EActionType, InNewType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActionCreateFinished, UCActionComponent*, OwningComp);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE4_RPG_API UCActionComponent : public UActorComponent
@@ -26,6 +19,7 @@ public:
 	UCActionComponent();
 
 protected:
+	virtual void InitializeComponent() override;
 	virtual void BeginPlay() override;
 
 public:
@@ -69,6 +63,9 @@ protected:
 	void ServerStopAction(AActor* Instigator, FName ActionName);
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FOnActionCreateFinished OnActionCreateFinished;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Montage")
 	bool bCanStopMontagePostAction;
 
@@ -83,6 +80,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	UCAction* ActiveMontageAction;
+
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")

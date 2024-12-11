@@ -11,6 +11,7 @@ class UCPlayerAttributeComponent;
 class USceneComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class UCActionComponent;
 
 
 UENUM(BlueprintType)
@@ -35,11 +36,17 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE TArray<TSubclassOf<ACPlayerCharacter>> GetCharacterClasses() { return CharacterClasses; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE int32 GetMaxPlayerCharacterCount() { return MaxPlayerCharacterCount; }
-	FORCEINLINE const TArray<TSubclassOf<ACPlayerCharacter>> GetCharacterClasses() { return CharacterClasses; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE TArray<ACPlayerCharacter*>& GetPlayerCharacters() { return PlayerCharacters; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE ACPlayerCharacter* GetPlayerCharacter() { return PlayerCharacter; }
-	FORCEINLINE const int32 GetPlayerCharacterCurrentIndex() { return PlayerCharacterCurrentIndex; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE int32 GetPlayerCharacterCurrentIndex() { return PlayerCharacterCurrentIndex; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() { return PlayerCameraActor; }
 	
 
@@ -103,6 +110,16 @@ private:
 	void OnStartSprint();
 	void OnStopSprint();
 
+// Widget Create
+	UFUNCTION()
+	void OnActionCreateFinished(UCActionComponent* OwningComp);
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void BindActionWidgets(UCActionComponent* OwningComp);
+
+
+
 private:
 	void ChangePlayerCharacter(uint32 InIndex);
 
@@ -118,6 +135,10 @@ protected:
 public:
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() const { return PlayerCameraActor; }
 
+public:
+	UPROPERTY(Replicated, VisibleAnywhere)
+	ACPlayerCameraActor* PlayerCameraActor;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	int32 MaxPlayerCharacterCount;
@@ -131,9 +152,8 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	UCPlayerAttributeComponent* PlayerAttributeComp;
 
-public:
-	UPROPERTY(Replicated, VisibleAnywhere)
-	ACPlayerCameraActor* PlayerCameraActor;
+	
+
 
 private:
 	UPROPERTY(Replicated, VisibleAnywhere)

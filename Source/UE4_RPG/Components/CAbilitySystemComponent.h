@@ -10,6 +10,8 @@ class UCCharacterAttributeSet;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatorActor, class UCAbilitySystemComponent*, OwningComp, float, NewValue, float, Delta);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeSetFinished,  UCAbilitySystemComponent*, AbilitySystemComponent);
+ 
 UCLASS()
 class UE4_RPG_API UCAbilitySystemComponent : public UAbilitySystemComponent
 {
@@ -45,6 +47,9 @@ public:
 
 	//UFUNCTION(BlueprintCallable, Category = "Cheat")
 	//	bool Kill(AActor* InstigatorActor);
+
+public:
+	FOnAttributeSetFinished OnAttributeSetFinished;
 
 public:
 	UPROPERTY(BlueprintAssignable)
