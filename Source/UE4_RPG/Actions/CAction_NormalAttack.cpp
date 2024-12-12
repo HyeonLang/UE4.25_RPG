@@ -38,9 +38,13 @@ void UCAction_NormalAttack::StartAction_Implementation(AActor* Instigator)
 
 void UCAction_NormalAttack::StopAction_Implementation(AActor* Instigator)
 {
-	Super::StopAction_Implementation(Instigator);
-
+	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+	if (InstigatorCharacter->GetWeapon())
+	{
+		InstigatorCharacter->GetWeapon()->OffCollision();
+	}
 	
+	Super::StopAction_Implementation(Instigator);
 }
 
 void UCAction_NormalAttack::OnRep_Target()

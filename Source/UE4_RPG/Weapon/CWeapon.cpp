@@ -5,6 +5,8 @@
 #include "Global.h"
 #include "Character/CPlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/CActionComponent.h"
+#include "Actions/CAction.h"
 
 // Sets default values
 ACWeapon::ACWeapon()
@@ -23,6 +25,9 @@ ACWeapon::ACWeapon()
 	CapsuleComp->SetRelativeRotation(FRotator(90, 0, 0));
 	CapsuleComp->SetCapsuleHalfHeight(90.f);
 
+	InstigateAction = nullptr;
+	AttackIndex = 0;
+
 	SetReplicates(true);
 	SetReplicateMovement(true);
 }
@@ -34,6 +39,9 @@ void ACWeapon::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	SkeletalMeshComp->SetVisibility(false);
+	
+	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ACWeapon::OnActorBeginOverlap);
+	CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &ACWeapon::OnActorEndOverlap);
 
 	//OffCollision();
 }
@@ -45,14 +53,54 @@ void ACWeapon::Tick(float DeltaTime)
 
 }
 
-void ACWeapon::OnCollision()
+void ACWeapon::OnCollision(UCAction* NewAction, int32 NewAttackIndex)
 {
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	if (NewAction)
+	{
+		InstigateAction = NewAction;
+		AttackIndex = NewAttackIndex;
+	}
 }
 
 void ACWeapon::OffCollision()
 {
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	InstigateAction = nullptr;
+	AttackIndex = 0;
+	OverlappedActors.Empty();
+}
+
+bool ACWeapon::IsOverlappedActor(AActor* TargetActor)
+{
+	if (OverlappedActors.Find(TargetActor) == -1)
+	{
+		return true;
+	}
+	return false;
+}
+
+void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (InstigateAction)
+	{
+		ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(InstigateAction->GetOwningComponent()->GetOwner());
+		if (PlayerCharacter)
+		{
+			InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+		}
+	}
+
+	OverlappedActors.AddUnique(OtherActor);
+}
+
+void ACWeapon::OnActorEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	int32 Index = OverlappedActors.Find(OtherActor);
+	if (Index != INDEX_NONE)
+	{
+		OverlappedActors.Remove(OtherActor);
+	}
 }
 
 void ACWeapon::OnEquip_Implementation()

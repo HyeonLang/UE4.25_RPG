@@ -279,10 +279,15 @@ void UCAction::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, in
 {
 }
 
+void UCAction::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex = 0)
+{
+}
+
 bool UCAction::IsRunning() const
 {
 	return RepData.bIsRunning;
 }
+
 
 void UCAction::StartCooldown_Implementation(float BaseCooldown)
 {

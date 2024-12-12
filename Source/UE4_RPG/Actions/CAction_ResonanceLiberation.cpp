@@ -86,8 +86,14 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 
 void UCAction_ResonanceLiberation::StopAction_Implementation(AActor* Instigator)
 {
-	Super::StopAction_Implementation(Instigator);
+
+	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+	if (InstigatorCharacter->GetWeapon())
+	{
+		InstigatorCharacter->GetWeapon()->OffCollision();
+	}
 	
+	Super::StopAction_Implementation(Instigator);
 }
 
 void UCAction_ResonanceLiberation::SetPlayingCameraOffset(FVector NewOffset)
