@@ -7,6 +7,8 @@
 class USceneComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class UPaperSpriteComponent;
+
 
 UCLASS()
 class UE4_RPG_API ACPlayerCameraActor : public AActor

@@ -5,14 +5,24 @@
 #include "Components/SceneCaptureComponent2D.h"
 #include "Components/SceneComponent.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "PaperSpriteComponent.h"
+
 
 
 ACMinimapCameraActor::ACMinimapCameraActor()
 {
 	CHelpers::CreateSceneComponent(this, &SceneComp, "SceneComp", RootComponent);
+	CHelpers::CreateSceneComponent(this, &PlayerMarkerSpriteComp, "PlayerMarkerSpriteComp", RootComponent);
 	CHelpers::CreateSceneComponent(this, &SpringArmComp, "SpringArmComp", SceneComp);
 	CHelpers::CreateSceneComponent(this, &SceneCaptureComp, "SceneCaptureComp", SpringArmComp);
 	CHelpers::CreateSceneComponent(this, &DepthCaptureComp, "DepthCaptureComp", SpringArmComp);
+
+	PlayerMarkerSpriteComp->SetRenderCustomDepth(false);
+	PlayerMarkerSpriteComp->SetRenderCustomDepth(true);
+	PlayerMarkerSpriteComp->CustomDepthStencilValue = 254;
+	PlayerMarkerSpriteComp->bOwnerNoSee = true;
+	PlayerMarkerSpriteComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 
 	//-> SpringArmComp
 	SpringArmComp->TargetArmLength = 1000.0f;
@@ -26,14 +36,16 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	SceneCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
 	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
 	SceneCaptureComp->OrthoWidth = 3072;
-	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_BaseColor;
+	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneColorSceneDepth;
 	SceneCaptureComp->ShowFlags.SetSkeletalMeshes(false);
 	SceneCaptureComp->ShowFlags.SetParticles(false);
+
 	SceneCaptureComp->ShowFlags.SetDynamicShadows(false);
 	SceneCaptureComp->ShowFlags.SetCollisionPawn(false);
 	SceneCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
 	SceneCaptureComp->ShowFlags.SetSkyLighting(false);
 	SceneCaptureComp->ShowFlags.SetWidgetComponents(false);
+	SceneCaptureComp->ShowFlags.SetSingleFlag(FEngineShowFlags::EShowFlag::SF_ContactShadows, false);
 
 	//카메라 투영 타입을 직교로 전환하여 거리감이 없는 이미지로 구현
 	DepthCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
@@ -46,8 +58,6 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	DepthCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
 	DepthCaptureComp->ShowFlags.SetSkyLighting(false);
 	DepthCaptureComp->ShowFlags.SetWidgetComponents(false);
-
-
 	
 	//ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> MinimapRenderTarget2D(TEXT("/Game/Materials/T_MinimapRenderTarget2D"));
 	////CHelpers::GetAsset(&MinimapRenderTarget2D, TEXT("/Game/Materials/T_MinimapRenderTarget2D"));
@@ -67,6 +77,7 @@ void ACMinimapCameraActor::BeginPlay()
 void ACMinimapCameraActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	SceneCaptureComp->CaptureScene();
 }
 
 void ACMinimapCameraActor::CreateMiniMapRenderTarget()

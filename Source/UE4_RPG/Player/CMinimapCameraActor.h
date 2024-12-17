@@ -10,6 +10,8 @@ class USceneCaptureComponent2D;
 class USpringArmComponent;
 class ACPlayerController;
 class UTextureRenderTarget2D;
+class UPaperSpriteComponent;
+
 
 UCLASS()
 class UE4_RPG_API ACMinimapCameraActor : public AActor
@@ -41,6 +43,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	USceneCaptureComponent2D* DepthCaptureComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UPaperSpriteComponent* PlayerMarkerSpriteComp;
 
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")

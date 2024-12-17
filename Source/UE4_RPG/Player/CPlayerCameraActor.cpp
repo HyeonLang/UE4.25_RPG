@@ -4,12 +4,15 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SceneComponent.h"
+#include "PaperSpriteComponent.h"
 
 ACPlayerCameraActor::ACPlayerCameraActor()
 {
 	CHelpers::CreateSceneComponent(this, &SceneComp, "SceneComp", RootComponent);
+	
 	CHelpers::CreateSceneComponent(this, &SpringArmComp, "SpringArmComp", SceneComp);
 	CHelpers::CreateSceneComponent(this, &CameraComp, "CameraComp", SpringArmComp);
+	
 
 	//-> SpringArmComp
 	SpringArmComp->TargetArmLength = 450.0f;

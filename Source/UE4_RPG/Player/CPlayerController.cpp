@@ -151,7 +151,7 @@ void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
 	if (ensure(PlayerCameraActorClass))
 	{
 
-		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform);
+		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform, this);
 		PlayerCameraActor->FinishSpawning(StartTransform);
 		SetViewTarget(PlayerCameraActor);
 	}

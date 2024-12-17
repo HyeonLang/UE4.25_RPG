@@ -17,7 +17,8 @@ public class UE4_RPG : ModuleRules
 			"InputCore",
 			"GameplayAbilities",
 			"GameplayTasks",
-			"GameplayTags"
+			"GameplayTags",
+			"Paper2D"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
