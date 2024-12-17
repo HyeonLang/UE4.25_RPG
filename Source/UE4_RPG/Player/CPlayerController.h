@@ -7,6 +7,7 @@
 class ACharacter;
 class ACPlayerCharacter;
 class ACPlayerCameraActor;
+class ACMinimapCameraActor;
 class UCPlayerAttributeComponent;
 class USceneComponent;
 class UCameraComponent;
@@ -136,8 +137,11 @@ public:
 	FORCEINLINE ACPlayerCameraActor* GetPlayerCameraActor() const { return PlayerCameraActor; }
 
 public:
-	UPROPERTY(Replicated, VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere)
 	ACPlayerCameraActor* PlayerCameraActor;
+
+	//UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	//ACMinimapCameraActor* MinimapCameraActor;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
@@ -148,6 +152,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "PlayerCameraActor")
 	TSubclassOf<ACPlayerCameraActor> PlayerCameraActorClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayerCameraActor")
+	TSubclassOf<ACMinimapCameraActor> MinimapCameraActorClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	UCPlayerAttributeComponent* PlayerAttributeComp;

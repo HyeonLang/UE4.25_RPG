@@ -7,8 +7,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayTagContainer.h"
 #include "Net/UnrealNetwork.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "../Character/CPlayerCharacter.h"
 #include "CPlayerCameraActor.h"
+#include "CMinimapCameraActor.h"
 #include "../Components/CPlayerAttributeComponent.h"
 #include "../Global.h"
 #include "../Components/CAimingComponent.h"
@@ -39,7 +41,6 @@ ACPlayerController::ACPlayerController()
 void ACPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
 	if (PlayerCameraActor && IsLocalController())
 	{
@@ -49,7 +50,11 @@ void ACPlayerController::BeginPlay()
 		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
 	}
 
-	
+	/*if (ensure(MinimapCameraActorClass) && IsLocalController())
+	{
+		MinimapCameraActor = GetWorld()->SpawnActorDeferred<ACMinimapCameraActor>(MinimapCameraActorClass, FTransform(), this);
+		MinimapCameraActor->FinishSpawning(FTransform());
+	}*/
 }
 
 
@@ -84,16 +89,24 @@ void ACPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (PlayerCharacter && PlayerCharacter->HasAuthority())
+	if (PlayerCharacter)
 	{
 		FVector Location;
 
 		Location = PlayerCharacter->GetActorLocation();
 		Location.Z += 95.f;
-		PlayerCameraActor->SetActorLocation(Location);
 		
-	}
+		if (PlayerCharacter->HasAuthority() && PlayerCameraActor)
+		{
+			PlayerCameraActor->SetActorLocation(Location);
+		}
 
+		/*if (MinimapCameraActor)
+		{
+			MinimapCameraActor->SetActorLocation(Location);
+			CLog::Print(MinimapCameraActor->GetActorLocation(), -1, DeltaSeconds);
+		}*/
+	}
 }
 
 void ACPlayerController::SetPlayerCharacterCurrentIndex(int32 InIndex)
@@ -135,14 +148,14 @@ void ACPlayerController::SpawnPlayerCharacter(FTransform StartTransform)
 
 void ACPlayerController::SpawnCameraActor(FTransform StartTransform)
 {
-	if (PlayerCameraActorClass)
+	if (ensure(PlayerCameraActorClass))
 	{
 
 		PlayerCameraActor = GetWorld()->SpawnActorDeferred<ACPlayerCameraActor>(PlayerCameraActorClass, StartTransform);
 		PlayerCameraActor->FinishSpawning(StartTransform);
-
 		SetViewTarget(PlayerCameraActor);
 	}
+	
 }
 
 void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVector CurrentVelocity, EChangeMode InMode)
@@ -495,5 +508,6 @@ void ACPlayerController::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 	DOREPLIFETIME(ACPlayerController, PlayerCharacter);
 	DOREPLIFETIME(ACPlayerController, PlayerCharacters);
 	DOREPLIFETIME(ACPlayerController, PlayerCameraActor);
+	//DOREPLIFETIME(ACPlayerController, MinimapCameraActor);
 	DOREPLIFETIME(ACPlayerController, PlayerCharacterCurrentIndex);
 }
