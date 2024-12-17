@@ -17,9 +17,7 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	CHelpers::CreateSceneComponent(this, &SceneCaptureComp, "SceneCaptureComp", SpringArmComp);
 	CHelpers::CreateSceneComponent(this, &DepthCaptureComp, "DepthCaptureComp", SpringArmComp);
 
-	PlayerMarkerSpriteComp->SetRenderCustomDepth(false);
-	PlayerMarkerSpriteComp->SetRenderCustomDepth(true);
-	PlayerMarkerSpriteComp->CustomDepthStencilValue = 254;
+	
 	PlayerMarkerSpriteComp->bOwnerNoSee = true;
 	PlayerMarkerSpriteComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -36,10 +34,10 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	SceneCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
 	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
 	SceneCaptureComp->OrthoWidth = 3072;
+
 	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneColorSceneDepth;
 	SceneCaptureComp->ShowFlags.SetSkeletalMeshes(false);
 	SceneCaptureComp->ShowFlags.SetParticles(false);
-
 	SceneCaptureComp->ShowFlags.SetDynamicShadows(false);
 	SceneCaptureComp->ShowFlags.SetCollisionPawn(false);
 	SceneCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
