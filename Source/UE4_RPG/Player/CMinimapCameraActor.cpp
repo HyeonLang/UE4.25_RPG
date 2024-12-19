@@ -31,31 +31,33 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	SpringArmComp->bInheritYaw = false;
 
 	//카메라 투영 타입을 직교로 전환하여 거리감이 없는 이미지로 구현
-	SceneCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
-	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
-	SceneCaptureComp->OrthoWidth = 3072;
-
-	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneColorSceneDepth;
-	SceneCaptureComp->ShowFlags.SetSkeletalMeshes(false);
-	SceneCaptureComp->ShowFlags.SetParticles(false);
-	SceneCaptureComp->ShowFlags.SetDynamicShadows(false);
-	SceneCaptureComp->ShowFlags.SetCollisionPawn(false);
-	SceneCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
-	SceneCaptureComp->ShowFlags.SetSkyLighting(false);
-	SceneCaptureComp->ShowFlags.SetWidgetComponents(false);
-	SceneCaptureComp->ShowFlags.SetSingleFlag(FEngineShowFlags::EShowFlag::SF_ContactShadows, false);
-
-	//카메라 투영 타입을 직교로 전환하여 거리감이 없는 이미지로 구현
 	DepthCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
 	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
 	DepthCaptureComp->OrthoWidth = 3072;
-	DepthCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneDepth;
+
+	DepthCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneColorSceneDepth;
 	DepthCaptureComp->ShowFlags.SetSkeletalMeshes(false);
+	DepthCaptureComp->ShowFlags.SetStaticMeshes(false);
+	DepthCaptureComp->ShowFlags.SetCollision(false);
 	DepthCaptureComp->ShowFlags.SetParticles(false);
+	DepthCaptureComp->ShowFlags.SetDynamicShadows(false);
 	DepthCaptureComp->ShowFlags.SetCollisionPawn(false);
 	DepthCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
 	DepthCaptureComp->ShowFlags.SetSkyLighting(false);
 	DepthCaptureComp->ShowFlags.SetWidgetComponents(false);
+	DepthCaptureComp->ShowFlags.SetSingleFlag(FEngineShowFlags::EShowFlag::SF_ContactShadows, false);
+
+	//카메라 투영 타입을 직교로 전환하여 거리감이 없는 이미지로 구현
+	SceneCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
+	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
+	SceneCaptureComp->OrthoWidth = 3072;
+	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_BaseColor;
+	SceneCaptureComp->ShowFlags.SetSkeletalMeshes(false);
+	SceneCaptureComp->ShowFlags.SetParticles(false);
+	SceneCaptureComp->ShowFlags.SetCollisionPawn(false);
+	SceneCaptureComp->ShowFlags.SetPostProcessing(true);   // 포스트 프로세싱 활성화 
+	SceneCaptureComp->ShowFlags.SetSkyLighting(false);
+	SceneCaptureComp->ShowFlags.SetWidgetComponents(false);
 	
 	//ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> MinimapRenderTarget2D(TEXT("/Game/Materials/T_MinimapRenderTarget2D"));
 	////CHelpers::GetAsset(&MinimapRenderTarget2D, TEXT("/Game/Materials/T_MinimapRenderTarget2D"));
