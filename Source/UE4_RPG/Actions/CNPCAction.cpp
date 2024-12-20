@@ -10,31 +10,17 @@
 
 UCNPCAction::UCNPCAction()
 {
-	ComboIndex = 0;
 }
 
 void UCNPCAction::Initialize()
 {
-	SetNPCActionDatas();
-	CooldownManager = NewObject<UCCooldownManager>(this);
-	CurrentComboNPCActionName = NPCActionName;
-}
-
-TSoftObjectPtr<UTexture2D> UCNPCAction::GetIcon_Implementation() const
-{
-	return Icon;
-}
-
-void UCNPCAction::NPCActionTick_Implementation(float DeltaTime)
-{
-	if (CooldownManager)
-	{
-		CooldownManager->CooldownTick(DeltaTime);
-	}
+	Super::Initialize();
 }
 
 bool UCNPCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 {
+	Super::CanStart_Implementation(Instigator, OutMsg);
+
 	if (IsRunning())
 	{
 		OutMsg = "IsRunning";
@@ -58,8 +44,10 @@ bool UCNPCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 	return true;
 }
 
-void UCNPCAction::StartNPCAction_Implementation(AActor* Instigator)
+void UCNPCAction::StartAction_Implementation(AActor* Instigator)
 {
+	Super::StartAction_Implementation(Instigator);
+
 	UE_LOG(LogTemp, Log, TEXT("Started : %s"), *GetNameSafe(this));
 
 	UCNPCActionComponent* Comp = GetOwningComponent();
@@ -70,17 +58,17 @@ void UCNPCAction::StartNPCAction_Implementation(AActor* Instigator)
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
 
-	if (Character && NPCActionDatas.IsValidIndex(ComboIndex) && NPCActionDatas[ComboIndex].MontageDatas.IsValidIndex(0))
+	if (Character && ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0))
 	{
-		Comp->bCanStopMontagePostNPCAction = NPCActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
+		Comp->bCanStopMontagePostNPCAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
 	}
 
 	if (Comp->GetOwnerRole() == ROLE_Authority) // 서버라면 서버에서만 실행
 	{
 		TimeStarted = GetWorld()->TimeSeconds; // 시작 시간
 
-		if (NPCActionDatas.IsValidIndex(ComboIndex)) // 쿨다운 실행
-			StartCooldown(NPCActionDatas[ComboIndex].Cooldown);
+		if (ActionDatas.IsValidIndex(ComboIndex)) // 쿨다운 실행
+			StartCooldown(ActionDatas[ComboIndex].Cooldown);
 	}
 
 	if (Comp->OnNPCActionStarted.IsBound())
@@ -89,7 +77,7 @@ void UCNPCAction::StartNPCAction_Implementation(AActor* Instigator)
 	}
 }
 
-void UCNPCAction::StopNPCAction_Implementation(AActor* Instigator)
+void UCNPCAction::StopAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Stopped : %s"), *GetNameSafe(this));
 
@@ -107,61 +95,29 @@ void UCNPCAction::StopNPCAction_Implementation(AActor* Instigator)
 	{
 		Comp->OnNPCActionStopped.Broadcast(Comp, this);
 	}
+
+	Super::StopAction_Implementation(Instigator);
 }
 
-void UCNPCAction::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, int32 AttackIndex)
-{
-}
 
-void UCNPCAction::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex)
-{
-}
-
-void UCNPCAction::StartCooldown_Implementation(float BaseCooldown)
-{
-	if (FMath::IsNearlyZero(BaseCooldown)) return;
-
-	CooldownManager->StartCooldown(BaseCooldown);
-	// 부모를 제일 마지막에 호출하여 쿨타임 계산후 쿨다운 실행
-}
-
-bool UCNPCAction::IsRunning() const
-{
-	return RepData.bIsRunning;
-}
 
 void UCNPCAction::SetOwningComponent(UCNPCActionComponent* NewNPCActionComp)
 {
 	NPCActionComp = NewNPCActionComp;
 }
 
-void UCNPCAction::SetNPCActionDatas()
-{
-	if (NPCActionDataAssets)
-	{
-		NPCActionDataAssets->BeginPlay(this, NPCActionDatas);
-	}
-}
-
-UWorld* UCNPCAction::GetWorld() const
-{
-	AActor* Actor = Cast<AActor>(GetOuter());
-	if (Actor)
-	{
-		return Actor->GetWorld();
-	}
-
-	return nullptr;
-}
-
 bool UCNPCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
-	return false;
+	bool Result = Super::GetAimTargetDirection_Implementation(OutDirection, OutTarget, InIsBossMode);
+
+	return Result;
 }
 
 bool UCNPCAction::SetAimTargetLocation_Implementation(AActor* InTarget, const bool InIsBossMode)
 {
-	return false;
+	bool Result = Super::SetAimTargetLocation_Implementation(InTarget, InIsBossMode);
+
+	return Result;
 }
 
 UCNPCActionComponent* UCNPCAction::GetOwningComponent() const
@@ -169,13 +125,15 @@ UCNPCActionComponent* UCNPCAction::GetOwningComponent() const
 	return NPCActionComp;
 }
 
-void UCNPCAction::PlayMontageDataNPCAction_Implementation(FActionMontageData MontageData, ACharacter* Instigator, bool bBindEndedDelegate)
+void UCNPCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageData, ACharacter* Instigator, bool bBindEndedDelegate)
 {
+	Super::PlayMontageDataAction_Implementation(MontageData, Instigator, bBindEndedDelegate);
+
 	if (!ensure(MontageData.AnimMontage)) return;
 
 	if (GetOwningComponent()->ActiveMontageNPCAction && GetOwningComponent()->ActiveMontageNPCAction->IsRunning() && GetOwningComponent()->ActiveMontageNPCAction != this)
 	{
-		GetOwningComponent()->ActiveMontageNPCAction->InterruptedNPCAction();
+		GetOwningComponent()->ActiveMontageNPCAction->InterruptedAction();
 	}
 
 	GetOwningComponent()->ActiveMontageNPCAction = this;
@@ -188,13 +146,15 @@ void UCNPCAction::PlayMontageDataNPCAction_Implementation(FActionMontageData Mon
 	);
 }
 
-void UCNPCAction::PlayMontageNPCAction_Implementation(UAnimMontage* Montage, ACharacter* Instigator, bool bBindEndedDelegate)
+void UCNPCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACharacter* Instigator, bool bBindEndedDelegate)
 {
+	Super::PlayMontageAction_Implementation(Montage, Instigator, bBindEndedDelegate);
+
 	if (!ensure(Montage)) return;
 
 	if (GetOwningComponent()->ActiveMontageNPCAction && GetOwningComponent()->ActiveMontageNPCAction->IsRunning() && GetOwningComponent()->ActiveMontageNPCAction != this)
 	{
-		GetOwningComponent()->ActiveMontageNPCAction->InterruptedNPCAction();
+		GetOwningComponent()->ActiveMontageNPCAction->InterruptedAction();
 	}
 
 	GetOwningComponent()->ActiveMontageNPCAction = this;
@@ -205,17 +165,21 @@ void UCNPCAction::PlayMontageNPCAction_Implementation(UAnimMontage* Montage, ACh
 	);
 }
 
-void UCNPCAction::InterruptedNPCAction_Implementation()
+void UCNPCAction::InterruptedAction_Implementation()
 {
 	UCNPCActionComponent* Comp = GetOwningComponent();
 	if (Comp)
 	{
-		StopNPCAction(Comp->GetOwner());
+		StopAction(Comp->GetOwner());
 	}
+
+	Super::InterruptedAction_Implementation();
 }
 
 void UCNPCAction::BindOnMontageEndDelegate_Implementation(UAnimMontage* Montage, ACharacter* Instigator)
 {
+	Super::BindOnMontageEndDelegate_Implementation(Montage, Instigator);
+
 	FOnMontageEnded OnMontageEndedDelegate;
 
 	OnMontageEndedDelegate.BindUFunction(this, FName("OnMontageEnd"));
@@ -232,23 +196,7 @@ void UCNPCAction::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 	UCNPCActionComponent* Comp = GetOwningComponent();
 	if (Comp)
 	{
-		StopNPCAction(Comp->GetOwner());
-	}
-}
-
-
-// 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
-void UCNPCAction::OnRep_RepData()
-{
-	if (RepData.bIsRunning)
-	{
-		// 로컬 인스티게이터가 아닌 서버 인스티게이터를 넘겨야함
-		// 서버에서 StartAction내의 인스티게이터를 넣어준것을 다시 로컬에 넘겨줌
-		StartNPCAction(RepData.Instigator);
-	}
-	else
-	{
-		StopNPCAction(RepData.Instigator);
+		StopAction(Comp->GetOwner());
 	}
 }
 
@@ -256,9 +204,5 @@ void UCNPCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UCNPCAction, RepData);
 	DOREPLIFETIME(UCNPCAction, NPCActionComp);
-	DOREPLIFETIME(UCNPCAction, NPCActionDatas);
-	DOREPLIFETIME(UCNPCAction, TimeStarted);
-	DOREPLIFETIME(UCNPCAction, CooldownManager);
 }

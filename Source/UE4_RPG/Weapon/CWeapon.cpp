@@ -4,9 +4,12 @@
 #include "CWeapon.h"
 #include "Global.h"
 #include "Character/CPlayerCharacter.h"
+#include "Character/CEnemyCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CActionComponent.h"
+#include "Components/CNPCActionComponent.h"
 #include "Actions/CAction.h"
+#include "Actions/CNPCAction.h"
 
 // Sets default values
 ACWeapon::ACWeapon()
@@ -15,9 +18,9 @@ ACWeapon::ACWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CHelpers::CreateSceneComponent(this, &RootComp, "RootComp");
-	CHelpers::CreateActorComponent(this, &SkeletalMeshComp, "SkeletalMeshComp");
-	SkeletalMeshComp->AttachToComponent(RootComp, FAttachmentTransformRules::KeepRelativeTransform);
 	CHelpers::CreateSceneComponent(this, &CapsuleComp, "CapsuleComp", RootComp);
+	CHelpers::CreateActorComponent(this, &SkeletalMeshComp, "SkeletalMeshComp");
+	SkeletalMeshComp->AttachToComponent(CapsuleComp, FAttachmentTransformRules::KeepRelativeTransform);
 	CHelpers::CreateSceneComponent(this, &MidComp, "MidComp", RootComp);
 	CHelpers::CreateSceneComponent(this, &StartComp, "StartComp", RootComp);
 
@@ -30,6 +33,8 @@ ACWeapon::ACWeapon()
 
 	SetReplicates(true);
 	SetReplicateMovement(true);
+
+	bAlwaysEquip = false;
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +48,10 @@ void ACWeapon::BeginPlay()
 	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ACWeapon::OnActorBeginOverlap);
 	CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &ACWeapon::OnActorEndOverlap);
 
+	if (bAlwaysEquip)
+	{
+		OnEquip();
+	}
 	//OffCollision();
 }
 
@@ -53,7 +62,7 @@ void ACWeapon::Tick(float DeltaTime)
 
 }
 
-void ACWeapon::OnCollision(UCAction* NewAction, int32 NewAttackIndex)
+void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 {
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	if (NewAction)
@@ -84,10 +93,25 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	if (InstigateAction)
 	{
-		ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(InstigateAction->GetOwningComponent()->GetOwner());
-		if (PlayerCharacter)
+		// 플레이어인 경우
+		UCAction* Action = Cast<UCAction>(InstigateAction);
+		if (Action)
 		{
-			InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+			ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Action->GetOwningComponent()->GetOwner());
+			if (PlayerCharacter)
+			{
+				InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+			}
+		}
+
+		UCNPCAction* NPCAction = Cast<UCNPCAction>(InstigateAction);
+		if (NPCAction)
+		{
+			ACEnemyCharacter* EnemyCharacter = Cast<ACEnemyCharacter>(NPCAction->GetOwningComponent()->GetOwner());
+			if (EnemyCharacter)
+			{
+				InstigateAction->Attack_ElapsedByOverlapEvent(EnemyCharacter, this, SweepResult, AttackIndex);
+			}
 		}
 	}
 
@@ -114,6 +138,8 @@ void ACWeapon::OnEquip_Implementation()
 
 void ACWeapon::OnUnequip_Implementation()
 {
+	if (bAlwaysEquip) return;
+
 	if (ensure(SkeletalMeshComp))
 	{
 		SkeletalMeshComp->SetVisibility(false);

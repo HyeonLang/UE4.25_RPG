@@ -50,7 +50,7 @@ void UCNPCActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	for (UCNPCAction* NPCAction : NPCActions)
 	{
 		if (NPCAction)
-			NPCAction->NPCActionTick(DeltaTime);
+			NPCAction->ActionTick(DeltaTime);
 	}
 }
 
@@ -99,7 +99,7 @@ void UCNPCActionComponent::AddNPCAction(AActor* Instigator, TSubclassOf<UCNPCAct
 		FString msg;
 		if (NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator, msg)))
 		{
-			NewAction->StartNPCAction(Instigator);
+			NewAction->StartAction(Instigator);
 		}
 	}
 }
@@ -121,7 +121,7 @@ UCNPCAction* UCNPCActionComponent::GetNPCActionByName(FName InNPCActionName) con
 {
 	for (UCNPCAction* NPCAction : NPCActions)
 	{
-		if (NPCAction && NPCAction->NPCActionName == InNPCActionName)
+		if (NPCAction && NPCAction->ActionName == InNPCActionName)
 		{
 			return NPCAction;
 		}
@@ -147,7 +147,7 @@ bool UCNPCActionComponent::StartNPCActionByName(AActor* Instigator, FName NPCAct
 
 	for (UCNPCAction* NPCAction : NPCActions)
 	{
-		if (NPCAction && NPCAction->NPCActionName == NPCActionName)
+		if (NPCAction && NPCAction->ActionName == NPCActionName)
 		{
 
 
@@ -170,7 +170,7 @@ bool UCNPCActionComponent::StartNPCActionByName(AActor* Instigator, FName NPCAct
 			TRACE_BOOKMARK(TEXT("StartNPCAction::%s"), *GetNameSafe(NPCAction));
 
 			{
-				NPCAction->StartNPCAction(Instigator);
+				NPCAction->StartAction(Instigator);
 
 				SCOPED_NAMED_EVENT_FSTRING(NPCAction->GetClass()->GetName(), FColor::White);
 			}
@@ -193,7 +193,7 @@ bool UCNPCActionComponent::StopNPCActionByName(AActor* Instigator, FName NPCActi
 {
 	for (UCNPCAction* NPCAction : NPCActions)
 	{
-		if (NPCAction && NPCAction->NPCActionName == NPCActionName)
+		if (NPCAction && NPCAction->ActionName == NPCActionName)
 		{
 			if (NPCAction->IsRunning())
 			{
@@ -204,7 +204,7 @@ bool UCNPCActionComponent::StopNPCActionByName(AActor* Instigator, FName NPCActi
 					ServerStopNPCAction(Instigator, NPCActionName);
 				}
 
-				NPCAction->StopNPCAction(Instigator);
+				NPCAction->StopAction(Instigator);
 				return true;
 			}
 		}

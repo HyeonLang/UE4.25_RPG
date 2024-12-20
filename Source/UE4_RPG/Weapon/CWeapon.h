@@ -6,7 +6,7 @@
 
 class ACharacter;
 class UCapsuleComponent;
-class UCAction;
+class UCActionBase;
 
 UCLASS()
 class UE4_RPG_API ACWeapon : public AActor
@@ -37,7 +37,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void OnCollision(UCAction* NewAction = nullptr, int32 NewAttackIndex = 0);
+	void OnCollision(UCActionBase* NewAction = nullptr, int32 NewAttackIndex = 0);
 
 	UFUNCTION(BlueprintCallable)
 	void OffCollision();
@@ -56,14 +56,21 @@ protected:
 public:
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* MidComp;
+
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* StartComp;
+
 	UPROPERTY(BlueprintReadWrite)
 	TArray<AActor*> OverlappedActors;
+
 	UPROPERTY(BlueprintReadWrite)
-	UCAction* InstigateAction;
+	UCActionBase* InstigateAction;
+
 	UPROPERTY(BlueprintReadWrite)
 	int32 AttackIndex;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bAlwaysEquip;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly)

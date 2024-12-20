@@ -11,37 +11,18 @@
 
 UCAction::UCAction()
 {
-	ComboIndex = 0;
 	bCanCombo = false;
 }
 
 void UCAction::Initialize()
 {
-	SetActionDatas();
-	CooldownManager = NewObject<UCCooldownManager>(this);
-	CurrentComboActionName = ActionName;
+	Super::Initialize();
 }
-
-TSoftObjectPtr<UTexture2D> UCAction::GetIcon_Implementation() const
-{
-	return Icon;
-}
-
-
-void UCAction::ActionTick_Implementation(float DeltaTime)
-{
-	if (CooldownManager)
-	{
-		CooldownManager->CooldownTick(DeltaTime);
-
-		/*	if (ActionDatas.Num() > 0 && ActionDatas[0].Cooldown > 0)
-				CLog::Print(CooldownManager->GetRemainingCooldown(), -1, DeltaTime, FColor::Red);*/
-	}
-}
-
 
 bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 {
+	Super::CanStart_Implementation(Instigator, OutMsg);
+
 	if (IsRunning())
 	{
 		OutMsg = "IsRunning";
@@ -67,6 +48,8 @@ bool UCAction::CanStart_Implementation(AActor* Instigator, FString& OutMsg)
 
 void UCAction::StartAction_Implementation(AActor* Instigator)
 {
+	Super::StartAction_Implementation(Instigator);
+
 	UE_LOG(LogTemp, Log, TEXT("Started : %s"), *GetNameSafe(this));
 
 	UCActionComponent* Comp = GetOwningComponent();
@@ -127,18 +110,8 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	{
 		Comp->OnActionStopped.Broadcast(Comp, this);
 	}
-}
 
-
-UWorld* UCAction::GetWorld() const
-{
-	AActor* Actor = Cast<AActor>(GetOuter());
-	if (Actor)
-	{
-		return Actor->GetWorld();
-	}
-
-	return nullptr;
+	Super::StopAction_Implementation(Instigator);
 }
 
 UCActionComponent* UCAction::GetOwningComponent() const
@@ -146,8 +119,10 @@ UCActionComponent* UCAction::GetOwningComponent() const
 	return ActionComp;
 }
 
-void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageData, ACPlayerCharacter* Instigator, bool bBindEndedDelegate)
+void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageData, ACharacter* Instigator, bool bBindEndedDelegate)
 {
+	Super::PlayMontageDataAction_Implementation(MontageData, Instigator, bBindEndedDelegate);
+
 	if (!ensure(MontageData.AnimMontage)) return;
 
 	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
@@ -167,8 +142,10 @@ void UCAction::PlayMontageDataAction_Implementation(FActionMontageData MontageDa
 
 }
 
-void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator, bool bBindEndedDelegate)
+void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACharacter* Instigator, bool bBindEndedDelegate)
 {
+	Super::PlayMontageAction_Implementation(Montage, Instigator, bBindEndedDelegate);
+
 	if (!ensure(Montage)) return;
 
 	if (GetOwningComponent()->ActiveMontageAction && GetOwningComponent()->ActiveMontageAction->IsRunning() && GetOwningComponent()->ActiveMontageAction != this)
@@ -188,6 +165,8 @@ void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACPlayerC
 
 bool UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
+	bool Result = Super::GetAimTargetDirection_Implementation(OutDirection, OutTarget, InIsBossMode);
+
 	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
 	OutTarget = AimingComp->GetAimTargetDirection(OutDirection, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
 
@@ -205,7 +184,9 @@ bool UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AAct
 
 bool UCAction::SetAimTargetLocation_Implementation(AActor* InTarget, const bool InIsBossMode)
 {
-	return false;
+	bool Result = Super::SetAimTargetLocation_Implementation(InTarget, InIsBossMode);
+
+	return Result;
 }
 
 void UCAction::SetCanCombo(bool InNew)
@@ -213,31 +194,29 @@ void UCAction::SetCanCombo(bool InNew)
 	bCanCombo = InNew;
 }
 
+
 void UCAction::SetOwningComponent(UCActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
 	
 }
 
-void UCAction::SetActionDatas()
-{
-	if (ActionDataAssets)
-	{
-		ActionDataAssets->BeginPlay(this, ActionDatas);
-	}
-}
-
 void UCAction::InterruptedAction_Implementation()
 {
+
 	UCActionComponent* Comp = GetOwningComponent();
 	if (Comp)
 	{
 		StopAction(Comp->GetOwner());
 	}
+
+	Super::InterruptedAction_Implementation();
 }
 
-void UCAction::BindOnMontageEndDelegate_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator)
+void UCAction::BindOnMontageEndDelegate_Implementation(UAnimMontage* Montage, ACharacter* Instigator)
 {
+	Super::BindOnMontageEndDelegate_Implementation(Montage, Instigator);
+
 	FOnMontageEnded OnMontageEndedDelegate;
 
 	OnMontageEndedDelegate.BindUFunction(this, FName("OnMontageEnd"));
@@ -259,51 +238,10 @@ void UCAction::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
 	}
 }
 
-// 다른 클라의 자기만 호출 : RepData가 서버와 다른 경우
-void UCAction::OnRep_RepData()
-{
-	if (RepData.bIsRunning)
-	{
-		// 로컬 인스티게이터가 아닌 서버 인스티게이터를 넘겨야함
-		// 서버에서 StartAction내의 인스티게이터를 넣어준것을 다시 로컬에 넘겨줌
-		StartAction(RepData.Instigator);
-	}
-	else
-	{
-		StopAction(RepData.Instigator);
-	}
-}
-
-
-void UCAction::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, int32 AttackIndex)
-{
-}
-
-void UCAction::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex)
-{
-}
-
-bool UCAction::IsRunning() const
-{
-	return RepData.bIsRunning;
-}
-
-
-void UCAction::StartCooldown_Implementation(float BaseCooldown)
-{
-	if (FMath::IsNearlyZero(BaseCooldown)) return;
-
-	CooldownManager->StartCooldown(BaseCooldown);
-	// 부모를 제일 마지막에 호출하여 쿨타임 계산후 쿨다운 실행
-}
 
 void UCAction::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UCAction, RepData);
 	DOREPLIFETIME(UCAction, ActionComp);
-	DOREPLIFETIME(UCAction, ActionDatas);
-	DOREPLIFETIME(UCAction, TimeStarted);
-	DOREPLIFETIME(UCAction, CooldownManager);
 }

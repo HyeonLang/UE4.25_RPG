@@ -17,8 +17,9 @@ class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCEnemyCharacterAttributeSet;
 class UCWorldWidgetComponent;
+class ACWeapon;
 
-UCLASS()
+UCLASS(Blueprintable)
 class UE4_RPG_API ACEnemyCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
@@ -36,10 +37,6 @@ public:
 	/** 어빌리티 시스템 컴포넌트를 반환합니다. */
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ IAbilitySystemInterface 끝
-
-public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "State")
-	void OnAttackBegin();
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
@@ -70,5 +67,17 @@ protected:
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
 	UUserWidget* HealthBarWidget;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ACWeapon> WeaponClass;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Weapon")
+	ACWeapon* Weapon;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Weapon")
+	FName WeaponSocket;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapon")
+	bool AlwaysWeaponEquip;
 
 };

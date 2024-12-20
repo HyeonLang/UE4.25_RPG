@@ -12,6 +12,7 @@
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
 #include "UI/CScreenWidget.h"
+#include "Weapon/CWeapon.h"
 
 ACEnemyCharacter::ACEnemyCharacter()
 {
@@ -25,6 +26,8 @@ ACEnemyCharacter::ACEnemyCharacter()
 
 	GetMesh()->SetCollisionProfileName("CharacterMesh");
 	GetCapsuleComponent()->SetCollisionProfileName("EnemyCharacter");
+	WeaponSocket = TEXT("WeaponSocket");
+	AlwaysWeaponEquip = false;
 }
 
 void ACEnemyCharacter::BeginPlay()
@@ -35,25 +38,23 @@ void ACEnemyCharacter::BeginPlay()
 
 	WidgetComp->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 
-
-	OnAttackBegin();
+	if (WeaponClass)
+	{
+		Weapon = GetWorld()->SpawnActorDeferred<ACWeapon>(WeaponClass, GetActorTransform(), this,  this);
+		Weapon->bAlwaysEquip = AlwaysWeaponEquip;
+		Weapon->FinishSpawning(GetActorTransform());
+		Weapon->ActorAttachTo(WeaponSocket);
+	}
 }
 void ACEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 
 }
 
 UAbilitySystemComponent* ACEnemyCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComp;
-}
-
-void ACEnemyCharacter::OnAttackBegin_Implementation()
-{
-	
-
 }
 
 void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta)
