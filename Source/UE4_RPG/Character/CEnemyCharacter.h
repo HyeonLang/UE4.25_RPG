@@ -12,7 +12,7 @@ class UUserWidget;
 class USpringArmComponent;
 class UCAimingComponent;
 class UCStateComponent;
-class UCActionComponent;
+class UCNPCActionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCEnemyCharacterAttributeSet;
@@ -46,7 +46,7 @@ public:
 	FORCEINLINE UCStateComponent* GetStateComponent() const { return StateComp; }
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
-	FORCEINLINE UCActionComponent* GetActionComponent() const { return ActionComp; }
+	FORCEINLINE UCNPCActionComponent* GetNPCActionComponent() const { return NPCActionComp; }
 
 protected:
 	UFUNCTION()
@@ -57,7 +57,7 @@ protected:
 	UCStateComponent* StateComp;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
-	UCActionComponent* ActionComp;
+	UCNPCActionComponent* NPCActionComp;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;

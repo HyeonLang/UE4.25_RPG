@@ -5,9 +5,9 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-#include "../Global.h"
-#include "../Components/CStateComponent.h"
-#include "../Components/CActionComponent.h"
+#include "Global.h"
+#include "Components/CStateComponent.h"
+#include "Components/CNPCActionComponent.h"
 #include "Components/CWorldWidgetComponent.h"
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
@@ -20,7 +20,7 @@ ACEnemyCharacter::ACEnemyCharacter()
 	CHelpers::CreateSceneComponent<UCWorldWidgetComponent>(this, &WidgetComp, "WidgetComp", RootComponent);
 
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
-	CHelpers::CreateActorComponent<UCActionComponent>(this, &ActionComp, "ActionComp");
+	CHelpers::CreateActorComponent<UCNPCActionComponent>(this, &NPCActionComp, "NPCActionComp");
 	CHelpers::CreateActorComponent<UCAbilitySystemComponent>(this, &AbilitySystemComp, "AbilitySystemComp");
 
 	GetMesh()->SetCollisionProfileName("CharacterMesh");
@@ -58,10 +58,7 @@ void ACEnemyCharacter::OnAttackBegin_Implementation()
 
 void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta)
 {
-	if (Delta < 0.f)
-	{
-
-	}
+	
 
 }
 

@@ -8,6 +8,7 @@ class UAnimMontage;
 class UParticleSystem;
 class ACPlayerCharacter;
 class UCAction;
+class UCNPCAction;
 
 USTRUCT(BlueprintType)
 struct FActionMontageData
@@ -92,7 +93,8 @@ class UE4_RPG_API UCActionData : public UDataAsset
 
 public:
 	void BeginPlay(UCAction* InOwnerAction, TArray<FActionData>& OutActionDatas);
-	
+	void BeginPlay(UCNPCAction* InOwnerNPCAction, TArray<FActionData>& OutNPCActionDatas);
+
 public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Actions")
 	TArray<FActionData> ActionDatas;

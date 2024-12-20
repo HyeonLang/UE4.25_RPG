@@ -156,7 +156,9 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			if (Action->GetCanCombo()) // NextCombo
+
+			// NextCombo
+			if (Action->GetCanCombo())
 			{
 				FName CurrentComboActionName = Action->CurrentComboActionName;
 				Action->SetCanCombo(false);

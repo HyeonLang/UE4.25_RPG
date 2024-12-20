@@ -34,7 +34,7 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	DepthCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
 	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
 	DepthCaptureComp->OrthoWidth = 3072;
-
+	DepthCaptureComp->bCaptureEveryFrame = false;
 	DepthCaptureComp->CaptureSource = ESceneCaptureSource::SCS_SceneColorSceneDepth;
 	DepthCaptureComp->ShowFlags.SetSkeletalMeshes(false);
 	DepthCaptureComp->ShowFlags.SetStaticMeshes(false);
@@ -51,6 +51,7 @@ ACMinimapCameraActor::ACMinimapCameraActor()
 	SceneCaptureComp->ProjectionType = ECameraProjectionMode::Orthographic;
 	//카메라에서 캡처될 크기 ( 클수록 축소되 보이는 미니맵 )
 	SceneCaptureComp->OrthoWidth = 3072;
+	SceneCaptureComp->bCaptureEveryFrame = false;
 	SceneCaptureComp->CaptureSource = ESceneCaptureSource::SCS_BaseColor;
 	SceneCaptureComp->ShowFlags.SetSkeletalMeshes(false);
 	SceneCaptureComp->ShowFlags.SetParticles(false);
@@ -78,6 +79,7 @@ void ACMinimapCameraActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	SceneCaptureComp->CaptureScene();
+	DepthCaptureComp->CaptureScene();
 }
 
 void ACMinimapCameraActor::CreateMiniMapRenderTarget()

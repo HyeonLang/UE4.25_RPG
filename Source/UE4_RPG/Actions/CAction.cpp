@@ -15,18 +15,6 @@ UCAction::UCAction()
 	bCanCombo = false;
 }
 
-
-void UCAction::ActionTick_Implementation(float DeltaTime)
-{
-	if (CooldownManager)
-	{
-		CooldownManager->CooldownTick(DeltaTime);
-		
-	/*	if (ActionDatas.Num() > 0 && ActionDatas[0].Cooldown > 0)
-			CLog::Print(CooldownManager->GetRemainingCooldown(), -1, DeltaTime, FColor::Red);*/
-	}
-}
-
 void UCAction::Initialize()
 {
 	SetActionDatas();
@@ -37,6 +25,18 @@ void UCAction::Initialize()
 TSoftObjectPtr<UTexture2D> UCAction::GetIcon_Implementation() const
 {
 	return Icon;
+}
+
+
+void UCAction::ActionTick_Implementation(float DeltaTime)
+{
+	if (CooldownManager)
+	{
+		CooldownManager->CooldownTick(DeltaTime);
+
+		/*	if (ActionDatas.Num() > 0 && ActionDatas[0].Cooldown > 0)
+				CLog::Print(CooldownManager->GetRemainingCooldown(), -1, DeltaTime, FColor::Red);*/
+	}
 }
 
 
@@ -227,19 +227,6 @@ void UCAction::SetActionDatas()
 	}
 }
 
-void UCAction::BindOnMontageEndedDelegate_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator)
-{
-	FOnMontageEnded OnMontageEndedDelegate;
-
-	OnMontageEndedDelegate.BindUFunction(this, FName("OnMontageEnded"));
-	CLog::Print(OnMontageEndedDelegate.IsBound() ? "true" : "false");
-	UAnimInstance* AnimInstance = Instigator->GetMesh()->GetAnimInstance();
-	if (AnimInstance)
-	{
-		AnimInstance->Montage_SetEndDelegate(OnMontageEndedDelegate, Montage);
-	}
-}
-
 void UCAction::InterruptedAction_Implementation()
 {
 	UCActionComponent* Comp = GetOwningComponent();
@@ -249,9 +236,22 @@ void UCAction::InterruptedAction_Implementation()
 	}
 }
 
-void UCAction::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+void UCAction::BindOnMontageEndDelegate_Implementation(UAnimMontage* Montage, ACPlayerCharacter* Instigator)
 {
-	CLog::Print("OnMontageEnded");
+	FOnMontageEnded OnMontageEndedDelegate;
+
+	OnMontageEndedDelegate.BindUFunction(this, FName("OnMontageEnd"));
+	//CLog::Print(OnMontageEndedDelegate.IsBound() ? "true" : "false");
+	UAnimInstance* AnimInstance = Instigator->GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_SetEndDelegate(OnMontageEndedDelegate, Montage);
+	}
+}
+
+void UCAction::OnMontageEnd(UAnimMontage* Montage, bool bInterrupted)
+{
+	//CLog::Print("OnMontageEnded");
 	UCActionComponent* Comp = GetOwningComponent();
 	if (Comp)
 	{
@@ -279,7 +279,7 @@ void UCAction::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, in
 {
 }
 
-void UCAction::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex = 0)
+void UCAction::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex)
 {
 }
 
