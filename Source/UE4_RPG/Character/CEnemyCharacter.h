@@ -45,9 +45,16 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCNPCActionComponent* GetNPCActionComponent() const { return NPCActionComp; }
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
+	FORCEINLINE ACWeapon* GetWeapon() const { return Weapon; }
+
 protected:
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta);
+
+public:
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	AActor* OwnerActor;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
@@ -62,6 +69,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCWorldWidgetComponent* WidgetComp;
 
+protected:
 	// UI
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;

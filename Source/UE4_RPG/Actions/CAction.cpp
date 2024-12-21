@@ -8,6 +8,7 @@
 #include "Components/CAimingComponent.h"
 #include "Character/CEnemyCharacter.h"
 #include "Game/CCooldownManager.h"
+#include "Weapon/CWeapon.h"
 
 UCAction::UCAction()
 {
@@ -88,6 +89,11 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 	UCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantTags);
 	ACPlayerCharacter* PC = Cast<ACPlayerCharacter>(Instigator);
+
+	if (PC->GetWeapon())
+	{
+		PC->GetWeapon()->OffCollision();
+	}
 
 	if (PC)
 	{

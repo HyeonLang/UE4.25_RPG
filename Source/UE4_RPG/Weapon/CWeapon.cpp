@@ -35,6 +35,7 @@ ACWeapon::ACWeapon()
 	SetReplicateMovement(true);
 
 	bAlwaysEquip = false;
+	bMultiHitMode = false;
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +43,6 @@ void ACWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	SkeletalMeshComp->SetVisibility(false);
 	
 	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ACWeapon::OnActorBeginOverlap);
@@ -52,6 +52,7 @@ void ACWeapon::BeginPlay()
 	{
 		OnEquip();
 	}
+
 	//OffCollision();
 }
 
@@ -64,6 +65,9 @@ void ACWeapon::Tick(float DeltaTime)
 
 void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 {
+	CLog::Print("On");
+	OverlappedActors.AddUnique(this);
+	OverlappedActors.AddUnique(GetOwner());
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	if (NewAction)
 	{
@@ -74,6 +78,7 @@ void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 
 void ACWeapon::OffCollision()
 {
+	CLog::Print("Off");
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InstigateAction = nullptr;
 	AttackIndex = 0;
@@ -82,7 +87,7 @@ void ACWeapon::OffCollision()
 
 bool ACWeapon::IsOverlappedActor(AActor* TargetActor)
 {
-	if (OverlappedActors.Find(TargetActor) == -1)
+	if (OverlappedActors.Find(TargetActor) != INDEX_NONE)
 	{
 		return true;
 	}
@@ -120,6 +125,7 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 void ACWeapon::OnActorEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!bMultiHitMode) return;
 	int32 Index = OverlappedActors.Find(OtherActor);
 	if (Index != INDEX_NONE)
 	{

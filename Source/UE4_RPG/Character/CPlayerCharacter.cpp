@@ -59,8 +59,8 @@ void ACPlayerCharacter::BeginPlay()
 
 	if (WeaponClass)
 	{
-		Weapon = GetWorld()->SpawnActor<ACWeapon>(WeaponClass, GetActorTransform());
-		Weapon->SetOwner(this);
+		Weapon = GetWorld()->SpawnActorDeferred<ACWeapon>(WeaponClass, GetActorTransform(), this, this);
+		Weapon->FinishSpawning(GetActorTransform());
 		Weapon->ActorAttachTo(WeaponSocket);
 	}
 

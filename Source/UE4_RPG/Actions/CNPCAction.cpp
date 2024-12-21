@@ -7,6 +7,8 @@
 #include "Components/CNPCActionComponent.h"
 #include "Components/CAimingComponent.h"
 #include "Game/CCooldownManager.h"
+#include "Character/CEnemyCharacter.h"
+#include "Weapon/CWeapon.h"
 
 UCNPCAction::UCNPCAction()
 {
@@ -84,6 +86,13 @@ void UCNPCAction::StopAction_Implementation(AActor* Instigator)
 	UCNPCActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantTags);
 	ACharacter* Character = Cast<ACharacter>(Instigator);
+	ACEnemyCharacter* EnemyCharacter = Cast<ACEnemyCharacter>(Instigator);
+
+	if (EnemyCharacter && EnemyCharacter->GetWeapon())
+	{
+		EnemyCharacter->GetWeapon()->OffCollision();
+	}
+	
 
 	IgnoreActors.Empty();
 

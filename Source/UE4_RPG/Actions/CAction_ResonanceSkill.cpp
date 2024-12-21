@@ -40,10 +40,6 @@ void UCAction_ResonanceSkill::StartAction_Implementation(AActor* Instigator)
 void UCAction_ResonanceSkill::StopAction_Implementation(AActor* Instigator)
 {
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
-	if (InstigatorCharacter->GetWeapon())
-	{
-		InstigatorCharacter->GetWeapon()->OffCollision();
-	}
 
 
 	Super::StopAction_Implementation(Instigator);

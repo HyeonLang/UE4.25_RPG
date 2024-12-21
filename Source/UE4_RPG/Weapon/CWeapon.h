@@ -72,6 +72,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bAlwaysEquip;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bMultiHitMode;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly)
 	USceneComponent* RootComp;
@@ -82,7 +85,5 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	UCapsuleComponent* CapsuleComp;
 
-	UPROPERTY(BlueprintReadOnly)
-	ACharacter* OwnerCharacter;
 
 };

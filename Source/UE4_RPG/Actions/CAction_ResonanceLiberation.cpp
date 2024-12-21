@@ -88,10 +88,6 @@ void UCAction_ResonanceLiberation::StopAction_Implementation(AActor* Instigator)
 {
 
 	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
-	if (InstigatorCharacter->GetWeapon())
-	{
-		InstigatorCharacter->GetWeapon()->OffCollision();
-	}
 	
 	Super::StopAction_Implementation(Instigator);
 }

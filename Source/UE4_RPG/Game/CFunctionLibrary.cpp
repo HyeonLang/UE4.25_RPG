@@ -29,6 +29,7 @@ bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, f
 	UCAbilitySystemComponent* ASComp = UCAbilitySystemComponent::GetAbilitySystemComponent(TargetActor);
 	if (ASComp)
 	{
+		
 		return ASComp->ApplyHealthChange(DamageCauser, -DamageAmount);
 	}
 
