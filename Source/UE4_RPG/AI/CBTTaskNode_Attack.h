@@ -5,7 +5,7 @@
 #include "BehaviorTree/BTTaskNode.h"
 #include "CBTTaskNode_Attack.generated.h"
 
-
+class UCActionBase;
 
 UCLASS()
 class UE4_RPG_API UCBTTaskNode_Attack : public UBTTaskNode
@@ -18,6 +18,8 @@ public:
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
 protected:
 	UFUNCTION(BlueprintNativeEvent)
 	EBTNodeResult::Type PlayAttack(ACharacter* InstigatorCharacter, UBlackboardComponent* BlackboardComp);
@@ -28,4 +30,9 @@ protected:
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI")
 	FName NPCActionName;
+
+protected:
+	bool bActiveAttack;
+
+	UCActionBase* ActiveAction;
 };

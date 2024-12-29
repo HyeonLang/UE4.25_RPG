@@ -7,10 +7,14 @@
 #include "Global.h"
 #include "Character/CEnemyCharacter.h"
 #include "Components/CNPCActionComponent.h"
+#include "Actions/CNPCAction.h"
 
 UCBTTaskNode_Attack::UCBTTaskNode_Attack()
 {
+	bNotifyTick = true;
 
+	bActiveAttack = false;
+	ActiveAction = nullptr;
 }
 
 EBTNodeResult::Type UCBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -30,12 +34,27 @@ EBTNodeResult::Type UCBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Own
 		UBlackboardComponent* BB = OwnerComp.GetBlackboardComponent();
 		if (ensure(BB))
 		{
-			//NetMulticastPlayAttack(NPCCharacter, BB);
 			return PlayAttack(NPCCharacter, BB);
 		}
 	}
 
 	return EBTNodeResult::Failed;
+}
+
+void UCBTTaskNode_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+
+	if (ActiveAction)
+	{
+		if (!ActiveAction->IsRunning() && bActiveAttack == true)
+		{
+			bActiveAttack = false;
+			ActiveAction = nullptr;
+			CLog::Print("Succeeded", -1, 2.0f);
+			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		}
+	}
 }
 
 EBTNodeResult::Type UCBTTaskNode_Attack::PlayAttack_Implementation(ACharacter* InstigatorCharacter, UBlackboardComponent* BlackboardComp)
@@ -44,7 +63,10 @@ EBTNodeResult::Type UCBTTaskNode_Attack::PlayAttack_Implementation(ACharacter* I
 	if (NPCActionComp)
 	{
 		NPCActionComp->StartNPCActionByName(InstigatorCharacter, NPCActionName);
-		return EBTNodeResult::Succeeded;
+		ActiveAction = NPCActionComp->GetNPCActionByName(NPCActionName);
+		bActiveAttack = true;
+
+		return EBTNodeResult::InProgress;
 	}
 
 	return EBTNodeResult::Failed;
