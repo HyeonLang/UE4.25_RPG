@@ -65,7 +65,6 @@ void ACWeapon::Tick(float DeltaTime)
 
 void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 {
-	CLog::Print("On");
 	OverlappedActors.AddUnique(this);
 	OverlappedActors.AddUnique(GetOwner());
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -78,7 +77,6 @@ void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 
 void ACWeapon::OffCollision()
 {
-	CLog::Print("Off");
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InstigateAction = nullptr;
 	AttackIndex = 0;
