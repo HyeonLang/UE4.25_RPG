@@ -17,6 +17,8 @@
 ACEnemyCharacter::ACEnemyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SetReplicates(true);
+	SetReplicateMovement(true);
 
 	CHelpers::CreateSceneComponent<UCWorldWidgetComponent>(this, &WidgetComp, "WidgetComp", RootComponent);
 

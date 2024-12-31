@@ -11,6 +11,8 @@
 #include "Components/CAimingComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CActionComponent.h"
+#include "Components/CIKComponent.h"
+#include "Components/CInteractionComponent.h"
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CPlayerCharacterAttributeSet.h"
 #include "Weapon/CWeapon.h"
@@ -19,10 +21,14 @@
 ACPlayerCharacter::ACPlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SetReplicates(true);
+	SetReplicateMovement(true);
 
 	CHelpers::CreateActorComponent<UCAimingComponent>(this, &AimingComp, "AimingComp");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
 	CHelpers::CreateActorComponent<UCActionComponent>(this, &ActionComp, "ActionComp");
+	CHelpers::CreateActorComponent<UCIKComponent>(this, &IKComp, "IKComp");
+	CHelpers::CreateActorComponent<UCInteractionComponent>(this, &InteractionComp, "InteractionComp");
 	CHelpers::CreateActorComponent<UCAbilitySystemComponent>(this, &AbilitySystemComp, "AbilitySystemComp");
 
 	GetMesh()->SetCollisionProfileName("PlayerMesh");

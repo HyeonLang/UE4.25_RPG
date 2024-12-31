@@ -14,6 +14,8 @@ class USpringArmComponent;
 class UCAimingComponent;
 class UCStateComponent;
 class UCActionComponent;
+class UCIKComponent;
+class UCInteractionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
 class UCPlayerCharacterAttributeSet;
@@ -132,6 +134,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCActionComponent* ActionComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
+	UCIKComponent* IKComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
+	UCInteractionComponent* InteractionComp;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCAbilitySystemComponent* AbilitySystemComp;
