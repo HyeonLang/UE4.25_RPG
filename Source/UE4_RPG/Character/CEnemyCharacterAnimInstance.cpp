@@ -87,4 +87,5 @@ void UCEnemyCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			CharacterMovementComp->RotationRate = BaseRotationRate;
 		}
 	}
+
 }

@@ -77,14 +77,25 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCActionComponent* GetActionComponent() const { return ActionComp; }
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
+	FORCEINLINE UCIKComponent* GetIKComponent() const { return IKComp; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
+	FORCEINLINE UCInteractionComponent* GetInteractionComponent() const { return InteractionComp; }
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
 	FORCEINLINE ACWeapon* GetWeapon() const { return Weapon; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Controller")
+	FORCEINLINE ACPlayerController* GetOwnerController() const { return OwnerController; }
 
 public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
 	FORCEINLINE bool GetCanCharacterChange() const { return bCanCharacterChange; }
 
 	FORCEINLINE int32 GetCanMoveCount() const { return CanMoveCount; }
+
+	FORCEINLINE bool GetOnField() const { return bOnField; }
 
 	UFUNCTION(BlueprintCallable, Reliable, Server, Category = "Cooldown")
 	void SetCharacterChangeCooldown();

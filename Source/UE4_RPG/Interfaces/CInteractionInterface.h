@@ -6,20 +6,23 @@
 #include "UObject/Interface.h"
 #include "CInteractionInterface.generated.h"
 
-// This class does not need to be modified.
+
 UINTERFACE(MinimalAPI)
 class UCInteractionInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
+
 class UE4_RPG_API ICInteractionInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+
 public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Interact(APawn* InstigatorPawn);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	FText GetInteractText(APawn* InstigatorPawn);
 };

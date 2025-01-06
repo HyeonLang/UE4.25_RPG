@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Components/CIKComponent.h"
 #include "CPlayerCharacterAnimInstance.generated.h"
 
 class ACPlayerCharacter;
@@ -66,6 +67,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	FRotator BaseRotationRate;
+
+	/*UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "InverseKinemetics")
+	FIKFeetData IKFeetData;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "InverseKinemetics")
+	bool bIkMode;*/
 	
 
 	float PreSpeed;

@@ -51,5 +51,5 @@ private:
 
 public:
 	AActor* TargetActor;
-		
+	
 };

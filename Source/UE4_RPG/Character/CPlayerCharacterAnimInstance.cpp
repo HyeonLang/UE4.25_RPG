@@ -107,4 +107,11 @@ void UCPlayerCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			CharacterMovementComp->RotationRate = BaseRotationRate;
 		}
 	}
+
+	//UCIKComponent* IKComp = PlayerCharacter->GetIKComponent();
+	//if (IKComp)
+	//{
+	//	IKFeetData = IKComp->GetIKFeetData();
+	//	bIkMode = IKComp->IsIKMode();
+	//}
 }
