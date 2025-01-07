@@ -30,6 +30,8 @@ ACEnemyCharacter::ACEnemyCharacter()
 	GetCapsuleComponent()->SetCollisionProfileName("EnemyCharacter");
 	WeaponSocket = TEXT("WeaponSocket");
 	AlwaysWeaponEquip = false;
+	SetCanBeDamaged(true);
+
 }
 
 void ACEnemyCharacter::BeginPlay()
@@ -47,6 +49,8 @@ void ACEnemyCharacter::BeginPlay()
 		Weapon->FinishSpawning(GetActorTransform());
 		Weapon->ActorAttachTo(WeaponSocket);
 	}
+
+	AbilitySystemComp->OnHealthChanged.AddDynamic(this, &ACEnemyCharacter::OnHealthChanged);
 }
 void ACEnemyCharacter::Tick(float DeltaTime)
 {
@@ -61,7 +65,11 @@ UAbilitySystemComponent* ACEnemyCharacter::GetAbilitySystemComponent() const
 
 void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta)
 {
-	
+	if (NewHealth <= 0.f)
+	{
+		SetCanBeDamaged(false);
+		NPCActionComp->StartNPCActionByName(this, TEXT("Dead"));
+	}
 
 }
 

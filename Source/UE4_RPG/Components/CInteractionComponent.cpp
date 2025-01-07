@@ -101,7 +101,6 @@ void UCInteractionComponent::FindNearestInteractable()
 		}
 	}
 
-	FString Str = "Hit : ";
 
 	if (bBlockingHit)
 	{
@@ -113,24 +112,27 @@ void UCInteractionComponent::FindNearestInteractable()
 			}
 
 			AActor* HitActor = Hit.GetActor();
-			Str = Str + " " + Hit.GetActor()->GetName();
 			if (HitActor)
 			{
-				if (HitActor->Implements<UCInteractionInterface>())
+				if (HitActor->Implements<UCInteractionInterface>() && !FocusedActors.Contains(HitActor))
 				{
-
-					FocusedActors.AddUnique(HitActor);
+					
+					FocusedActors.Add(HitActor);
 
 					if (OnAddFocusedActor.IsBound())
 					{
-						OnAddFocusedActor.Broadcast(this, HitActor);
+							OnAddFocusedActor.Broadcast(this, HitActor);
 					}
+					
 				}
 			}
 		}
 
 	}
 
+	FString Str = "Hit : ";
+	for (AActor* A : FocusedActors)
+		Str = Str + " " + A->GetName();
 	CLog::Print(Str, -1, 0.f);
 }
 

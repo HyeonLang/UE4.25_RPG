@@ -3,6 +3,7 @@
 #include "Components/CAimingComponent.h"
 #include "Character/CPlayerCharacter.h"
 #include "Weapon/CWeapon.h"
+#include "Global.h"
 
 #include "Net/UnrealNetwork.h"
 

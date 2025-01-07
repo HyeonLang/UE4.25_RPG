@@ -24,11 +24,21 @@ void ACItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetLifeSpan(10.f);
 }
 
 void ACItemBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ACItemBase::Interact_Implementation(APawn* InstigatorPawn)
+{
+}
+
+FText ACItemBase::GetInteractText_Implementation(APawn* InstigatorPawn)
+{
+	return ItemName;
 }
 
