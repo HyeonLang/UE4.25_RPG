@@ -16,7 +16,7 @@ ACItemBase::ACItemBase()
 	CHelpers::CreateSceneComponent<USphereComponent>(this, &SphereComp, "SphereComp", MeshComp);
 	CHelpers::CreateSceneComponent<UParticleSystemComponent>(this, &EffectComp, "EffectComp", MeshComp);
 
-	
+	SphereComp->SetSphereRadius(50.f);
 	MeshComp->SetSimulatePhysics(true);
 }
 
@@ -24,7 +24,7 @@ void ACItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SetLifeSpan(10.f);
+	SetLifeSpan(30.f);
 }
 
 void ACItemBase::Tick(float DeltaTime)

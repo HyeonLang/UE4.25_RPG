@@ -36,8 +36,23 @@ ACEnemyCharacter::ACEnemyCharacter()
 
 void ACEnemyCharacter::BeginPlay()
 {
+	int32 MaterialIndex = 0;
+	for (auto* Meterial : GetMesh()->GetMaterials())
+	{
+		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Meterial, this);
+
+		if (DynamicMaterial)
+		{
+			DynamicMaterial->SetScalarParameterValue("Amount", 0.f);
+			GetMesh()->SetMaterial(MaterialIndex, DynamicMaterial);
+		}
+
+		MaterialIndex++;
+	}
+
 	// 위젯등에서의 Attribute 사용을 위해 가장먼저 생성 
 	AbilitySystemComp->AttributeSet = const_cast<UCEnemyCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCEnemyCharacterAttributeSet>());
+
 	Super::BeginPlay();
 
 	WidgetComp->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
@@ -71,6 +86,10 @@ void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemC
 		NPCActionComp->StartNPCActionByName(this, TEXT("Dead"));
 	}
 
+}
+
+void ACEnemyCharacter::Dead_Implementation()
+{
 }
 
 

@@ -48,6 +48,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE ACWeapon* GetWeapon() const { return Weapon; }
 
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Dead();
+
 protected:
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta);
@@ -87,5 +91,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapon")
 	bool AlwaysWeaponEquip;
+
+
 
 };
