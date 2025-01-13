@@ -35,6 +35,7 @@ protected:
 	void FindNearestInteractable();
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void PrimaryInteraction();
 
 	//Server

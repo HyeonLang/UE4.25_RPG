@@ -26,7 +26,7 @@ public:
 
 public:
 	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
-	virtual FText GetInteractText_Implementation(APawn* InstigatorPawn) override;
+	virtual FName GetInteractName_Implementation(APawn* InstigatorPawn) override;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
@@ -39,8 +39,5 @@ protected:
 	UParticleSystemComponent* EffectComp;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Info")
-	FText ItemName;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Info")
-	uint8 ItemNo;
+	FName ItemID;
 };

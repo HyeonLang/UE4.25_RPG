@@ -140,6 +140,8 @@ void UCInteractionComponent::PrimaryInteraction()
 {
 	// 로컬 변수를 매개변수로 서버로 넘겨 서버 rpc 함수를 실행
 	// RPC 이면서 액터를 상속받은 포인터를 넘기면 도메인(채널)으로 바꿔서 넘긴다.
+	if (FocusedActors.Num() < 1) return;
+
 	ServerInteract(FocusedActors[0]);
 }
 

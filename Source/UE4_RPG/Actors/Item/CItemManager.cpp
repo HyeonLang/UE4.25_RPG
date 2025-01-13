@@ -1,5 +1,6 @@
 #include "CItemManager.h"
 #include "Global.h"
+#include "Net/UnrealNetwork.h"
 
 // 싱글톤 인스턴스 초기화
 UCItemManager* UCItemManager::Instance = nullptr;
@@ -7,7 +8,7 @@ UCItemManager* UCItemManager::Instance = nullptr;
 void UCItemManager::Initialize()
 {
     CHelpers::GetAssetDynamic(&ItemDataTable, TEXT("/Game/Data/DT_ItemInfo"));
-    CHelpers::GetAssetDynamic(&ConsumableItemDataTable, TEXT("/Game/Data/DT_ItemInfo"));
+    CHelpers::GetAssetDynamic(&ConsumableItemDataTable, TEXT("/Game/Data/DT_ConsumableItemInfo"));
 }
 
 UCItemManager* UCItemManager::GetInstance()
@@ -15,6 +16,7 @@ UCItemManager* UCItemManager::GetInstance()
     if (Instance == nullptr)
     {
         Instance = NewObject<UCItemManager>();
+        Instance->AddToRoot();
         if (Instance)
         {
             Instance->Initialize();
@@ -23,18 +25,28 @@ UCItemManager* UCItemManager::GetInstance()
     return Instance;
 }
 
-FItemInfo UCItemManager::GetItemInfoByID(int32 ItemID) const
+FItemInfo UCItemManager::GetItemInfoByID(FName ItemID) const
 {
+    FItemInfo ReturnInfo;
+
     if (ItemDataTable)
     {
-        //// 데이터 테이블에서 해당 아이템 ID에 맞는 행을 찾음
-        //TArray<FName> RowNames = ItemDataTable->GetRowNames();
-        //for (FName RowName : RowNames)
-        //{
-
-        //}
+        if (ItemDataTable->FindRow<FItemInfo>(ItemID, TEXT("Finding Item in Inventory")))
+        {
+            ReturnInfo = *(ItemDataTable->FindRow<FItemInfo>(ItemID, TEXT("Finding Item in Inventory")));
+        }
+        else
+        {
+            ReturnInfo = FItemInfo();
+            CLog::Print("Not Item Found");
+        }
     }
-    return FItemInfo();
+    else
+    {
+        ReturnInfo = FItemInfo();
+    }
+
+    return ReturnInfo;
 }
 
 FItemInfo UCItemManager::GetItemInfoByName(FName ItemName) const
@@ -42,7 +54,16 @@ FItemInfo UCItemManager::GetItemInfoByName(FName ItemName) const
     return FItemInfo();
 }
 
-bool UCItemManager::UseItem(int32 ItemID)
+bool UCItemManager::UseItem(FName ItemID)
 {
     return true;
+}
+
+
+void UCItemManager::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME(UCItemManager, ItemDataTable);
+    DOREPLIFETIME(UCItemManager, ConsumableItemDataTable);
 }

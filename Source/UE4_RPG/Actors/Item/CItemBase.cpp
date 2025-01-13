@@ -4,6 +4,11 @@
 #include "Particles/ParticleSystemComponent.h"
 
 #include "Global.h"
+#include "Actors/Item/CItemManager.h"
+#include "Character/CPlayerCharacter.h"
+#include "Player/CPlayerController.h"
+#include "Game/CPlayerState.h"
+#include "Player/CInventory.h"
 
 
 ACItemBase::ACItemBase()
@@ -24,7 +29,7 @@ void ACItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SetLifeSpan(30.f);
+	//SetLifeSpan(30.f);
 }
 
 void ACItemBase::Tick(float DeltaTime)
@@ -35,10 +40,26 @@ void ACItemBase::Tick(float DeltaTime)
 
 void ACItemBase::Interact_Implementation(APawn* InstigatorPawn)
 {
+	//ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(InstigatorPawn);
+	
+	ACPlayerController* PlayerController = Cast<ACPlayerController>(InstigatorPawn->GetController());
+	if (PlayerController)
+	{
+		ACPlayerState* PlayerState = PlayerController->GetPlayerState<ACPlayerState>();
+		if (PlayerState)
+		{
+			UCInventory* PlayerInventory = PlayerState->GetPlayerInventory();
+			if (!PlayerInventory) return;
+			FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(ItemID);
+			PlayerInventory->AddItem(ItmeInfo.ItemID, ItmeInfo.ItemType, 1);
+			CLog::Print("AddItme", -1, 2.0f);
+		}
+	}
+	
 }
 
-FText ACItemBase::GetInteractText_Implementation(APawn* InstigatorPawn)
+FName ACItemBase::GetInteractName_Implementation(APawn* InstigatorPawn)
 {
-	return ItemName;
+	return UCItemManager::GetInstance()->GetItemInfoByID(ItemID).ItemName;
 }
 

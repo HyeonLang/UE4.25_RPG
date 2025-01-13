@@ -28,7 +28,7 @@ struct FItemInfo : public FTableRowBase
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
-    int32 ItemID;
+    FName ItemID;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
     FName ItemName;
@@ -50,7 +50,7 @@ struct FConsumableItemInfo : public FTableRowBase
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
-    int32 ItemID;
+    FName ItemID;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
     EConsumableItemType ConsumableItemType;
@@ -73,14 +73,21 @@ private:
     static UCItemManager* Instance;
 
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Data", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Item Data", meta = (AllowPrivateAccess = true))
     UDataTable* ItemDataTable;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Data", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Item Data", meta = (AllowPrivateAccess = true))
     UDataTable* ConsumableItemDataTable;
 
 public:
     virtual void Initialize() override;
+
+    // Object류 클래스 리플리케이트 준비작업
+    // 액터가 아닌 오브젝트상속 클래스의 리플리케이트를 도와줌
+    FORCEINLINE virtual bool IsSupportedForNetworking() const override
+    {
+        return true;
+    }
 
 public:
     // 싱글톤 인스턴스 반환
@@ -89,7 +96,7 @@ public:
 
     // 아이템 정보를 데이터 테이블에서 가져오는 함수
     UFUNCTION(BlueprintCallable, Category = "Item")
-    FItemInfo GetItemInfoByID(int32 ItemID) const;
+    FItemInfo GetItemInfoByID(FName ItemID) const;
 
     // 아이템 정보를 데이터 테이블에서 가져오는 함수
     UFUNCTION(BlueprintCallable, Category = "Item")
@@ -97,6 +104,6 @@ public:
 
     // 아이템 사용 함수
     UFUNCTION(BlueprintCallable, Category = "Item")
-    bool UseItem(int32 ItemID);
+    bool UseItem(FName ItemID);
 	
 };
