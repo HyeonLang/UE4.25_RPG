@@ -22,7 +22,7 @@ bool UCInventory::AddItem(FName AddItemID, EItemType AddItemType, int32 AddItemC
 {
 	//아이템 번호 검사 (매니저에서)
 	if (AddItemCount <= 0) return false;
-
+	
 	if (AddItemList(AddItemID, AddItemType, AddItemCount))
 	{
 		ItemListRepData.SetItemListRepData(AddItemID, AddItemType, AddItemCount, EInventoryChangeType::Add);
@@ -79,6 +79,8 @@ TMap<FName, int32>& UCInventory::GetItemListByItemType(EItemType ItemType)
 	return EmptyList;
 }
 
+
+
 bool UCInventory::AddItemList(FName AddItemID, EItemType AddItemType, int32 AddItemCount)
 {
 	//아이템 번호 검사 (매니저에서)
@@ -86,6 +88,8 @@ bool UCInventory::AddItemList(FName AddItemID, EItemType AddItemType, int32 AddI
 ;
 	if (GetItemListByItemType(AddItemType).Contains(AddItemID))
 	{
+		int32 t = GetItemListByItemType(AddItemType)[AddItemID] + AddItemCount;
+		CLog::Print(t);
 		GetItemListByItemType(AddItemType)[AddItemID] = GetItemListByItemType(AddItemType)[AddItemID] + AddItemCount;
 	}
 	else
@@ -107,17 +111,12 @@ bool UCInventory::RemoveItemList(FName RemoveItemID, EItemType RemoveItemType, i
 
 		GetItemListByItemType(RemoveItemType)[RemoveItemID] = GetItemListByItemType(RemoveItemType)[RemoveItemID] - RemoveItemCount;
 
-		if (GetItemListByItemType(RemoveItemType)[RemoveItemID] == 0)
+		if (GetItemListByItemType(RemoveItemType)[RemoveItemID] <= 0)
 		{
 			GetItemListByItemType(RemoveItemType).Remove(RemoveItemID);
 		}
-	}
-	else
-	{
-		GetItemListByItemType(RemoveItemType).Add(RemoveItemID, RemoveItemCount);
-	}
 
-
+	}
 
 	return true;
 }
@@ -129,6 +128,7 @@ void UCInventory::OnRep_ItemListRepData()
 	{
 	case EInventoryChangeType::Add:
 		// 아이템 수량을 증가시키는 로직
+		CLog::Print("ItemListRepData Add");
 		AddItemList(ItemListRepData.ItemID, ItemListRepData.ItemType, ItemListRepData.ItemCount);
 
 		UE_LOG(LogTemp, Warning, TEXT("Quantity Added"));
@@ -136,6 +136,7 @@ void UCInventory::OnRep_ItemListRepData()
 
 	case EInventoryChangeType::Remove:
 		// 아이템 수량을 감소시키는 로직
+		CLog::Print("ItemListRepData ReMove");
 		RemoveItemList(ItemListRepData.ItemID, ItemListRepData.ItemType, ItemListRepData.ItemCount);
 
 		UE_LOG(LogTemp, Warning, TEXT("Quantity Removed"));
@@ -143,10 +144,12 @@ void UCInventory::OnRep_ItemListRepData()
 
 	case EInventoryChangeType::Max:
 		// Max 값에 대한 처리 (보통 예외 처리가 필요할 때 사용)
+		CLog::Print("ItemListRepData Invalid");
 		UE_LOG(LogTemp, Warning, TEXT("Invalid Inventory Change Type"));
 		break;
 
 	default:
+		CLog::Print("ItemListRepData Unknown");
 		UE_LOG(LogTemp, Error, TEXT("Unknown Change Type"));
 		break;
 	}

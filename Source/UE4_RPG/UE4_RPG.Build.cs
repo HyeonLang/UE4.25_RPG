@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class UE4_RPG : ModuleRules
 {
@@ -9,6 +10,7 @@ public class UE4_RPG : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.Add(ModuleDirectory);
+		//PublicIncludePaths.Add("C:/Program Files/MySQL/MySQL Server 8.0/include");
 
 		PublicDependencyModuleNames.AddRange(new string[] { 
 			"Core", 
@@ -22,6 +24,12 @@ public class UE4_RPG : ModuleRules
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
+
+		// MySQL 라이브러리 추가
+		//PublicAdditionalLibraries.Add("C:/Program Files/MySQL/MySQL Server 8.0/lib/libmysql.lib");
+
+		// MySQL DLL 복사
+		//RuntimeDependencies.Add("$(TargetOutputDir)/libmysql.dll", "C:/Program Files/MySQL/MySQL Server 8.0/lib/libmysql.dll");
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

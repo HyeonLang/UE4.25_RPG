@@ -38,6 +38,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UParticleSystemComponent* EffectComp;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Info")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Info")
 	FName ItemID;
 };

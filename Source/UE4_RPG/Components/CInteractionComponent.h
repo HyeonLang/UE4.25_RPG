@@ -33,6 +33,8 @@ public:
 
 protected:
 	void FindNearestInteractable();
+	
+	void OnCooldownComplete();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -71,4 +73,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Trace")
 	bool bInteractionMode;
+
+private:
+	bool bCanInteractByCooldown;
 };

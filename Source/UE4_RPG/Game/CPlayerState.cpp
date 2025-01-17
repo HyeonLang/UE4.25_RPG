@@ -56,6 +56,30 @@ void ACPlayerState::Tick(float DeltaTime)
 	}
 }
 
+bool ACPlayerState::UseInventoryItem(FName UseItemID, EItemType UseItemType, int32 UseItemCount)
+{
+	if (HasAuthority())
+	{
+		PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount);
+
+		return true;
+	}
+	else
+	{
+		CLog::Print("UseItem");
+		ServerUseInventoryItem(UseItemID, UseItemType, UseItemCount);
+
+		return true;
+	}
+
+	return false;
+}
+
+void ACPlayerState::ServerUseInventoryItem_Implementation(FName UseItemID, EItemType UseItemType, int32 UseItemCount)
+{
+	PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount);
+}
+
 
 
 

@@ -53,7 +53,7 @@ public:
 	EInventoryChangeType InventoryChangeType;
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class UE4_RPG_API UCInventory : public UObject
 {
 	GENERATED_BODY()

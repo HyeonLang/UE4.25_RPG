@@ -34,7 +34,7 @@ public:
     FName ItemName;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
-    FString ItemDescription;
+    FText ItemDescription;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
     UTexture2D* ItemIcon;

@@ -16,6 +16,7 @@ UCInteractionComponent::UCInteractionComponent()
 	TraceAngle = 90.f;
 
 	bInteractionMode = true;
+	bCanInteractByCooldown = true;
 
 	CollisionChannels.Add(ECC_WorldDynamic);
 }
@@ -136,13 +137,23 @@ void UCInteractionComponent::FindNearestInteractable()
 	CLog::Print(Str, -1, 0.f);
 }
 
+void UCInteractionComponent::OnCooldownComplete()
+{
+	bCanInteractByCooldown = true;
+}
+
 void UCInteractionComponent::PrimaryInteraction()
 {
+	if (!bCanInteractByCooldown) return;
 	// 로컬 변수를 매개변수로 서버로 넘겨 서버 rpc 함수를 실행
 	// RPC 이면서 액터를 상속받은 포인터를 넘기면 도메인(채널)으로 바꿔서 넘긴다.
 	if (FocusedActors.Num() < 1) return;
-
 	ServerInteract(FocusedActors[0]);
+
+	// Set interaction cooldown
+	bCanInteractByCooldown = false;
+	FTimerHandle InteractTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(InteractTimerHandle, this, &UCInteractionComponent::OnCooldownComplete, 1.0f, false);
 }
 
 void UCInteractionComponent::ServerInteract_Implementation(AActor* InFocused)

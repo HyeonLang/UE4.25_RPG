@@ -24,6 +24,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UCInventory* GetPlayerInventory() const { return PlayerInventory; }
 
+	UFUNCTION(BlueprintCallable)
+	bool UseInventoryItem(FName UseItemID, EItemType UseItemType, int32 UseItemCount = 1);
+
+	UFUNCTION(Reliable, Server)
+	void ServerUseInventoryItem(FName UseItemID, EItemType UseItemType, int32 UseItemCount = 1);
+
 protected:
 	//UPROPERTY(VisibleDefaultsOnly)
 	UPROPERTY(Replicated, VisibleDefaultsOnly)
