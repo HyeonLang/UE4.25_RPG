@@ -20,4 +20,6 @@ public:
 	static void Log(const FRotator& InValue);
 	static void Log(const UObject* InObject);
 	static void Log(const FString& InFuncName, int32 InLineNumber);
+
+	static void LogOnScreen(UObject* WorldContext, FString Msg, FColor Color = FColor::White, float Duration = 5.f);
 };

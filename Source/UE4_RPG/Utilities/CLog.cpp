@@ -74,3 +74,23 @@ void CLog::Log(const FString& InFuncName, int32 InLineNumber)
 
 	UE_LOG(GameProject, Display, TEXT("%s"), *str);
 }
+
+void CLog::LogOnScreen(UObject* WorldContext, FString Msg, FColor Color, float Duration)
+{
+	if (!ensure(WorldContext))
+	{
+		return;
+	}
+
+	UWorld* World = WorldContext->GetWorld();
+	if (!ensure(World))
+	{
+		return;
+	}
+
+	FString Prefix = World->IsNetMode(NM_Client) ? "[Client] " : "[Server] ";
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, Duration, Color, Prefix + Msg);
+	}
+}
