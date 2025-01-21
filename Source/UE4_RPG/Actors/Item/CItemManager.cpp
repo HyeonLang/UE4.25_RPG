@@ -2,6 +2,8 @@
 #include "Global.h"
 #include "Net/UnrealNetwork.h"
 
+#include "Components/CAbilitySystemComponent.h"
+
 // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º ÃÊ±âÈ­
 UCItemManager* UCItemManager::Instance = nullptr;
 
@@ -49,13 +51,66 @@ FItemInfo UCItemManager::GetItemInfoByID(FName ItemID) const
     return ReturnInfo;
 }
 
+FConsumableItemInfo UCItemManager::GetConsumableItemInfoByID(FName ItemID) const
+{
+    FConsumableItemInfo ReturnInfo;
+    if (ConsumableItemDataTable)
+    {
+        if (ConsumableItemDataTable->FindRow<FConsumableItemInfo>(ItemID, TEXT("Finding Item in Inventory")))
+        {
+            ReturnInfo = *(ConsumableItemDataTable->FindRow<FConsumableItemInfo>(ItemID, TEXT("Finding Item in Inventory")));
+        }
+        else
+        {
+            ReturnInfo = FConsumableItemInfo();
+            CLog::Print("Not ConsumableItem Found");
+        }
+    }
+    else
+    {
+        ReturnInfo = FConsumableItemInfo();
+    }
+    return ReturnInfo;
+}
+
 FItemInfo UCItemManager::GetItemInfoByName(FName ItemName) const
 {
     return FItemInfo();
 }
 
-bool UCItemManager::UseItem(FName ItemID)
+bool UCItemManager::UseConsumableItem(AActor* InstigatorActor, FName ItemID, int32 UseItemCount)
 {
+    if (!InstigatorActor->HasAuthority()) return false;
+
+    FConsumableItemInfo ConsumableItemInfo = GetConsumableItemInfoByID(ItemID);
+    if (ConsumableItemInfo.ItemID != ItemID) return false;
+
+    UCAbilitySystemComponent* InstigatorAbilitySystemComp;
+
+    switch (ConsumableItemInfo.ConsumableItemType)
+    {
+    case EConsumableItemType::Potion:
+        std::cout << "Potion item selected!" << std::endl;
+
+        InstigatorAbilitySystemComp = Cast<UCAbilitySystemComponent>(InstigatorActor->GetComponentByClass(UCAbilitySystemComponent::StaticClass()));
+
+        if (InstigatorAbilitySystemComp)
+        {
+            InstigatorAbilitySystemComp->ApplyHealthChange(InstigatorActor, ConsumableItemInfo.Delta);
+        }
+
+        break;
+
+    case EConsumableItemType::Max:
+        std::cout << "Invalid item selected!" << std::endl;
+        break;
+
+    default:
+        std::cout << "Unknown item type!" << std::endl;
+        break;
+    }
+
+    
     return true;
 }
 

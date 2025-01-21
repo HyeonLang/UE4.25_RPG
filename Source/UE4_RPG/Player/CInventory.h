@@ -78,6 +78,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RemoveItem(FName RemoveItemID, EItemType RemoveItemType, int32 RemoveItemCount = 1);
 
+	UFUNCTION(BlueprintCallable)
+	bool UseItem(AActor* InstigatorActor, FName UseItemID, EItemType UseItemType, int32 UseItemCount = 1);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TMap<FName, int32>& GetItemListByItemType(EItemType ItemType);
 

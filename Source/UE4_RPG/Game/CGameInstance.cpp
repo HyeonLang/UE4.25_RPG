@@ -12,7 +12,7 @@ const static FName SESSION_SETTINGS_KEY = TEXT("ToreKey");
 
 UCGameInstance::UCGameInstance()
 {
-	CHelpers::GetClass<UUserWidget>(&LoginMenuWidgetClass, TEXT("/Game/UI/WB_MainMenu"));
+	CHelpers::GetClass<UUserWidget>(&LoginMenuWidgetClass, TEXT("/Game/UI/WB_LoginMenu"));
 	//CHelpers::GetClass<UUserWidget>(&InGameMenuWidgetClass, TEXT("/Game/UI/WB_InGameMenu"));
 	
 }
@@ -106,7 +106,7 @@ void UCGameInstance::Join(uint32 InIndex)
 	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[InIndex]);
 }
 
-void UCGameInstance::OpenMainMenuLevel()
+void UCGameInstance::OpenLoginMenuLevel()
 {
 	APlayerController* PC = GetFirstLocalPlayerController();
 	if (!PC)
@@ -114,7 +114,7 @@ void UCGameInstance::OpenMainMenuLevel()
 		return;
 	}
 
-	PC->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	PC->ClientTravel("/Game/Maps/LoginMenu", ETravelType::TRAVEL_Absolute);
 }
 
 void UCGameInstance::StartFindSession()
@@ -259,5 +259,5 @@ void UCGameInstance::OnJoinSessionCompleted(FName InSessionName, EOnJoinSessionC
 void UCGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorMessage)
 {
 	CLog::LogOnScreen(this, ErrorMessage, FColor::Red);
-	OpenMainMenuLevel();
+	OpenLoginMenuLevel();
 }

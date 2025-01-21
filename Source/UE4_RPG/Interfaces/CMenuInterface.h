@@ -17,6 +17,6 @@ class UE4_RPG_API ICMenuInterface
 public:
 	virtual void Host(FString InDesiredSessionName) = 0;
 	virtual void Join(uint32 InIndex) = 0;
-	virtual void OpenMainMenuLevel() = 0;
+	virtual void OpenLoginMenuLevel() = 0;
 	virtual void StartFindSession() = 0;
 };

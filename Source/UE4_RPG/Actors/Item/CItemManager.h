@@ -98,12 +98,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Item")
     FItemInfo GetItemInfoByID(FName ItemID) const;
 
+    UFUNCTION(BlueprintCallable, Category = "Item")
+    FConsumableItemInfo GetConsumableItemInfoByID(FName ItemID) const;
+
     // 아이템 정보를 데이터 테이블에서 가져오는 함수
     UFUNCTION(BlueprintCallable, Category = "Item")
     FItemInfo GetItemInfoByName(FName ItemName) const;
 
-    // 아이템 사용 함수
-    UFUNCTION(BlueprintCallable, Category = "Item")
-    bool UseItem(FName ItemID);
-	
+public:
+    UFUNCTION(BlueprintCallable, Category = "ItemUse")
+    bool UseConsumableItem(AActor* InstigatorActor, FName ItemID, int32 UseItemCount = 1);
 };

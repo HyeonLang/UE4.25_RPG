@@ -30,7 +30,7 @@ public:
 	UFUNCTION(Exec)
 	virtual void Join(uint32 InIndex) override;
 
-	virtual void OpenMainMenuLevel() override;
+	virtual void OpenLoginMenuLevel() override;
 	virtual void StartFindSession() override;
 
 	void StartSession();

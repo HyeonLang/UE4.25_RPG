@@ -18,7 +18,7 @@ public:
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
-
+	virtual void BeginPlay() override;
 
 private:
 	void StartGameStartTimer();
@@ -26,10 +26,13 @@ private:
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	uint32 MaxNumberOfPlayers;
+	int32 MaxNumberOfPlayers;
 
-private:
-	uint32 NumberOfPlayers;
+protected:
+	UPROPERTY(BlueprintReadWrite)
+	int32 NumberOfPlayers;
 	FTimerHandle GameStartTimerHandle;
+
+	TSubclassOf<ACharacter> SpawnClass;
 	
 };

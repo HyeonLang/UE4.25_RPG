@@ -6,7 +6,12 @@
 
 ACLobbyGameMode::ACLobbyGameMode()
 {
-
+	// set default pawn class to our Blueprinted character
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/PlayerCharacters/ChangLi/BP_LobbyCharacter_ChangLi"));
+	if (PlayerPawnBPClass.Class != NULL)
+	{
+		SpawnClass = PlayerPawnBPClass.Class;
+	}
 }
 
 void ACLobbyGameMode::PostLogin(APlayerController* NewPlayer)
@@ -36,6 +41,13 @@ void ACLobbyGameMode::Logout(AController* Exiting)
 	UE_LOG(LogTemp, Warning, TEXT("Logout : Current Players : %s"), *FString::FromInt(NumberOfPlayers));
 }
 
+void ACLobbyGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	
+}
+
 void ACLobbyGameMode::StartGameStartTimer()
 {
 	// Todo. 입장을 막는 코드 : 로비 플레이어 컨트롤러 생성 후 클릭 등의 입력으로도 진행가능하게
@@ -54,6 +66,6 @@ void ACLobbyGameMode::StartGame()
 	if (World)
 	{
 		//bUseSeamlessTravel = true;
-		//World->ServerTravel("/Game/Maps/FPS?listen"); // 게임 맵 이동
+		//World->ServerTravel("/Game/Maps/Demo?listen"); // 게임 맵 이동
 	}
 }

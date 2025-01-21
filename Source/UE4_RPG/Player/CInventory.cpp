@@ -54,6 +54,16 @@ bool UCInventory::RemoveItem(FName RemoveItemID, EItemType RemoveItemType, int32
 	return true;
 }
 
+bool UCInventory::UseItem(AActor* InstigatorActor, FName UseItemID, EItemType UseItemType, int32 UseItemCount)
+{
+	if (UseItemType == EItemType::Consumable)
+	{
+		if (UCItemManager::GetInstance()->UseConsumableItem(InstigatorActor, UseItemID, UseItemCount)) return true;
+		
+	}
+	return false;
+}
+
 TMap<FName, int32>& UCInventory::GetItemListByItemType(EItemType ItemType)
 {
 	ACPlayerState* PlayerState = Cast<ACPlayerState>(GetOuter());

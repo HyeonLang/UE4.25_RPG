@@ -6,6 +6,9 @@
 
 #include "Global.h"
 #include "Player/CInventory.h"
+#include "Player/CPlayerController.h"
+#include "Character/CPlayerCharacter.h"
+
 
 ACPlayerState::ACPlayerState()
 {
@@ -60,9 +63,15 @@ bool ACPlayerState::UseInventoryItem(FName UseItemID, EItemType UseItemType, int
 {
 	if (HasAuthority())
 	{
-		PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount);
+		ACPlayerController* PlayerController = Cast<ACPlayerController>(GetOwner());
+		if (!PlayerController) return false;
 
-		return true;
+		if (PlayerInventory->UseItem(PlayerController->GetPlayerCharacter(), UseItemID, UseItemType, UseItemCount))
+		{
+			if (!PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount)) return false;
+
+			return true;
+		}
 	}
 	else
 	{
@@ -77,7 +86,13 @@ bool ACPlayerState::UseInventoryItem(FName UseItemID, EItemType UseItemType, int
 
 void ACPlayerState::ServerUseInventoryItem_Implementation(FName UseItemID, EItemType UseItemType, int32 UseItemCount)
 {
-	PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount);
+	ACPlayerController* PlayerController = Cast<ACPlayerController>(GetOwner());
+	if (!PlayerController) return;
+
+	if (PlayerInventory->UseItem(PlayerController->GetPlayerCharacter(), UseItemID, UseItemType, UseItemCount))
+	{
+		PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount);
+	}
 }
 
 
