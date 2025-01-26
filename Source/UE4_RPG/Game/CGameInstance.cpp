@@ -6,6 +6,7 @@
 #include "OnlineSessionSettings.h"
 #include "Global.h"
 #include "UI/CLoginMenuWidget.h"
+#include "Database/CDBManager.h"
 
 const static FName SESSION_NAME = TEXT("GameSession");
 const static FName SESSION_SETTINGS_KEY = TEXT("ToreKey");
@@ -46,6 +47,8 @@ void UCGameInstance::Init()
 	{
 		GEngine->OnNetworkFailure().AddUObject(this, &UCGameInstance::OnNetworkFailure);
 	}
+
+	DBManager = NewObject<UCDBManager>();
 }
 
 void UCGameInstance::Host(FString InDesiredSessionName)

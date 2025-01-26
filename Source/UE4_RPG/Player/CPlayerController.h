@@ -79,6 +79,7 @@ private:
 	void OnInputKey_F();
 	void OnInputKey_Q();
 	void OnInputKey_E();
+	void OnInputKey_E_Released();
 
 	void OnInputForward(float Axis);
 	void OnInputRight(float Axis);

@@ -49,6 +49,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool StopActionByName(AActor* Instigator, FName ActionName);
 
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool StartAllCancelLoopAction(AActor* Instigator);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Action")
 	FORCEINLINE TArray<UCAction*> GetActions() const { return Actions; }
 

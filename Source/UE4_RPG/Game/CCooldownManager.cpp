@@ -8,17 +8,19 @@
 #include "TimerManager.h"
 
 #include "Actions/CAction.h"
+#include "Global.h"
 
 UCCooldownManager::UCCooldownManager()
     : CurrentCooldown(0.0f)
     , RemainingCooldown(0.0f)
     , bIsCooldownActive(false)
+    , bIsLocalMode(false)
 {
 }
 
 void UCCooldownManager::CooldownTick(float DeltaTime)
 {
-    if (GetWorld() && GetWorld()->IsServer())
+    if (GetWorld() && (GetWorld()->IsServer() || bIsLocalMode))
     { 
         if (bIsCooldownActive)
         {
@@ -62,7 +64,7 @@ void UCCooldownManager::StartCooldown(float InitialCooldown)
     CurrentCooldown = InitialCooldown;
     RemainingCooldown = InitialCooldown;
     bIsCooldownActive = true;
-
+    
     GetWorld()->GetTimerManager().SetTimer(
         CooldownTimerHandle,
         this,
@@ -183,6 +185,11 @@ void UCCooldownManager::SetCooldown(float CooldownTime)
     );
 
     UE_LOG(LogTemp, Log, TEXT("Cooldown set to: %f seconds"), CooldownTime);
+}
+
+void UCCooldownManager::SetLocalMode()
+{
+    bIsLocalMode = true;
 }
 
 

@@ -12,6 +12,7 @@
 class UUserWidget;
 class UCLoginMenuWidget;
 class FOnlineSessionSearch;
+class UCDBManager;
 
 UCLASS()
 class UE4_RPG_API UCGameInstance : public UGameInstance, public ICMenuInterface
@@ -48,6 +49,10 @@ private:
 	void OnFindSessionCompleted(bool bWasSuccessful);
 	void OnJoinSessionCompleted(FName InSessionName, EOnJoinSessionCompleteResult::Type InResult);
 	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorMessage);
+
+public:
+	UPROPERTY(BlueprintReadOnly)
+	UCDBManager* DBManager;
 
 private:
 	TSubclassOf<UUserWidget> LoginMenuWidgetClass;

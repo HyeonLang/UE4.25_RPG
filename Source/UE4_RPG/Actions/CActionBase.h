@@ -72,6 +72,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
 
+
 public:
 	virtual void SetActionDatas();
 
@@ -113,6 +114,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combo")
+	bool bCanCancelLoop;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Action")
 	TArray<AActor*> IgnoreActors;

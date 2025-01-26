@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include <xdevapi.h>
 #include "CDBManager.generated.h"
 
 /**
@@ -13,10 +14,23 @@ UCLASS()
 class UE4_RPG_API UCDBManager : public UObject
 {
 	GENERATED_BODY()
+public:
+	UCDBManager();
+	~UCDBManager();
 
 public:
-	//bool Connect(const FString& Host, const FString& UserName, co nst FString Password, const FString& Schema);
+	UFUNCTION(BlueprintCallable, Category = "DB")
+	bool Connect(const FString& Host, int32 Port, const FString& UserName, const FString& Password, const FString& Schema);
+	UFUNCTION(BlueprintCallable, Category = "DB")
+	bool InsertUserTable(const FString& InTableName, const FString& InUserName, const FString& InPassword);
+	UFUNCTION(BlueprintCallable, Category = "DB")
+	bool Disconnect();
 
-	//bool Insert(const FString& TableName, const FString& UserName);
-	
+public:
+	//UPROPERTY()
+	mysqlx::Session* m_Session;
+
+	//UPROPERTY()
+	mysqlx::Schema* m_SchemaDB;
+
 };

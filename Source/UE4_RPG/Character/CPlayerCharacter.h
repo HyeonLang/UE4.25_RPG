@@ -21,6 +21,7 @@ class UCAbilitySystemComponent;
 class UCPlayerCharacterAttributeSet;
 class ACWeapon;
 class UCAction;
+class UCCooldownManager;
 
 
 UCLASS()
@@ -46,6 +47,9 @@ public:
 
 	void SetOwnerController(ACPlayerController* Controller);
 
+	//// Object류 클래스 리플리케이트 준비작업 1 재정의
+	//bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+
 	
 public:
 	void OnMoveForward(float Axis);
@@ -64,6 +68,7 @@ public:
 
 	void StartNormalAttack();
 	void StartResonanceSkill();
+	void StartResonanceSkillReleased();
 	void StartResonanceLiberation();
 
 
@@ -91,17 +96,15 @@ public:
 
 public:
 	FORCEINLINE float GetCooldownCharacterChange() const { return Cooldown_CharacterChange; }
-	FORCEINLINE bool GetCanCharacterChange() const { return bCanCharacterChange; }
 
 	FORCEINLINE int32 GetCanMoveCount() const { return CanMoveCount; }
 
 	FORCEINLINE bool GetOnField() const { return bOnField; }
 
-	UFUNCTION(BlueprintCallable, Reliable, Server, Category = "Cooldown")
-	void SetCharacterChangeCooldown();
+	bool GetCanCharacterChange() const;
 
-	UFUNCTION(Reliable, Server, Category = "Cooldown")
-	void SetCanCharacterChange(bool InNew = true);
+	UFUNCTION(BlueprintCallable, Category = "Cooldown")
+	void SetCharacterChangeCooldown();
 
 	UFUNCTION(Reliable, Server, Category = "Montage")
 	void ServerStopAnimMontage(UAnimMontage* AnimMontage = nullptr);
@@ -168,6 +171,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
 	TSoftObjectPtr<UTexture2D> Icon;		// soft 래퍼런스
 
+
+public:
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = "Cooldown")
+	UCCooldownManager* CooldownManager_CharacterChange;
+
 protected:
 	UPROPERTY(ReplicatedUsing = "OnRep_OnField")
 	bool bOnField;
@@ -175,13 +183,7 @@ protected:
 	UFUNCTION()
 	void OnRep_OnField();
 
-
-protected:
-	FTimerHandle TimerHandle_Cooldown_CharacterChange;
-
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadWrite, VisibleInstanceOnly)
 	float Cooldown_CharacterChange;
 
-	UPROPERTY(Replicated)
-	bool bCanCharacterChange;
 };

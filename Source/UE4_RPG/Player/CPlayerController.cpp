@@ -75,6 +75,7 @@ void ACPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
 
 	InputComponent->BindAction("Key_E", IE_Pressed, this, &ACPlayerController::OnInputKey_E);
+	InputComponent->BindAction("Key_E", IE_Released, this, &ACPlayerController::OnInputKey_E_Released);
 	InputComponent->BindAction("Key_R", IE_Pressed, this, &ACPlayerController::OnInputKey_R);
 
 
@@ -192,10 +193,11 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVe
 		break;
 	}
 
-
+	
 	ShowCharacter(InNewCharacter);
 	PlayerCharacter = InNewCharacter;
 
+	
 
 	if (!HasAuthority())
 	{
@@ -224,9 +226,11 @@ void ACPlayerController::ServerPossessCharacter_Implementation(ACPlayerCharacter
 
 void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode InMode)
 {
+
 	if (PlayerCharacter)
 	{
 		OutVelocity = PlayerCharacter->GetCharacterMovement()->Velocity;
+
 		PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
 		
 		switch (InMode)
@@ -238,6 +242,7 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 			break;
 		case EChangeMode::Concerto:
 			PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
+			
 			break;
 		default:
 			break;
@@ -253,13 +258,10 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 				PC->SetActorRotation(PlayerCharacter->GetActorRotation());
 			}
 		}
+		
+		PlayerCharacter->SetCharacterChangeCooldown();
 
-		if (IsLocalController())
-		{
-			PlayerCharacter->SetCanCharacterChange(false);
-			PlayerCharacter->SetCharacterChangeCooldown();
-		}
-
+		
 		if (!HasAuthority())
 		{
 			ServerUnPossessCharacter(OutVelocity, InMode);
@@ -269,11 +271,11 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 			UnPossess();
 		}
 	}
+
 }
 
 void ACPlayerController::ServerUnPossessCharacter_Implementation(FVector OutVelocity, EChangeMode InMode)
 {
-	NetMulticastUnPossessCharacter(InMode);
 	UnPossessCharacter(OutVelocity, InMode);
 }
 
@@ -316,6 +318,12 @@ void ACPlayerController::OnInputKey_E()
 {
 	if (!PlayerCharacter) return;
 	PlayerCharacter->StartResonanceSkill();
+}
+
+void ACPlayerController::OnInputKey_E_Released()
+{
+	if (!PlayerCharacter) return;
+	PlayerCharacter->StartResonanceSkillReleased();
 }
 
 void ACPlayerController::OnInputForward(float Axis)
@@ -424,11 +432,13 @@ void ACPlayerController::OnMouseY(float Axis)
 
 void ACPlayerController::OnStartSprint()
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->StartSprint();
 }
 
 void ACPlayerController::OnStopSprint()
 {
+	if (!PlayerCharacter) return;
 	PlayerCharacter->StopSprint();
 }
 
@@ -463,6 +473,8 @@ void ACPlayerController::ChangePlayerCharacter(uint32 InIndex)
 	{
 		InMode = EChangeMode::Concerto;
 	}
+
+	PlayerCharacter->GetActionComponent()->StartAllCancelLoopAction(PlayerCharacter);
 
 	FVector Velocity;
 	UnPossessCharacter(Velocity, InMode);

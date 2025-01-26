@@ -5,7 +5,7 @@
 #include "CCooldownManager.generated.h"
 
 
-UCLASS()
+UCLASS(BlueprintType)
 class UE4_RPG_API UCCooldownManager : public UObject
 {
 	GENERATED_BODY()
@@ -51,6 +51,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Cooldown")
     void SetCooldown(float CooldownTime);
 
+    
+    UFUNCTION(BlueprintCallable, Category = "Cooldown")
+    void SetLocalMode();
+
 
 protected:
     /** 쿨타임 종료 시 호출 */
@@ -82,4 +86,7 @@ protected:
 
     UPROPERTY()
     UWorld* World;
+
+    UPROPERTY()
+    bool bIsLocalMode;
 };

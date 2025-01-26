@@ -1,5 +1,6 @@
 #include "CPlayerCharacter.h"
 
+#include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -16,6 +17,7 @@
 #include "Components/CAbilitySystemComponent.h"
 #include "Attributes/CPlayerCharacterAttributeSet.h"
 #include "Weapon/CWeapon.h"
+#include "Game/CCooldownManager.h"
 
 
 ACPlayerCharacter::ACPlayerCharacter()
@@ -39,7 +41,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0, 1080, 0);
 
 	Cooldown_CharacterChange = 2.f;
-	bCanCharacterChange = true;
 	bOnField = true;
 	bCanJump = true;
 	//bCanMove = true;
@@ -63,6 +64,9 @@ void ACPlayerCharacter::BeginPlay()
 		}
 	}
 
+	CooldownManager_CharacterChange = NewObject<UCCooldownManager>(this);
+	CooldownManager_CharacterChange->SetLocalMode();
+
 	if (WeaponClass)
 	{
 		Weapon = GetWorld()->SpawnActorDeferred<ACWeapon>(WeaponClass, GetActorTransform(), this, this);
@@ -76,7 +80,26 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (CooldownManager_CharacterChange)
+	{
+		CooldownManager_CharacterChange->CooldownTick(DeltaTime);
+	}
 }
+
+//bool ACPlayerCharacter::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+//{
+//	bool bChangedSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+//
+//
+//	if (CooldownManager_CharacterChange)
+//	{
+//		bChangedSomething |= Channel->ReplicateSubobject(CooldownManager_CharacterChange, *Bunch, *RepFlags);
+//	}
+//		
+//
+//	return bChangedSomething;
+//}
 
 
 UAbilitySystemComponent* ACPlayerCharacter::GetAbilitySystemComponent() const
@@ -101,7 +124,6 @@ void ACPlayerCharacter::OnMoveForward(float Axis)
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
 		ServerStopAnimMontage();
-		Weapon->OnUnequip();
 	}
 
 	FRotator ControlRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -116,7 +138,6 @@ void ACPlayerCharacter::OnMoveRight(float Axis)
 	
 	if (IsActiveMontage && !FMath::IsNearlyZero(Axis) && ActionComp->bCanStopMontagePostAction)
 	{
-		Weapon->OnUnequip();
 		ServerStopAnimMontage();
 	}
 
@@ -151,16 +172,13 @@ void ACPlayerCharacter::OnDash()
 	//ActionComp->SetDashMode();
 }
 
-void ACPlayerCharacter::SetCharacterChangeCooldown_Implementation()
+void ACPlayerCharacter::SetCharacterChangeCooldown()
 {
-	FTimerDelegate Delegate;
-	Delegate.BindUFunction(this, "SetCanCharacterChange", true);
-	GetWorldTimerManager().SetTimer(TimerHandle_Cooldown_CharacterChange, Delegate, Cooldown_CharacterChange, false);
-}
-
-void ACPlayerCharacter::SetCanCharacterChange_Implementation(bool InNew)
-{
-	bCanCharacterChange = InNew;
+	
+	if (FMath::IsNearlyZero(Cooldown_CharacterChange)) return;
+		
+	CooldownManager_CharacterChange->StartCooldown(Cooldown_CharacterChange);
+	
 }
 
 void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
@@ -168,13 +186,20 @@ void ACPlayerCharacter::ServerStopAnimMontage_Implementation(UAnimMontage* AnimM
 	StopAnimMontage(AnimMontage);
 	//CLog::Print(ActionComp->bCanStopMontagePostAction ? "True" : "Fasle");
 	ActionComp->bCanStopMontagePostAction = false;
+	if (Weapon) Weapon->OnUnequip();
 	NetMulticastStopAnimMontage(AnimMontage);
 }
 
 void ACPlayerCharacter::NetMulticastStopAnimMontage_Implementation(UAnimMontage* AnimMontage)
 {
 	StopAnimMontage(AnimMontage);
+	if (Weapon) Weapon->OnUnequip();
 	ActionComp->bCanStopMontagePostAction = false;
+}
+
+bool ACPlayerCharacter::GetCanCharacterChange() const
+{
+	return !CooldownManager_CharacterChange->IsCooldownActive();
 }
 
 void ACPlayerCharacter::SetAllVisibility(bool bNewVisibility)
@@ -255,6 +280,11 @@ void ACPlayerCharacter::StartResonanceSkill()
 	ActionComp->StartActionByName(this, "ResonanceSkill");
 }
 
+void ACPlayerCharacter::StartResonanceSkillReleased()
+{
+	ActionComp->StartActionByName(this, "ResonanceSkillReleased");
+}
+
 void ACPlayerCharacter::StartResonanceLiberation()
 {
 	ActionComp->StartActionByName(this, "ResonanceLiberation");
@@ -267,9 +297,8 @@ void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 
 	DOREPLIFETIME(ACPlayerCharacter, bOnField);
 
-	DOREPLIFETIME(ACPlayerCharacter, Cooldown_CharacterChange);
-	DOREPLIFETIME(ACPlayerCharacter, bCanCharacterChange);
 	//DOREPLIFETIME(ACPlayerCharacter, bCanMove);
 	DOREPLIFETIME(ACPlayerCharacter, bCanJump);
 	DOREPLIFETIME(ACPlayerCharacter, OwnerController);
+	DOREPLIFETIME(ACPlayerCharacter, CooldownManager_CharacterChange);
 }

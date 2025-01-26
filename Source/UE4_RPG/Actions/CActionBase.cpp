@@ -35,6 +35,7 @@ void UCActionBase::ActionTick_Implementation(float DeltaTime)
 
 void UCActionBase::StartAction_Implementation(AActor* Instigator)
 {
+	bCanCancelLoop = false;
 }
 
 void UCActionBase::StopAction_Implementation(AActor* Instigator)
@@ -66,6 +67,8 @@ bool UCActionBase::IsRunning() const
 {
 	return RepData.bIsRunning;
 }
+
+
 
 void UCActionBase::SetActionDatas()
 {

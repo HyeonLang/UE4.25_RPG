@@ -52,7 +52,8 @@ void ACItemBase::Interact_Implementation(APawn* InstigatorPawn)
 			if (!PlayerInventory) return;
 			FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(ItemID);
 			PlayerInventory->AddItem(ItmeInfo.ItemID, ItmeInfo.ItemType, 1);
-			CLog::Print("AddItme", -1, 2.0f);
+			
+			Destroy();
 		}
 	}
 	

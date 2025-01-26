@@ -5,7 +5,10 @@
 
 #include "Global.h"
 #include "Actions/CAction.h"
+#include "Actions/CAction_CancelLoop.h"
 #include "Game/CCooldownManager.h"
+#include "Character/CPlayerCharacter.h"
+#include "Player/CPlayerController.h"
 
 
 DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_TORE);
@@ -58,6 +61,7 @@ void UCActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		if (Action)
 			Action->ActionTick(DeltaTime);
 	}
+
 	
 }
 
@@ -248,6 +252,21 @@ bool UCActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 	}
 
 	return false;
+}
+
+bool UCActionComponent::StartAllCancelLoopAction(AActor* Instigator)
+{
+	for (UCAction* Action : Actions)
+	{
+		UCAction_CancelLoop* CancelLoopAction = Cast<UCAction_CancelLoop>(Action);
+		if (CancelLoopAction)
+		{
+			CLog::Print(CancelLoopAction->ActionName.ToString());
+			StartActionByName(Instigator, CancelLoopAction->ActionName);
+		}
+	}
+
+	return true;
 }
 
 void UCActionComponent::ComboReset(UCAction* InAction, FName ResetName)

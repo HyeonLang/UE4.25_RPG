@@ -66,6 +66,6 @@ void ACLobbyGameMode::StartGame()
 	if (World)
 	{
 		//bUseSeamlessTravel = true;
-		//World->ServerTravel("/Game/Maps/Demo?listen"); // 게임 맵 이동
+		World->ServerTravel("/Game/Maps/Demo?listen"); // 게임 맵 이동
 	}
 }
