@@ -24,6 +24,10 @@ private:
 	void StartGameStartTimer();
 	void StartGame();
 
+public:
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetMaxNumberOfPlayers() const { return MaxNumberOfPlayers; };
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 MaxNumberOfPlayers;

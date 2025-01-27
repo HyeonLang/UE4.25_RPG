@@ -13,7 +13,12 @@ const static FName SESSION_SETTINGS_KEY = TEXT("ToreKey");
 
 UCGameInstance::UCGameInstance()
 {
-	CHelpers::GetClass<UUserWidget>(&LoginMenuWidgetClass, TEXT("/Game/UI/WB_LoginMenu"));
+
+	ConstructorHelpers::FClassFinder<UUserWidget> MainMenuWidgetClassAsset(TEXT("/Game/UI/WB_LoginMenu"));
+	if (MainMenuWidgetClassAsset.Succeeded())
+	{
+		LoginMenuWidgetClass = MainMenuWidgetClassAsset.Class;
+	}
 	//CHelpers::GetClass<UUserWidget>(&InGameMenuWidgetClass, TEXT("/Game/UI/WB_InGameMenu"));
 	
 }
@@ -85,11 +90,13 @@ void UCGameInstance::CreateSession_Internal()
 			SessionSettings.bIsLANMatch = false;
 		}
 
-		SessionSettings.NumPublicConnections = 2;
+		
+		SessionSettings.NumPublicConnections = 3;
 		SessionSettings.bShouldAdvertise = true;
+		SessionSettings.bAllowJoinInProgress = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.Set(SESSION_SETTINGS_KEY, DesiredSessionName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-
+		//SessionSettings.Set(,)
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
@@ -144,7 +151,7 @@ void UCGameInstance::StartSession()
 void UCGameInstance::LoadMainMenu()
 {
 	ensure(LoginMenuWidgetClass);
-
+	
 	LoginMenu = CreateWidget<UCLoginMenuWidget>(this, LoginMenuWidgetClass);
 	if (!LoginMenu)
 	{
@@ -152,6 +159,7 @@ void UCGameInstance::LoadMainMenu()
 	}
 
 	LoginMenu->SetOwningInstance(this);
+
 	LoginMenu->SetInputToUI();
 }
 

@@ -14,6 +14,14 @@ class UCLoginMenuWidget;
 class FOnlineSessionSearch;
 class UCDBManager;
 
+USTRUCT(BlueprintType)
+struct FUserInfo
+{
+	GENERATED_BODY()
+
+public:
+};
+
 UCLASS()
 class UE4_RPG_API UCGameInstance : public UGameInstance, public ICMenuInterface
 {
@@ -63,5 +71,6 @@ private:
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
+	
 	FString DesiredSessionName;
 };

@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CRPGGameMode.h"
+#include "CMainMenuGameMode.h"
 
-ACRPGGameMode::ACRPGGameMode()
+ACMainMenuGameMode::ACMainMenuGameMode()
 {
-	
 }

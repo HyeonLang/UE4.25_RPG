@@ -15,6 +15,12 @@ class UE4_RPG_API UCSessionRowWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+	virtual bool Initialize() override;
+
+protected:
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 public:
 	void Setup(UCLoginMenuWidget* InParentWidget, uint32 InSelfIndex);
 
@@ -36,10 +42,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bEverClicked;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	bool bIsTitle;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	UButton* RowButton;
-
 
 
 private:

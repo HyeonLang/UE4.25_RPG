@@ -6,12 +6,16 @@
 
 ACLobbyGameMode::ACLobbyGameMode()
 {
+	DefaultPawnClass = nullptr;
+
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/PlayerCharacters/ChangLi/BP_LobbyCharacter_ChangLi"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		SpawnClass = PlayerPawnBPClass.Class;
 	}
+
+	
 }
 
 void ACLobbyGameMode::PostLogin(APlayerController* NewPlayer)
@@ -23,7 +27,7 @@ void ACLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	CLog::LogOnScreen(this, "Current Players : " + FString::FromInt(NumberOfPlayers));
 	UE_LOG(LogTemp, Warning, TEXT("PostLogin : Current Players : %s"), *FString::FromInt(NumberOfPlayers));
 
-	if (NumberOfPlayers >= MaxNumberOfPlayers)
+	if (NumberOfPlayers >= 1)
 	{
 		CLog::LogOnScreen(this, "Reached Max Players");
 		UE_LOG(LogTemp, Error, TEXT("Reached Max Players"));

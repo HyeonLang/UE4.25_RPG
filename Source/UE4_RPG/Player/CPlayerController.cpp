@@ -35,6 +35,8 @@ ACPlayerController::ACPlayerController()
 
 	CHelpers::GetClass(&PlayerCameraActorClass, TEXT("/Game/Player/BP_CPlayerCameraActor"));
 
+	bAutoManageActiveCameraTarget = false;
+
 }
 
 
@@ -44,10 +46,11 @@ void ACPlayerController::BeginPlay()
 	
 	if (PlayerCameraActor && IsLocalController())
 	{
-		FTimerHandle TH;
+		/*FTimerHandle TH;
 		FTimerDelegate TD;
 		TD.BindUFunction(this, "OnSetViewTarget");
-		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);
+		GetWorld()->GetTimerManager().SetTimer(TH, TD, 0.1f, false);*/
+		SetViewTarget(PlayerCameraActor);
 	}
 
 	/*if (ensure(MinimapCameraActorClass) && IsLocalController())

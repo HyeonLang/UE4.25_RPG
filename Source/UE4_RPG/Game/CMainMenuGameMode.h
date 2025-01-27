@@ -3,16 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../UE4_RPGGameModeBase.h"
-#include "CRPGGameMode.generated.h"
+#include "GameFramework/GameModeBase.h"
+#include "CMainMenuGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UE4_RPG_API ACRPGGameMode : public AUE4_RPGGameModeBase
+class UE4_RPG_API ACMainMenuGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+	
 public:
-	ACRPGGameMode();
+	ACMainMenuGameMode();
 };
