@@ -176,6 +176,11 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVe
 			InNewCharacter->ServerStopAnimMontage();
 		}
 	}
+
+	if (InNewCharacter->GetActionComponent()->OnActionStopped.IsAlreadyBound(this, &ACPlayerController::OnActionStopped_HideCharacter))
+	{
+		InNewCharacter->GetActionComponent()->OnActionStopped.RemoveDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
+	}
 	
 	if (GetChangeCharacterLocation(Location, PlayerCharacter, PlayerCharacter->GetAimingComponent()->TargetActor, InMode))
 	{
@@ -200,7 +205,10 @@ void ACPlayerController::PossessCharacter(ACPlayerCharacter* InNewCharacter, FVe
 	ShowCharacter(InNewCharacter);
 	PlayerCharacter = InNewCharacter;
 
-	
+	if (OnPossessPlayerCharacter.IsBound())
+	{
+		OnPossessPlayerCharacter.Broadcast(PlayerCharacter, PlayerCharacterCurrentIndex);
+	}
 
 	if (!HasAuthority())
 	{
@@ -252,10 +260,15 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 		}
 
 		ACPlayerCharacter* PCI = PlayerCharacter;
+		int32 Index;
 		for (int32 i = 0; i < MaxPlayerCharacterCount; i++)
 		{
 			ACPlayerCharacter* PC = PlayerCharacters[i];
-			if (PC == PCI) continue;
+			if (PC == PCI)
+			{
+				Index = i;
+				continue;
+			}
 			if (PC) {
 				PC->SetActorLocation(PlayerCharacter->GetActorLocation());
 				PC->SetActorRotation(PlayerCharacter->GetActorRotation());
@@ -263,6 +276,11 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 		}
 		
 		PlayerCharacter->SetCharacterChangeCooldown();
+
+		if (OnUnPossessPlayerCharacter.IsBound())
+		{
+			OnUnPossessPlayerCharacter.Broadcast(PlayerCharacter, Index);
+		}
 
 		
 		if (!HasAuthority())

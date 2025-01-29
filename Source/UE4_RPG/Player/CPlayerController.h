@@ -4,6 +4,9 @@
 #include "GameFramework/PlayerController.h"
 #include "CPlayerController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPossessPlayerCharacter, ACPlayerCharacter*, PossessPlayerCharacter, int32, PossessCharacterIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnPossessPlayerCharacter, ACPlayerCharacter*, UnPossessPlayerCharacter, int32, UnPossessCharacterIndex);
+
 class ACharacter;
 class ACPlayerCharacter;
 class ACPlayerCameraActor;
@@ -140,6 +143,12 @@ public:
 public:
 	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere)
 	ACPlayerCameraActor* PlayerCameraActor;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPossessPlayerCharacter OnPossessPlayerCharacter;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnUnPossessPlayerCharacter OnUnPossessPlayerCharacter;
 
 	//UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	//ACMinimapCameraActor* MinimapCameraActor;

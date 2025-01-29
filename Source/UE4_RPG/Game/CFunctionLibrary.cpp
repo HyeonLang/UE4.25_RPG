@@ -2,6 +2,7 @@
 #include "Components/CAbilitySystemComponent.h"
 #include "Character/CPlayerCharacter.h"
 #include "Player/CPlayerController.h"
+#include "Components/CNPCActionComponent.h"
 #include "Engine/EngineTypes.h"
 #include "Global.h"
 
@@ -26,6 +27,12 @@ TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UAc
 
 bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
+	UCNPCActionComponent* NPCActionComp = Cast<UCNPCActionComponent>(TargetActor->GetComponentByClass(UCNPCActionComponent::StaticClass()));
+	if (NPCActionComp)
+	{
+		NPCActionComp->StartNPCActionByName(TargetActor, TEXT("Hitted"));
+	}
+
 	UCAbilitySystemComponent* ASComp = UCAbilitySystemComponent::GetAbilitySystemComponent(TargetActor);
 	if (ASComp)
 	{
