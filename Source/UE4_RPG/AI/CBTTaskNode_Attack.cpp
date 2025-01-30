@@ -62,6 +62,11 @@ EBTNodeResult::Type UCBTTaskNode_Attack::PlayAttack_Implementation(ACharacter* I
 	UCNPCActionComponent* NPCActionComp = Cast<UCNPCActionComponent>(InstigatorCharacter->GetComponentByClass(UCNPCActionComponent::StaticClass()));
 	if (NPCActionComp)
 	{
+		AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject("TargetActor"));
+
+		FRotator Direction = FRotator(InstigatorCharacter->GetActorRotation().Pitch, (TargetActor->GetActorLocation() - InstigatorCharacter->GetActorLocation()).GetSafeNormal().Rotation().Yaw, InstigatorCharacter->GetActorRotation().Roll);
+		InstigatorCharacter->SetActorRotation(Direction);
+
 		NPCActionComp->StartNPCActionByName(InstigatorCharacter, NPCActionName);
 		ActiveAction = NPCActionComp->GetNPCActionByName(NPCActionName);
 		bActiveAttack = true;

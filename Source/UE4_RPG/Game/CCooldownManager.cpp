@@ -143,6 +143,11 @@ void UCCooldownManager::OnCooldownComplete()
 
     GetWorld()->GetTimerManager().ClearTimer(CooldownTimerHandle);
 
+    if (OnCooldownCompleteDelegate.IsBound())
+    {
+        OnCooldownCompleteDelegate.Broadcast(this);
+    }
+
     UE_LOG(LogTemp, Log, TEXT("Cooldown complete."));
 }
 

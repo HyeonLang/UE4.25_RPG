@@ -4,12 +4,15 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Global.h"
 #include "Components/CStateComponent.h"
 #include "Components/CNPCActionComponent.h"
 #include "Components/CWorldWidgetComponent.h"
 #include "Components/CAbilitySystemComponent.h"
+#include "Perception/PawnSensingComponent.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
 #include "UI/CScreenWidget.h"
 #include "Weapon/CWeapon.h"
@@ -21,7 +24,8 @@ ACEnemyCharacter::ACEnemyCharacter()
 	SetReplicateMovement(true);
 
 	CHelpers::CreateSceneComponent<UCWorldWidgetComponent>(this, &WidgetComp, "WidgetComp", RootComponent);
-
+	
+	CHelpers::CreateActorComponent<UPawnSensingComponent>(this, &PawnSensingComp, "PawnSensingComp");
 	CHelpers::CreateActorComponent<UCStateComponent>(this, &StateComp, "StateComp");
 	CHelpers::CreateActorComponent<UCNPCActionComponent>(this, &NPCActionComp, "NPCActionComp");
 	CHelpers::CreateActorComponent<UCAbilitySystemComponent>(this, &AbilitySystemComp, "AbilitySystemComp");
@@ -32,6 +36,7 @@ ACEnemyCharacter::ACEnemyCharacter()
 	AlwaysWeaponEquip = false;
 	SetCanBeDamaged(true);
 
+	TargetActorKeyName = "TargetActor";
 }
 
 void ACEnemyCharacter::BeginPlay()
@@ -66,16 +71,37 @@ void ACEnemyCharacter::BeginPlay()
 	}
 
 	AbilitySystemComp->OnHealthChanged.AddDynamic(this, &ACEnemyCharacter::OnHealthChanged);
+	//PawnSensingComp->OnSeePawn.AddDynamic(this, &ACEnemyCharacter::OnSeePawn);
 }
 void ACEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 UAbilitySystemComponent* ACEnemyCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComp;
+}
+
+void ACEnemyCharacter::SetTargetActor(AActor* NewTarget)
+{
+	AAIController* AIC = GetController<AAIController>();
+	if (AIC)
+	{
+		AIC->GetBlackboardComponent()->SetValueAsObject(TargetActorKeyName, NewTarget);
+	}
+}
+
+AActor* ACEnemyCharacter::GetTargetActor() const
+{
+	AAIController* AIC = GetController<AAIController>();
+	if (AIC)
+	{
+		return Cast<AActor>(AIC->GetBlackboardComponent()->GetValueAsObject(TargetActorKeyName));
+	}
+
+	return nullptr;
 }
 
 void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta)
@@ -86,6 +112,24 @@ void ACEnemyCharacter::OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemC
 		NPCActionComp->StartNPCActionByName(this, TEXT("Dead"));
 	}
 
+}
+
+void ACEnemyCharacter::OnSeePawn(APawn* Pawn)
+{
+	AAIController* AIC = GetController<AAIController>();
+	if (ensure(AIC))
+	{
+		if (GetTargetActor() != Pawn)
+		{
+			SetTargetActor(Pawn);
+
+			NetMulticastPawnSeen();
+		}
+	}
+}
+
+void ACEnemyCharacter::NetMulticastPawnSeen_Implementation()
+{
 }
 
 void ACEnemyCharacter::Dead_Implementation()

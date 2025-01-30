@@ -15,6 +15,7 @@ class UCStateComponent;
 class UCNPCActionComponent;
 class UAbilitySystemComponent;
 class UCAbilitySystemComponent;
+class UPawnSensingComponent;
 class UCEnemyCharacterAttributeSet;
 class UCWorldWidgetComponent;
 class ACWeapon;
@@ -40,6 +41,9 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
+	FORCEINLINE UPawnSensingComponent* GetPawnSensingComponent() const { return PawnSensingComp; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
 	FORCEINLINE UCStateComponent* GetStateComponent() const { return StateComp; }
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Components")
@@ -52,15 +56,32 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Dead();
 
+	UFUNCTION(BlueprintCallable)
+	void SetTargetActor(AActor* NewTarget);
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetTargetActor() const;
+
+
 protected:
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UCAbilitySystemComponent* OwningComp, float NewHealth, float Delta);
+
+	UFUNCTION()
+	void OnSeePawn(APawn* Pawn);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void NetMulticastPawnSeen();
+
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 	AActor* OwnerActor;
 
 protected:
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UPawnSensingComponent* PawnSensingComp;
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCStateComponent* StateComp;
 
@@ -72,6 +93,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Component")
 	UCWorldWidgetComponent* WidgetComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetActorKeyName;
 
 protected:
 	// UI

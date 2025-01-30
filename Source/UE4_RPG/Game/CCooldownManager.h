@@ -4,6 +4,8 @@
 #include "UObject/NoExportTypes.h"
 #include "CCooldownManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCooldownComplete, UCCooldownManager*, CooldownManager);
+
 
 UCLASS(BlueprintType)
 class UE4_RPG_API UCCooldownManager : public UObject
@@ -54,6 +56,8 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "Cooldown")
     void SetLocalMode();
+
+    FOnCooldownComplete OnCooldownCompleteDelegate;
 
 
 protected:

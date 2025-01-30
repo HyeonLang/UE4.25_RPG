@@ -5,6 +5,7 @@
 #include "CActorSpawner.generated.h"
 
 class UCCooldownManager;
+class ACSpawnTargetPoint;
 
 UCLASS()
 class UE4_RPG_API ACActorSpawner : public AActor
@@ -21,6 +22,19 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void SpawnActorsAtTargetPoints();
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnCooldownComplete(UCCooldownManager* CooldownManager);
+
+protected:
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	TArray<ACSpawnTargetPoint*> SpawnTargetPoints;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float RespawnCooldown;
 
 public:
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = "Cooldown")
