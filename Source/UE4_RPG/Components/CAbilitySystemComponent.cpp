@@ -5,11 +5,15 @@
 #include "Attributes/CCharacterAttributeSet.h"
 #include "Attributes/CEnemyCharacterAttributeSet.h"
 #include "Attributes/CPlayerCharacterAttributeSet.h"
+#include "UI/CScreenWidget.h"
+#include "Global.h"
 
 UCAbilitySystemComponent::UCAbilitySystemComponent()
 {
 	SetIsReplicatedByDefault(true);
 	SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	CHelpers::GetClass<UCScreenWidget>(&DamageTextWidgetClass, TEXT("/Game/UI/WB_DamageText"));
 }
 
 UCAbilitySystemComponent* UCAbilitySystemComponent::GetAbilitySystemComponent(AActor* FromActor)
@@ -19,7 +23,7 @@ UCAbilitySystemComponent* UCAbilitySystemComponent::GetAbilitySystemComponent(AA
 	return nullptr;
 }
 
-bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
+bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta, const FHitResult& InHitResult)
 {
 	if (!GetOwner()->CanBeDamaged() && Delta < 0.f) // 데미지를 받지 않는 경우 추가
 	{
@@ -43,7 +47,7 @@ bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float 
 
 		if (!FMath::IsNearlyZero(ActualDelta))
 		{
-			NetMulticastHealthChanged(InstigatorActor, AttributeSet->GetHealth(), ActualDelta);
+			NetMulticastHealthChanged(InstigatorActor, AttributeSet->GetHealth(), ActualDelta, InHitResult);
 			if (OnHealthChanged.IsBound())
 				OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
 		}
@@ -61,10 +65,34 @@ bool UCAbilitySystemComponent::ApplyHealthChange(AActor* InstigatorActor, float 
 	return !FMath::IsNearlyZero(ActualDelta);
 }
 
-void UCAbilitySystemComponent::NetMulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
+void UCAbilitySystemComponent::NetMulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta, const FHitResult& InHitResult)
 {
 	if (OnHealthChanged.IsBound())
 		OnHealthChanged.Broadcast(InstigatorActor, this, NewHealth, Delta);
+
+	FVector SpawnLocation;
+	if (InHitResult.GetActor() && !InHitResult.ImpactPoint.IsNearlyZero())
+	{
+		SpawnLocation = InHitResult.ImpactPoint;
+	}
+	else
+	{
+		SpawnLocation = GetOwner()->GetActorLocation();
+	}
+
+
+	if (DamageTextWidgetClass)
+	{
+		
+		UCScreenWidget* DamageTextWidget = CreateWidget<UCScreenWidget>(GetWorld(), DamageTextWidgetClass);
+		DamageTextWidget->AttachToLocation = SpawnLocation;
+		FNumberFormattingOptions NumberFormattingOptions = FNumberFormattingOptions();
+		NumberFormattingOptions.SetMaximumFractionalDigits(0);
+		DamageTextWidget->SetText(FText::AsNumber(-Delta));
+		DamageTextWidget->AddToViewport();
+		if (DamageTextWidget)
+			CLog::Print(DamageTextWidget->InText.ToString());
+	}
 }
 
 bool UCAbilitySystemComponent::IsAlive() const

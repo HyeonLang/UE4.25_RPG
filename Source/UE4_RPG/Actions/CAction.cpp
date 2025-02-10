@@ -63,7 +63,6 @@ void UCAction::StartAction_Implementation(AActor* Instigator)
 
 	if (PC && ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0))
 	{
-		Comp->bCanStopMontagePostAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
 		if (!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
 			PC->CanMoveCount++;
 	}
@@ -95,11 +94,13 @@ void UCAction::StopAction_Implementation(AActor* Instigator)
 		PC->GetWeapon()->OffCollision();
 	}
 
-	if (PC)
+	if (PC && ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0))
 	{
-		if (ActionDatas.IsValidIndex(ComboIndex) && ActionDatas[ComboIndex].MontageDatas.IsValidIndex(0) &&!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
+		Comp->bCanStopMontagePostAction = ActionDatas[ComboIndex].MontageDatas[0].bCanStopMontagePostAction;
+		if (!ActionDatas[ComboIndex].MontageDatas[0].bCanMove)
 			PC->CanMoveCount--;
 	}
+	
 
 	if (PC->GetAimingComponent()->TargetActor)
 	{

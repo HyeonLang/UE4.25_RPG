@@ -7,7 +7,7 @@
 #include "Global.h"
 
 #define ISDEBUGLINE true
-#define TRACEDEBUGTYPE EDrawDebugTrace::ForDuration
+#define TRACEDEBUGTYPE EDrawDebugTrace::None
 
 TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UActorComponent* Comp)
 {
@@ -25,7 +25,7 @@ TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UAc
 	return TArray<ACPlayerCharacter*>();
 }
 
-bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
+bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult)
 {
 	UCNPCActionComponent* NPCActionComp = Cast<UCNPCActionComponent>(TargetActor->GetComponentByClass(UCNPCActionComponent::StaticClass()));
 	if (NPCActionComp)
@@ -37,7 +37,7 @@ bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, f
 	if (ASComp)
 	{
 		
-		return ASComp->ApplyHealthChange(DamageCauser, -DamageAmount);
+		return ASComp->ApplyHealthChange(DamageCauser, -DamageAmount, HitResult);
 	}
 
 	return false;
@@ -45,7 +45,7 @@ bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, f
 
 bool UCFunctionLibrary::ApplyDirectionDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult)
 {
-	if (ApplyDamage(DamageCauser, TargetActor, DamageAmount))
+	if (ApplyDamage(DamageCauser, TargetActor, DamageAmount, HitResult))
 	{
 		UPrimitiveComponent* HitComp = HitResult.GetComponent();
 		if (HitComp && HitComp->IsSimulatingPhysics(HitResult.BoneName))

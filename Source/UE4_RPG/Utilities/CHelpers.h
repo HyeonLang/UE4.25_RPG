@@ -43,6 +43,26 @@ public:
 	}
 
 	template<typename T>
+	static void GetClassDynamic(TSubclassOf<T>* OutClass, FString InPath)
+	{
+		
+		UClass* LoadedClass = StaticLoadClass(T::StaticClass(), nullptr, *InPath);
+
+		if (!LoadedClass)
+		{
+			ensureMsgf(false, TEXT("Failed to load class from path: %s"), *InPath);
+			return;
+		}
+
+		*OutClass = Cast<UClass>(LoadedClass);
+
+		if (!*OutClass)
+		{
+			ensureMsgf(false, TEXT("Failed to cast the loaded class to TSubclassOf<T>"));
+		}
+	}
+
+	template<typename T>
 	static T* GetComponent(AActor* InActor)
 	{
 		return Cast<T>(InActor->GetComponentByClass(T::StaticClass()));

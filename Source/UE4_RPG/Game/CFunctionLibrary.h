@@ -16,7 +16,7 @@ public:
 	static TArray<ACPlayerCharacter*> GetPlayerCharactersByComponent(UActorComponent* Comp);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
-	static bool ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount);
+	static bool ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static bool ApplyDirectionDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult);

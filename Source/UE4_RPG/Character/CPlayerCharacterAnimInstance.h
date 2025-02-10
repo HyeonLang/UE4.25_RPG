@@ -39,6 +39,9 @@ protected:
 	float Speed;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
+	float Direction;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	float Pitch;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")

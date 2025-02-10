@@ -1,5 +1,9 @@
 #include "CDBManager.h"
-#include <xdevapi.h>
+#include "HttpModule.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
+#include "Kismet/GameplayStatics.h"
+#include "GenericPlatform/GenericPlatformHttp.h"
 #include "Global.h"
 
 
@@ -7,86 +11,55 @@ UCDBManager::UCDBManager()
 {
 }
 
-UCDBManager::~UCDBManager()
+void UCDBManager::SendData(const FText& InUserName, const FText& InPhone1, const FText& InPhone2, const FText& InPhone3, const FText& InAge, const FText& InAddress)
 {
-	Disconnect();
+    //Http모듈. 멤버 변수로 획득 금지
+    FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+    Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnResponseReceived);
+
+    //JSON Elenemt Array(요소 전달)
+    TSharedRef<FJsonObject> JsonFieldObject = MakeShared<FJsonObject>();
+
+    const FText& nameText = InUserName;
+    URL.Append("user_name=");
+    URL.Append(FString::Printf(TEXT("%s"), *FGenericPlatformHttp::UrlEncode(nameText.ToString())));
+    //URL.Append("%EA%B9%80%EA%B2%BD%EC%84%9D");
+
+    const FText& phone1Text = InPhone1;
+    URL.Append("&user_phone1=");
+    URL.Append(FString::Printf(TEXT("%s"), *phone1Text.ToString()));
+
+    const FText& phone2Text = InPhone2;
+    URL.Append("&user_phone2=");
+    URL.Append(FString::Printf(TEXT("%s"), *phone2Text.ToString()));
+
+    const FText& phone3Text = InPhone3;
+    URL.Append("&user_phone3=");
+    URL.Append(FString::Printf(TEXT("%s"), *phone3Text.ToString()));
+
+    //나이+주소 -> user_contents,
+    if (InAge.IsEmpty() == false || InAddress.IsEmpty() == false)
+    {
+        const FText& ageText = InAge;
+        const FText& addressText = InAddress;
+        FString userContentsStr = FString::Printf(TEXT("%s/%s"), *ageText.ToString(), *FGenericPlatformHttp::UrlEncode(addressText.ToString()));
+
+        URL.Append("&user_contents=");
+        URL.Append(FString::Printf(TEXT("%s"), *userContentsStr));
+    }
+    UE_LOG(LogTemp, Error, TEXT("%s"), *URL);
+
+
+    //Request->SetURL(FGenericPlatformHttp::UrlEncode(URL));
+
+    Request->SetURL(URL);
+    Request->SetVerb("GET");
+    Request->SetHeader("Content-Type", "text/html");
+    bool bSuceess = Request->ProcessRequest();
+    UE_LOG(LogTemp, Error, TEXT("Request result is %d"), bSuceess);
+
 }
 
-bool UCDBManager::Connect(const FString& Host, int32 Port, const FString& UserName, const FString& Password, const FString& Schema)
+void UCDBManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
 {
-	std::string strHost = TCHAR_TO_UTF8(*Host);
-	std::string strUserName = TCHAR_TO_UTF8(*UserName);
-	std::string strPassword = TCHAR_TO_UTF8(*Password);
-	std::string strSchema = TCHAR_TO_UTF8(*Schema);
-	
-	try {
-		m_Session = new mysqlx::Session(strHost, Port, strUserName, strPassword);
-		m_SchemaDB = new mysqlx::Schema(m_Session->getSchema(strSchema));
-		CLog::Log(TEXT("DBConnect Success."));
-		return true;
-	}
-	catch (const mysqlx::Error& err)
-	{
-		FString ErrorMsg = TEXT("Mysql Error : %s") + FString(err.what());
-		CLog::Log(ErrorMsg);
-		return false;
-	}
-	catch (std::exception& ex)
-	{
-		FString ErrorMsg = TEXT("Standard Exception : %s") + FString(ex.what());
-		CLog::Log(ErrorMsg);
-		return false;
-	}
-	catch (...)
-	{
-		CLog::Log(TEXT("Connect Unknown Exception Error."));
-		return false;
-	}
-
-	return false;
-}
-
-bool UCDBManager::InsertUserTable(const FString& InTableName, const FString& InUserName, const FString& InPassword)
-{
-	if (nullptr == m_Session)
-	{
-		CLog::Log(TEXT("Unknown Exception Error."));
-		
-		return false;
-	}
-
-	try
-	{
-		mysqlx::Table Table = m_SchemaDB->getTable(TCHAR_TO_UTF8(*InTableName));
-
-		Table.insert("username", "password").values(TCHAR_TO_UTF8(*InUserName), TCHAR_TO_UTF8(*InPassword)).execute();
-
-		CLog::Log(TEXT("DBInsert Success."));
-		return true;
-	}
-	catch(const mysqlx::Error& err)
-	{
-		FString ErrorMsg = TEXT("Data Insert Fail Error : %s") + FString(err.what());
-		CLog::Log(ErrorMsg);
-		return false;
-	}
-	catch (...)
-	{
-		CLog::Log(TEXT("DBInsert Unknown Exception Error."));
-		return false;
-	}
-
-	return false;
-}
-
-bool UCDBManager::Disconnect()
-{
-	if (m_Session)
-	{
-		delete m_Session;
-		m_Session = nullptr;
-
-		CLog::Log(TEXT("DB Session Close."));
-	}
-	return false;
 }

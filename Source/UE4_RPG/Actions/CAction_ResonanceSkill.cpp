@@ -7,6 +7,7 @@
 #include "Global.h"
 #include "Weapon/CWeapon.h"
 
+#include "LevelSequence.h"
 #include "Net/UnrealNetwork.h"
 
 

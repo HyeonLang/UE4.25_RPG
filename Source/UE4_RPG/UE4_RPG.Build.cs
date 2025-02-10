@@ -27,7 +27,13 @@ public class UE4_RPG : ModuleRules
 			"GameplayTags",
 			"Paper2D",
 			"OnlineSubsystem",
-			"OnlineSubsystemSteam"
+			"OnlineSubsystemSteam",
+			"LevelSequence",
+			"MovieScene",
+			"CinematicCamera",
+			"HTTP", 
+			"JSON", 
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

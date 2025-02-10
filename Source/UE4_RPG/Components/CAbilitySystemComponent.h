@@ -6,11 +6,12 @@
 #include "AbilitySystemComponent.h"
 #include "CAbilitySystemComponent.generated.h"
 
-class UCCharacterAttributeSet;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatorActor, class UCAbilitySystemComponent*, OwningComp, float, NewValue, float, Delta);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeSetFinished,  UCAbilitySystemComponent*, AbilitySystemComponent);
+
+class UCCharacterAttributeSet;
+class UCScreenWidget;
  
 UCLASS()
 class UE4_RPG_API UCAbilitySystemComponent : public UAbilitySystemComponent
@@ -33,11 +34,11 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
+	bool ApplyHealthChange(AActor* InstigatorActor, float Delta, const FHitResult& InHitResult);
 
 	// ApplyHealthChange 넷멀티캐스트
 	UFUNCTION(NetMulticast, Reliable)
-	void NetMulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
+	void NetMulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta, const FHitResult& InHitResult);
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool IsAlive() const;
@@ -57,4 +58,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Attribute")
 	UCCharacterAttributeSet* AttributeSet;
+
+protected:
+	TSubclassOf<UCScreenWidget> DamageTextWidgetClass;
 };

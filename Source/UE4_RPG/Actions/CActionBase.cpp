@@ -70,7 +70,7 @@ bool UCActionBase::IsRunning() const
 
 
 
-void UCActionBase::SetActionDatas()
+void UCActionBase::SetActionDatas_Implementation()
 {
 	if (ActionDataAssets)
 	{

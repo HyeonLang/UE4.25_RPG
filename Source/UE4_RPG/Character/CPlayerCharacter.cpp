@@ -6,6 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialInstanceConstant.h"
 
 #include "Global.h"
 #include "Player/CPlayerController.h"
@@ -55,6 +57,18 @@ void ACPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Create Dynamic Material
+	for (int32 i = 0; i < GetMesh()->GetMaterials().Num(); i++)
+	{
+		UMaterialInterface* Material = GetMesh()->GetMaterial(i);
+		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Material, this);
+		if (ensure(DynamicMaterial))
+		{
+			GetMesh()->SetMaterial(i, DynamicMaterial);
+		}
+	}
+
+
 	AbilitySystemComp->AttributeSet = const_cast<UCPlayerCharacterAttributeSet*>(GetAbilitySystemComponent()->GetSetChecked<UCPlayerCharacterAttributeSet>());
 	if (AbilitySystemComp->AttributeSet)
 	{
@@ -85,6 +99,8 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 	{
 		CooldownManager_CharacterChange->CooldownTick(DeltaTime);
 	}
+
+	CLog::Print(CanMoveCount, -1, DeltaTime);
 }
 
 //bool ACPlayerCharacter::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

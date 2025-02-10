@@ -2,26 +2,33 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/SizeBox.h"
+#include "Components/TextBlock.h"
+#include "Global.h"
 
 void UCScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	FVector2D ScreenPosition;
+	bool bIsOnScreen = UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), AttachToLocation + WorldOffset, ScreenPosition);
 
-	bool bIsOnScreen = UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), AttachToActor->GetActorLocation() + WorldOffset, ScreenPosition);
+	
+	float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
+	ScreenPosition /= ViewportScale;
 
-	if (bIsOnScreen)
+	if (ParentSizeBox)
 	{
-		float ViewportScale = UWidgetLayoutLibrary::GetViewportScale(this);
-		ScreenPosition /= ViewportScale;
-
-		if (ParentSizeBox)
-
-		{
-			ParentSizeBox->SetRenderTranslation(ScreenPosition);
-		}
+		ParentSizeBox->SetRenderTranslation(ScreenPosition);
 	}
+	
 
-	ParentSizeBox->SetVisibility(bIsOnScreen ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	if (ParentSizeBox)
+	{
+		ParentSizeBox->SetVisibility(bIsOnScreen ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UCScreenWidget::SetText(FText Text)
+{
+	DamageText->SetText(Text);
 }

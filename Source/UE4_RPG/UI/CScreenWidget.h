@@ -6,6 +6,7 @@
 #include "CScreenWidget.generated.h"
 
 class USizeBox;
+class UTextBlock;
 
 
 UCLASS()
@@ -17,8 +18,14 @@ protected:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
+	void SetText(FText Text);
+
+public:
 	UPROPERTY(BlueprintReadOnly, Category = "UI", meta = (ExposeOnSpawn = true))
-	AActor* AttachToActor;
+	FVector AttachToLocation;
+
+	UPROPERTY(BlueprintReadWrite, Category = "UI", meta = (ExposeOnSpawn = true))
+	FText InText;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 	FVector WorldOffset;
@@ -26,5 +33,7 @@ public:
 protected:
 	UPROPERTY(meta = (BindWidget))
 	USizeBox* ParentSizeBox;
-	
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DamageText;
 };

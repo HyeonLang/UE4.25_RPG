@@ -6,6 +6,7 @@
 #include "Actions/CAction.h"
 #include "CAction_ResonanceSkill.generated.h"
 
+class ULavelSequence;
 
 UCLASS()
 class UE4_RPG_API UCAction_ResonanceSkill : public UCAction
@@ -31,4 +32,5 @@ protected:
 
 	UFUNCTION()
 	void OnRep_TargetDerection();
+
 };

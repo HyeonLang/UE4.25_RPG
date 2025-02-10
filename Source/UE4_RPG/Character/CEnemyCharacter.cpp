@@ -41,18 +41,15 @@ ACEnemyCharacter::ACEnemyCharacter()
 
 void ACEnemyCharacter::BeginPlay()
 {
-	int32 MaterialIndex = 0;
-	for (auto* Meterial : GetMesh()->GetMaterials())
+	for (int32 i = 0; i < GetMesh()->GetMaterials().Num(); i++)
 	{
-		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Meterial, this);
-
-		if (DynamicMaterial)
+		UMaterialInterface* Material = GetMesh()->GetMaterial(i);
+		UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(Material, this);
+		if (ensure(DynamicMaterial))
 		{
 			DynamicMaterial->SetScalarParameterValue("Amount", 0.f);
-			GetMesh()->SetMaterial(MaterialIndex, DynamicMaterial);
+			GetMesh()->SetMaterial(i, DynamicMaterial);
 		}
-
-		MaterialIndex++;
 	}
 
 	// 위젯등에서의 Attribute 사용을 위해 가장먼저 생성 

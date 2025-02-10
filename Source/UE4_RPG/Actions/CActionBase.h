@@ -74,7 +74,8 @@ public:
 
 
 public:
-	virtual void SetActionDatas();
+	UFUNCTION(BlueprintNativeEvent)
+	void SetActionDatas();
 
 	UWorld* GetWorld() const;
 

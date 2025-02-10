@@ -94,9 +94,10 @@ bool UCItemManager::UseConsumableItem(AActor* InstigatorActor, FName ItemID, int
 
         InstigatorAbilitySystemComp = Cast<UCAbilitySystemComponent>(InstigatorActor->GetComponentByClass(UCAbilitySystemComponent::StaticClass()));
 
+
         if (InstigatorAbilitySystemComp)
         {
-            InstigatorAbilitySystemComp->ApplyHealthChange(InstigatorActor, ConsumableItemInfo.Delta);
+            InstigatorAbilitySystemComp->ApplyHealthChange(InstigatorActor, ConsumableItemInfo.Delta, FHitResult());
         }
 
         break;
