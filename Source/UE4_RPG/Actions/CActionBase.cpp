@@ -93,7 +93,7 @@ void UCActionBase::BindOnMontageEndDelegate_Implementation(UAnimMontage* Montage
 {
 }
 
-bool UCActionBase::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
+bool UCActionBase::GetAimTargetLocationAndDirection_Implementation(FVector& OutTargetLocation, FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
 	return false;
 }

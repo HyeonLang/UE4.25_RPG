@@ -122,6 +122,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(bool InNew);
 
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Dash(float MoveLength);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void MoveToTarget(float MoveLength, bool bDirect = false);
+
 protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnActionCreateFinished(UCActionComponent* OwningComp);

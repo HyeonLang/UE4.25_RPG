@@ -36,7 +36,7 @@ public:
 	void SetOwningComponent(UCActionComponent* NewActionComp);
 
 public:
-	virtual bool GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode) override;
+	virtual bool GetAimTargetLocationAndDirection_Implementation(FVector& OutTargetLocation, FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode) override;
 
 	virtual bool SetAimTargetLocation_Implementation(AActor* InTarget, const bool InIsBossMode) override;
 

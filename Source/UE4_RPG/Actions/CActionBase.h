@@ -81,7 +81,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
-	bool GetAimTargetDirection(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
+	bool GetAimTargetLocationAndDirection(FVector& OutTargetLocation, FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	bool SetAimTargetLocation(AActor* InTarget, const bool InIsBossMode);

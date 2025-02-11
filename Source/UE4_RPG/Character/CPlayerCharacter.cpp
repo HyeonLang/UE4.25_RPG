@@ -245,6 +245,14 @@ void ACPlayerCharacter::SetCanMove(bool InNew)
 	CanMoveCount = InNew;
 }
 
+void ACPlayerCharacter::Dash_Implementation(float MoveLength)
+{
+}
+
+void ACPlayerCharacter::MoveToTarget_Implementation(float MoveLength, bool bDirect = false)
+{
+}
+
 void ACPlayerCharacter::OnActionCreateFinished_Implementation(UCActionComponent* OwningComp)
 {
 	if (OwnerController)

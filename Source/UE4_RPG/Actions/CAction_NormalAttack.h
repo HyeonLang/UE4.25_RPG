@@ -28,10 +28,17 @@ protected:
 		void OnRep_Target();
 
 	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_TargetDerection")
-		FRotator TargetDerection;
+	FVector TargetLocation;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Target", ReplicatedUsing = "OnRep_TargetDerection")
+	FRotator TargetDerection;
 
 	UFUNCTION()
-		void OnRep_TargetDerection();
+	void OnRep_TargetLocation();
+
+	UFUNCTION()
+	void OnRep_TargetDerection();
+
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")

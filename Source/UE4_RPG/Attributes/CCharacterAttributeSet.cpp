@@ -9,6 +9,8 @@ UCCharacterAttributeSet::UCCharacterAttributeSet()
 
 }
 
+
+
 void UCCharacterAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCCharacterAttributeSet, Health, OldHealth);

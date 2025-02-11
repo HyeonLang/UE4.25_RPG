@@ -56,6 +56,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChanged OnHealthChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChanged OnMaxHealthChanged;
+
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Attribute")
 	UCCharacterAttributeSet* AttributeSet;
 

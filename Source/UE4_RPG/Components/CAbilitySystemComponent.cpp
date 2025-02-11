@@ -77,7 +77,7 @@ void UCAbilitySystemComponent::NetMulticastHealthChanged_Implementation(AActor* 
 	}
 	else
 	{
-		SpawnLocation = GetOwner()->GetActorLocation();
+		SpawnLocation = GetOwner()->GetActorLocation() + FVector(0, 0, 15.f);
 	}
 
 

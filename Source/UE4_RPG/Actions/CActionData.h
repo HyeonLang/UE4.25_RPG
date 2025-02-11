@@ -79,6 +79,9 @@ public:
 	float AttackRange;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	float EffectiveAttackRange;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	float DamageRange;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)

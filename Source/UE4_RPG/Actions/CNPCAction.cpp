@@ -115,9 +115,9 @@ void UCNPCAction::SetOwningComponent(UCNPCActionComponent* NewNPCActionComp)
 	NPCActionComp = NewNPCActionComp;
 }
 
-bool UCNPCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
+bool UCNPCAction::GetAimTargetLocationAndDirection_Implementation(FVector& OutTargetLocation, FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
-	bool Result = Super::GetAimTargetDirection_Implementation(OutDirection, OutTarget, InIsBossMode);
+	bool Result = Super::GetAimTargetLocationAndDirection_Implementation(OutTargetLocation, OutDirection, OutTarget, InIsBossMode);
 
 	return Result;
 }

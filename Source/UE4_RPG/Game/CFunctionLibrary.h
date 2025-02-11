@@ -6,7 +6,7 @@
 
 class ACPlayerCharacter;
 
-UCLASS()
+UCLASS(Blueprintable)
 class UE4_RPG_API UCFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()

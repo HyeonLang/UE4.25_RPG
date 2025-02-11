@@ -170,15 +170,16 @@ void UCAction::PlayMontageAction_Implementation(UAnimMontage* Montage, ACharacte
 
 }
 
-bool UCAction::GetAimTargetDirection_Implementation(FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
+bool UCAction::GetAimTargetLocationAndDirection_Implementation(FVector& OutTargetLocation, FRotator& OutDirection, AActor* OutTarget, const bool InIsBossMode)
 {
-	bool Result = Super::GetAimTargetDirection_Implementation(OutDirection, OutTarget, InIsBossMode);
+	bool Result = Super::GetAimTargetLocationAndDirection_Implementation(OutTargetLocation, OutDirection, OutTarget, InIsBossMode);
 
 	UCAimingComponent* AimingComp = Cast<UCAimingComponent>(GetOwningComponent()->GetOwner()->GetComponentByClass(UCAimingComponent::StaticClass()));
 	OutTarget = AimingComp->GetAimTargetDirection(OutDirection, ActionDatas[ComboIndex].AttackRange, InIsBossMode);
 
 	if (OutTarget)
 	{
+		OutTargetLocation = OutTarget->GetActorLocation();
 		ACEnemyCharacter* EnemyTarget = Cast<ACEnemyCharacter>(OutTarget);
 		if (!EnemyTarget)
 		{

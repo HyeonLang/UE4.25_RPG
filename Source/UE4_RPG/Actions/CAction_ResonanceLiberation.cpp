@@ -64,15 +64,23 @@ void UCAction_ResonanceLiberation::StartAction_Implementation(AActor* Instigator
 {
 	Super::StartAction_Implementation(Instigator);
 
+	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
+
 	if (GetOwningComponent()->GetOwnerRole() == ROLE_Authority)
 	{
-		if (GetAimTargetDirection(TargetDerection, TargetActor, false))// Todo. bossmode fix
+		if (GetAimTargetLocationAndDirection(TargetLocation, TargetDerection, TargetActor, false))// Todo. bossmode fix
 		{
 			Instigator->SetActorRotation(TargetDerection);
+			if (ActionDatas.IsValidIndex(ComboIndex) && !FMath::IsNearlyZero(ActionDatas[ComboIndex].EffectiveAttackRange))
+			{
+				float Distance = UKismetMathLibrary::Distance2D(FVector2D(InstigatorCharacter->GetActorLocation().X, InstigatorCharacter->GetActorLocation().Y), FVector2D(TargetLocation.X, TargetLocation.Y));
+
+				InstigatorCharacter->MoveToTarget(Distance - ActionDatas[ComboIndex].EffectiveAttackRange, true);
+
+			}
 		}
 	}
 
-	ACPlayerCharacter* InstigatorCharacter = Cast<ACPlayerCharacter>(Instigator);
 
 	if (InstigatorCharacter)
 	{
@@ -101,6 +109,18 @@ void UCAction_ResonanceLiberation::SetPlayingCameraOffset(FVector NewOffset)
 
 void UCAction_ResonanceLiberation::OnRep_Target()
 {
+}
+
+void UCAction_ResonanceLiberation::OnRep_TargetLocation()
+{
+	ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(GetOwningComponent()->GetOwner());
+	if (ActionDatas.IsValidIndex(ComboIndex) && !FMath::IsNearlyZero(ActionDatas[ComboIndex].EffectiveAttackRange))
+	{
+		float Distance = UKismetMathLibrary::Distance2D(FVector2D(PlayerCharacter->GetActorLocation().X, PlayerCharacter->GetActorLocation().Y), FVector2D(TargetLocation.X, TargetLocation.Y));
+
+		PlayerCharacter->MoveToTarget(Distance - ActionDatas[ComboIndex].EffectiveAttackRange, true);
+
+	}
 }
 
 void UCAction_ResonanceLiberation::OnRep_TargetDerection()
@@ -178,4 +198,5 @@ void UCAction_ResonanceLiberation::GetLifetimeReplicatedProps(TArray<class FLife
 
 	DOREPLIFETIME(UCAction_ResonanceLiberation, TargetActor);
 	DOREPLIFETIME(UCAction_ResonanceLiberation, TargetDerection);
+	DOREPLIFETIME(UCAction_ResonanceLiberation, TargetLocation);
 }

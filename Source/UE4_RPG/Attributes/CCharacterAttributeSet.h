@@ -13,7 +13,6 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-
 UCLASS()
 class UE4_RPG_API UCCharacterAttributeSet : public UAttributeSet
 {

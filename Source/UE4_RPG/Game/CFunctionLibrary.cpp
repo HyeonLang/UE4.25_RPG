@@ -25,6 +25,8 @@ TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UAc
 	return TArray<ACPlayerCharacter*>();
 }
 
+
+
 bool UCFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult)
 {
 	UCNPCActionComponent* NPCActionComp = Cast<UCNPCActionComponent>(TargetActor->GetComponentByClass(UCNPCActionComponent::StaticClass()));
