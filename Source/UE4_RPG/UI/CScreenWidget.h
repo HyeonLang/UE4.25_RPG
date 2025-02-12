@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Global.h"
 #include "CScreenWidget.generated.h"
 
 class USizeBox;
@@ -18,7 +19,7 @@ protected:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
-	void SetText(FText Text);
+	void SetText(FText Text, EGameAttributeType InGameAttributeType);
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "UI", meta = (ExposeOnSpawn = true))

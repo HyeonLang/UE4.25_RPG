@@ -100,13 +100,17 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		UCAction* Action = Cast<UCAction>(InstigateAction);
 		if (Action)
 		{
-			ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Action->GetOwningComponent()->GetOwner());
-			if (PlayerCharacter)
+			if (!Cast<ACPlayerCharacter>(OtherActor))
 			{
-				//InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+				ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Action->GetOwningComponent()->GetOwner());
+				if (PlayerCharacter)
+				{
+					InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+				}
 			}
 		}
 
+		//NPCÀÎ °æ¿ì
 		UCNPCAction* NPCAction = Cast<UCNPCAction>(InstigateAction);
 		if (NPCAction)
 		{

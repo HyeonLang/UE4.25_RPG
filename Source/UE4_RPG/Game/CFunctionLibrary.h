@@ -6,6 +6,13 @@
 
 class ACPlayerCharacter;
 
+UENUM(BlueprintType)
+enum class EGameAttributeType : uint8
+{
+	Normal, Glacio, Fusion, Conducto, Aero, Spectro, Havoc, Heal, Max
+};
+
+
 UCLASS(Blueprintable)
 class UE4_RPG_API UCFunctionLibrary : public UBlueprintFunctionLibrary
 {
@@ -29,4 +36,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static TArray<FHitResult> BoxTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, FVector HalfSize, FRotator Orientation, UObject* InWorld);
+
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static FColor GetAttributeColor(EGameAttributeType InGameAttributeType);
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static FLinearColor GetAttributeLinearColor(EGameAttributeType InGameAttributeType);
+	
 };

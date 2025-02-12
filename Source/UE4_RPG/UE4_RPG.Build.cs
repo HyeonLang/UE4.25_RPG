@@ -26,13 +26,16 @@ public class UE4_RPG : ModuleRules
 			"GameplayTasks",
 			"GameplayTags",
 			"Paper2D",
+			"Slate",
+			"SlateCore",
 			"OnlineSubsystem",
 			"OnlineSubsystemSteam",
 			"LevelSequence",
 			"MovieScene",
 			"CinematicCamera",
 			"HTTP", 
-			"JSON", 
+			"JSON",
+			"JsonUtilities", 
 			"UMG"
 		});
 

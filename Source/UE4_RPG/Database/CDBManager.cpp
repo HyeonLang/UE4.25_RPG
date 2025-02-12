@@ -4,8 +4,9 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
 #include "GenericPlatform/GenericPlatformHttp.h"
+#include "Json.h"
+#include "JsonUtilities.h"
 #include "Global.h"
-
 
 UCDBManager::UCDBManager()
 {
@@ -13,53 +14,174 @@ UCDBManager::UCDBManager()
 
 void UCDBManager::SendData(const FText& InUserName, const FText& InPhone1, const FText& InPhone2, const FText& InPhone3, const FText& InAge, const FText& InAddress)
 {
-    //Http¸ğµâ. ¸â¹ö º¯¼ö·Î È¹µæ ±İÁö
     FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
     Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnResponseReceived);
 
-    //JSON Elenemt Array(¿ä¼Ò Àü´Ş)
-    TSharedRef<FJsonObject> JsonFieldObject = MakeShared<FJsonObject>();
-
-    const FText& nameText = InUserName;
+    URL.Empty();
     URL.Append("user_name=");
-    URL.Append(FString::Printf(TEXT("%s"), *FGenericPlatformHttp::UrlEncode(nameText.ToString())));
-    //URL.Append("%EA%B9%80%EA%B2%BD%EC%84%9D");
+    URL.Append(FString::Printf(TEXT("%s"), *FGenericPlatformHttp::UrlEncode(InUserName.ToString())));
 
-    const FText& phone1Text = InPhone1;
     URL.Append("&user_phone1=");
-    URL.Append(FString::Printf(TEXT("%s"), *phone1Text.ToString()));
+    URL.Append(FString::Printf(TEXT("%s"), *InPhone1.ToString()));
 
-    const FText& phone2Text = InPhone2;
     URL.Append("&user_phone2=");
-    URL.Append(FString::Printf(TEXT("%s"), *phone2Text.ToString()));
+    URL.Append(FString::Printf(TEXT("%s"), *InPhone2.ToString()));
 
-    const FText& phone3Text = InPhone3;
     URL.Append("&user_phone3=");
-    URL.Append(FString::Printf(TEXT("%s"), *phone3Text.ToString()));
+    URL.Append(FString::Printf(TEXT("%s"), *InPhone3.ToString()));
 
-    //³ªÀÌ+ÁÖ¼Ò -> user_contents,
-    if (InAge.IsEmpty() == false || InAddress.IsEmpty() == false)
+    if (!InAge.IsEmpty() || !InAddress.IsEmpty())
     {
-        const FText& ageText = InAge;
-        const FText& addressText = InAddress;
-        FString userContentsStr = FString::Printf(TEXT("%s/%s"), *ageText.ToString(), *FGenericPlatformHttp::UrlEncode(addressText.ToString()));
+        FString userContents = FString::Printf(TEXT("%s/%s"), 
+            *InAge.ToString(), 
+            *FGenericPlatformHttp::UrlEncode(InAddress.ToString()));
 
         URL.Append("&user_contents=");
-        URL.Append(FString::Printf(TEXT("%s"), *userContentsStr));
+        URL.Append(FString::Printf(TEXT("%s"), *userContents));
     }
-    UE_LOG(LogTemp, Error, TEXT("%s"), *URL);
-
-
-    //Request->SetURL(FGenericPlatformHttp::UrlEncode(URL));
 
     Request->SetURL(URL);
-    Request->SetVerb("GET");
-    Request->SetHeader("Content-Type", "text/html");
-    bool bSuceess = Request->ProcessRequest();
-    UE_LOG(LogTemp, Error, TEXT("Request result is %d"), bSuceess);
+    Request->SetVerb(TEXT("GET"));
+    Request->SetHeader(TEXT("Content-Type"), TEXT("text/html"));
 
+    if (!Request->ProcessRequest())
+    {
+        OnRequestFailedEvent.Broadcast(TEXT("Failed to send request"));
+    }
+}
+
+void UCDBManager::SendGetRequest(const FString& Endpoint)
+{
+    FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+    Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnResponseReceived);
+
+    Request->SetURL(Endpoint);
+    Request->SetVerb(TEXT("GET"));
+    Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+    if (!Request->ProcessRequest())
+    {
+        OnRequestFailedEvent.Broadcast(TEXT("Failed to send GET request"));
+    }
+}
+
+void UCDBManager::SendPostRequest(const FString& Endpoint, const FString& JsonString)
+{
+    FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+    Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnResponseReceived);
+
+    Request->SetURL(Endpoint);
+    Request->SetVerb(TEXT("POST"));
+    Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+    Request->SetContentAsString(JsonString);
+
+    if (!Request->ProcessRequest())
+    {
+        OnRequestFailedEvent.Broadcast(TEXT("Failed to send POST request"));
+    }
 }
 
 void UCDBManager::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
 {
+    if (!bConnectedSuccessfully || !Response.IsValid())
+    {
+        OnRequestFailedEvent.Broadcast(TEXT("Connection failed or invalid response"));
+        return;
+    }
+
+    if (Response->GetResponseCode() >= 400)
+    {
+        OnRequestFailedEvent.Broadcast(FString::Printf(TEXT("Server error: %d"), Response->GetResponseCode()));
+        return;
+    }
+
+    FString ResponseString = Response->GetContentAsString();
+    OnResponseReceivedEvent.Broadcast(ResponseString);
+
+    // JSON ì‘ë‹µ íŒŒì‹± ì˜ˆì‹œ
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseString);
+    if (FJsonSerializer::Deserialize(Reader, JsonObject))
+    {
+        // JSON íŒŒì‹± ì„±ê³µ
+        UE_LOG(LogTemp, Log, TEXT("Response parsed successfully: %s"), *ResponseString);
+    }
+}
+
+FString UCDBManager::CreateQueryString(const TMap<FString, FString>& Params)
+{
+    FString QueryString;
+    bool bFirst = true;
+
+    for (const auto& Param : Params)
+    {
+        if (!bFirst)
+        {
+            QueryString += TEXT("&");
+        }
+        QueryString += FString::Printf(TEXT("%s=%s"), 
+            *FGenericPlatformHttp::UrlEncode(Param.Key), 
+            *FGenericPlatformHttp::UrlEncode(Param.Value));
+        bFirst = false;
+    }
+
+    return QueryString;
+}
+
+void UCDBManager::RequestLogin(const FString& Username, const FString& Password)
+{
+    FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+    Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnLoginResponse);
+
+    // JSON ë°ì´í„° ìƒì„±
+    TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
+    JsonObject->SetStringField(TEXT("username"), Username);
+    JsonObject->SetStringField(TEXT("password"), Password);
+
+    FString JsonString;
+    TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
+    FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
+
+    // POST ìš”ì²­ ì„¤ì •
+    Request->SetURL(TEXT("http://your-server.com/api/login"));  // ì„œë²„ì˜ ë¡œê·¸ì¸ ì—”ë“œí¬ì¸íŠ¸ë¡œ ë³€ê²½ í•„ìš”
+    Request->SetVerb(TEXT("POST"));
+    Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+    Request->SetContentAsString(JsonString);
+
+    if (!Request->ProcessRequest())
+    {
+        OnLoginFailedEvent.Broadcast(TEXT("Failed to send login request"));
+    }
+}
+
+void UCDBManager::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+    if (!bConnectedSuccessfully || !Response.IsValid())
+    {
+        OnLoginFailedEvent.Broadcast(TEXT("Connection failed or invalid response"));
+        return;
+    }
+
+    if (Response->GetResponseCode() >= 400)
+    {
+        OnLoginFailedEvent.Broadcast(FString::Printf(TEXT("Login failed: %d"), Response->GetResponseCode()));
+        return;
+    }
+
+    FString ResponseString = Response->GetContentAsString();
+    
+    // JSON ì‘ë‹µ íŒŒì‹±
+    TSharedPtr<FJsonObject> JsonObject;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseString);
+    
+    if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+    {
+        // ë¡œê·¸ì¸ ì„±ê³µ ì‹œ ì‚¬ìš©ì ë°ì´í„° ì „ë‹¬
+        OnLoginSuccessEvent.Broadcast(ResponseString);
+        UE_LOG(LogTemp, Log, TEXT("Login successful: %s"), *ResponseString);
+    }
+    else
+    {
+        OnLoginFailedEvent.Broadcast(TEXT("Failed to parse login response"));
+    }
 }

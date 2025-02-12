@@ -80,15 +80,23 @@ void UCAbilitySystemComponent::NetMulticastHealthChanged_Implementation(AActor* 
 		SpawnLocation = GetOwner()->GetActorLocation() + FVector(0, 0, 15.f);
 	}
 
-
 	if (DamageTextWidgetClass)
 	{
-		
+		// Todo. 데미지 클래스 받고 따로 함수로 만들어주기
 		UCScreenWidget* DamageTextWidget = CreateWidget<UCScreenWidget>(GetWorld(), DamageTextWidgetClass);
 		DamageTextWidget->AttachToLocation = SpawnLocation;
 		FNumberFormattingOptions NumberFormattingOptions = FNumberFormattingOptions();
 		NumberFormattingOptions.SetMaximumFractionalDigits(0);
-		DamageTextWidget->SetText(FText::AsNumber(-Delta));
+		
+		EGameAttributeType DamageType = EGameAttributeType::Fusion;
+		if (Delta > 0) {
+			DamageType = EGameAttributeType::Heal;
+			DamageTextWidget->SetText(FText::AsNumber(Delta), DamageType);
+		}
+		else
+		{
+			DamageTextWidget->SetText(FText::AsNumber(-Delta), DamageType);
+		}
 		DamageTextWidget->AddToViewport();
 		if (DamageTextWidget)
 			CLog::Print(DamageTextWidget->InText.ToString());

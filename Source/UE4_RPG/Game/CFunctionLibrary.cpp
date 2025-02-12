@@ -193,3 +193,43 @@ TArray<FHitResult> UCFunctionLibrary::BoxTraceForAttackTarget(TArray<AActor*> In
 	return TargetResults;
 }
 
+
+FColor UCFunctionLibrary::GetAttributeColor(EGameAttributeType InGameAttributeType)
+{
+	switch (InGameAttributeType)
+	{
+	case EGameAttributeType::Normal:
+		return FColor(255, 255, 255);
+		break;
+	case EGameAttributeType::Glacio:
+		return FColor(135, 206,235);
+		break;
+	case EGameAttributeType::Fusion:
+		return FColor(255, 105, 108);
+		break;
+	case EGameAttributeType::Conducto:
+		return FColor(186, 85, 211);
+		break;
+	case EGameAttributeType::Aero:
+		return FColor(72, 209, 204);
+		break;
+	case EGameAttributeType::Spectro:
+		return FColor(245, 245, 170);
+		break;
+	case EGameAttributeType::Havoc:
+		return FColor(221, 160, 221);
+		break;
+	case EGameAttributeType::Heal:
+		return FColor(157, 249, 67);
+		break;
+	case EGameAttributeType::Max:
+
+	default:
+		return FColor(0, 0, 0);
+	}
+}
+
+FLinearColor UCFunctionLibrary::GetAttributeLinearColor(EGameAttributeType InGameAttributeType)
+{
+	return FLinearColor(GetAttributeColor(InGameAttributeType));
+}

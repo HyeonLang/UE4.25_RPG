@@ -3,7 +3,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
-#include "Global.h"
+
 
 void UCScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -28,7 +28,9 @@ void UCScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	}
 }
 
-void UCScreenWidget::SetText(FText Text)
+void UCScreenWidget::SetText(FText Text, EGameAttributeType InGameAttributeType)
 {
 	DamageText->SetText(Text);
+	const FLinearColor LinearColor = UCFunctionLibrary::GetAttributeLinearColor(InGameAttributeType);
+	DamageText->SetColorAndOpacity(FSlateColor(LinearColor));
 }
