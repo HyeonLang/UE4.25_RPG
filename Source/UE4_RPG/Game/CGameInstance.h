@@ -31,6 +31,8 @@ public:
 	virtual void Init() override;
 
 public:
+	virtual void Login(const FString& UserId, const FString& Password) override;
+	
 	UFUNCTION(Exec)
 	virtual void Host(FString InDesiredSessionName) override;
 
@@ -58,15 +60,27 @@ private:
 	void OnJoinSessionCompleted(FName InSessionName, EOnJoinSessionCompleteResult::Type InResult);
 	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorMessage);
 
+	UFUNCTION()
+	void OnLoginSuccessEvent(const FString& UserData);
+
+	void OnPreLoadMap(const FString& InMapName);
+	void OnPostLoadMapWithWorld(UWorld* InLoadedWorld);
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	UCDBManager* DBManager;
+
+	UPROPERTY(BlueprintReadOnly)
+	UUserWidget* LoadingWidget;
 
 private:
 	TSubclassOf<UUserWidget> LoginMenuWidgetClass;
 	UCLoginMenuWidget* LoginMenu;
 
 	TSubclassOf<UUserWidget> InGameMenuWidgetClass;
+
+	TSubclassOf<UUserWidget> LoadingWidgetClass;
+
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;

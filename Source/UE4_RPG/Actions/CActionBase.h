@@ -61,6 +61,10 @@ public:
 	void Attack_Elapsed(ACharacter* InstigatorCharacter, int32 AttackIndex = 0);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void Attack_Explode(ACharacter* InstigatorCharacter, FVector HitLocation, FRotator HitRotation, int32 AttackIndex = 0);
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void Attack_ElapsedByOverlapEvent(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex = 0);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "NPCAction")

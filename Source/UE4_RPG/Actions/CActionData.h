@@ -45,7 +45,7 @@ public:
 	FTransform EffectTransform;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UParticleSystem> Effects;
+	UParticleSystem* Effects;
 
 };
 
@@ -71,6 +71,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FActionEffectData> EffectDatas;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TArray<FActionEffectData> HitEffectDatas;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FActionCameraData> CameraDatas;

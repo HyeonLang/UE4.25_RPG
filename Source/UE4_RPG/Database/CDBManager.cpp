@@ -10,6 +10,7 @@
 
 UCDBManager::UCDBManager()
 {
+    bLoginInProgress = false;
 }
 
 void UCDBManager::SendData(const FText& InUserName, const FText& InPhone1, const FText& InPhone2, const FText& InPhone3, const FText& InAge, const FText& InAddress)
@@ -130,12 +131,21 @@ FString UCDBManager::CreateQueryString(const TMap<FString, FString>& Params)
 
 void UCDBManager::RequestLogin(const FString& Username, const FString& Password)
 {
+    CLog::Print("RequestLogin", -1, 10.f, FColor::White);
+    
+    // 이미 로그인 요청이 진행 중이면 중복 요청 방지
+    if (bLoginInProgress)
+    {
+        OnLoginFailedEvent.Broadcast(TEXT("Login request already in progress"));
+        return;
+    }
+
     FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
     Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnLoginResponse);
 
     // JSON 데이터 생성
     TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
-    JsonObject->SetStringField(TEXT("username"), Username);
+    JsonObject->SetStringField(TEXT("userid"), Username);
     JsonObject->SetStringField(TEXT("password"), Password);
 
     FString JsonString;
@@ -143,19 +153,29 @@ void UCDBManager::RequestLogin(const FString& Username, const FString& Password)
     FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
 
     // POST 요청 설정
-    Request->SetURL(TEXT("http://your-server.com/api/login"));  // 서버의 로그인 엔드포인트로 변경 필요
+    Request->SetURL(TEXT("http://127.0.0.1:5000/api/login"));  // 서버의 로그인 엔드포인트로 변경 필요
     Request->SetVerb(TEXT("POST"));
+    
     Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+    Request->SetHeader(TEXT("Accept"), TEXT("application/json"));  // 추가
+
     Request->SetContentAsString(JsonString);
 
     if (!Request->ProcessRequest())
     {
         OnLoginFailedEvent.Broadcast(TEXT("Failed to send login request"));
+        return;
     }
+    CLog::Print("RequestLogin Success", -1, 10.f, FColor::White);
+    // 로그인 요청 시작
+    bLoginInProgress = true;
 }
 
 void UCDBManager::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
 {
+    // 로그인 요청 완료
+    bLoginInProgress = false;
+    CLog::Print("OnLoginResponse", -1, 10.f, FColor::White);
     if (!bConnectedSuccessfully || !Response.IsValid())
     {
         OnLoginFailedEvent.Broadcast(TEXT("Connection failed or invalid response"));
@@ -179,6 +199,7 @@ void UCDBManager::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Resp
         // 로그인 성공 시 사용자 데이터 전달
         OnLoginSuccessEvent.Broadcast(ResponseString);
         UE_LOG(LogTemp, Log, TEXT("Login successful: %s"), *ResponseString);
+        CLog::Print("OnLoginResponse success", -1, 10.f, FColor::White);
     }
     else
     {

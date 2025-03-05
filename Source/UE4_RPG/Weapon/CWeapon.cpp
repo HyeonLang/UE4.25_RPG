@@ -3,11 +3,14 @@
 
 #include "CWeapon.h"
 #include "Global.h"
+#include "Player/CPlayerController.h"
 #include "Character/CPlayerCharacter.h"
 #include "Character/CEnemyCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CActionComponent.h"
 #include "Components/CNPCActionComponent.h"
+#include "Weapon/CWeapon.h"
+#include "Weapon/CNPCWeapon.h"
 #include "Actions/CAction.h"
 #include "Actions/CNPCAction.h"
 
@@ -100,8 +103,9 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		UCAction* Action = Cast<UCAction>(InstigateAction);
 		if (Action)
 		{
-			if (!Cast<ACPlayerCharacter>(OtherActor))
+			if (!Cast<ACPlayerCharacter>(OtherActor) && !Cast<ACWeapon>(OtherActor) && !Cast<ACNPCWeapon>(OtherActor))
 			{
+				
 				ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(Action->GetOwningComponent()->GetOwner());
 				if (PlayerCharacter)
 				{
@@ -115,9 +119,12 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if (NPCAction)
 		{
 			ACEnemyCharacter* EnemyCharacter = Cast<ACEnemyCharacter>(NPCAction->GetOwningComponent()->GetOwner());
-			if (EnemyCharacter)
+			if (!Cast<ACWeapon>(OtherActor) && !Cast<ACNPCWeapon>(OtherActor))
 			{
-				InstigateAction->Attack_ElapsedByOverlapEvent(EnemyCharacter, this, SweepResult, AttackIndex);
+				if (EnemyCharacter)
+				{
+					InstigateAction->Attack_ElapsedByOverlapEvent(EnemyCharacter, this, SweepResult, AttackIndex);
+				}
 			}
 		}
 	}

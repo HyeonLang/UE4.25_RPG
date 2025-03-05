@@ -44,7 +44,20 @@ void UCActionBase::StopAction_Implementation(AActor* Instigator)
 
 void UCActionBase::Attack_Elapsed_Implementation(ACharacter* InstigatorCharacter, int32 AttackIndex)
 {
+	
 }
+
+void UCActionBase::Attack_Explode_Implementation(ACharacter* InstigatorCharacter, FVector HitLocation, FRotator HitRotation, int32 AttackIndex)
+{
+	if (ActionDatas.IsValidIndex(AttackIndex) && ActionDatas[AttackIndex].HitEffectDatas.IsValidIndex(0))
+	{
+		if (ActionDatas[AttackIndex].HitEffectDatas[0].Effects)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(this, ActionDatas[AttackIndex].HitEffectDatas[0].Effects, HitLocation, HitRotation);
+		}
+	}
+}
+
 
 void UCActionBase::Attack_ElapsedByOverlapEvent_Implementation(ACharacter* InstigatorCharacter, AActor* InstigatorActor, const FHitResult& HitResult, int32 AttackIndex)
 {

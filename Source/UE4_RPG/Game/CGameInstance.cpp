@@ -19,6 +19,12 @@ UCGameInstance::UCGameInstance()
 	{
 		LoginMenuWidgetClass = MainMenuWidgetClassAsset.Class;
 	}
+
+	ConstructorHelpers::FClassFinder<UUserWidget> LoadingWidgetClassAsset(TEXT("/Game/UI/WB_LoadingWidget"));
+	if (LoadingWidgetClassAsset.Succeeded())
+	{
+		LoadingWidgetClass = LoadingWidgetClassAsset.Class;
+	}
 	//CHelpers::GetClass<UUserWidget>(&InGameMenuWidgetClass, TEXT("/Game/UI/WB_InGameMenu"));
 	
 }
@@ -54,6 +60,18 @@ void UCGameInstance::Init()
 	}
 
 	DBManager = NewObject<UCDBManager>();
+	if (ensure(DBManager))
+	{
+		DBManager->OnLoginSuccessEvent.AddDynamic(this, &UCGameInstance::OnLoginSuccessEvent);
+	}
+
+	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &UCGameInstance::OnPreLoadMap);
+	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UCGameInstance::OnPostLoadMapWithWorld);
+}
+
+void UCGameInstance::Login(const FString& UserId, const FString& Password)
+{
+	DBManager->RequestLogin(UserId, Password);
 }
 
 void UCGameInstance::Host(FString InDesiredSessionName)
@@ -271,4 +289,52 @@ void UCGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENet
 {
 	CLog::LogOnScreen(this, ErrorMessage, FColor::Red);
 	OpenLoginMenuLevel();
+}
+
+void UCGameInstance::OnLoginSuccessEvent(const FString& UserData)
+{
+	// JSON ÀÀ´ä ÆÄ½Ì
+	TSharedPtr<FJsonObject> JsonObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(UserData);
+
+	FJsonSerializer::Deserialize(Reader, JsonObject);
+
+	bool bSuccess = false;
+	if (JsonObject->GetStringField("status") == "fail")
+	{
+		bSuccess = false;
+	}
+	else
+	{
+		bSuccess = true;
+	}
+
+	if (LoginMenu)
+	{
+		LoginMenu->LoginServerResponse(bSuccess);
+	}
+
+	CLog::Print(JsonObject->GetStringField("status"), -1, 10.f, FColor::Red);
+	CLog::Log(UserData);
+}
+
+void UCGameInstance::OnPreLoadMap(const FString& InMapName)
+{
+	////if (InMapName.Right(4) != "Demo") return;
+
+	//if (!GetWorld()->IsServer())
+	//{
+	//	if (LoadingWidgetClass)
+	//	{
+	//		LoadingWidget = CreateWidget<UUserWidget>(GetWorld(), LoadingWidgetClass);
+	//		LoadingWidget->AddToViewport();
+	//	}
+	//}
+	
+	
+}
+
+void UCGameInstance::OnPostLoadMapWithWorld(UWorld* InLoadedWorld)
+{
+	
 }

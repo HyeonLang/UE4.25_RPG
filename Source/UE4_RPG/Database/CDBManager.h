@@ -40,6 +40,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HTTP")
 	void RequestLogin(const FString& Username, const FString& Password);
 
+	// 로그인 요청 상태 확인
+	UFUNCTION(BlueprintPure, Category = "HTTP")
+	bool IsLoginInProgress() const { return bLoginInProgress; }
+
 	// 기본 URL 설정
 	UFUNCTION(BlueprintCallable, Category = "HTTP")
 	void SetBaseUrl(const FString& NewBaseUrl) { BaseURL = NewBaseUrl; }
@@ -62,6 +66,10 @@ protected:
 	// 현재 URL
 	UPROPERTY()
 	FString URL;
+
+	// 로그인 요청 진행 중 여부
+	UPROPERTY()
+	bool bLoginInProgress;
 
 public:
 	// 응답 수신 이벤트

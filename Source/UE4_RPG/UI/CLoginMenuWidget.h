@@ -62,6 +62,8 @@ public:
 	void SetSessionList(TArray<FSessionData> InSessionDatas);
 	void SetSelectedIndex(uint32 InIndex);
 
+	void LoginServerResponse(bool bSuccess);
+
 protected:
 	//Buttons
 	UPROPERTY(meta = (BindWidget))
