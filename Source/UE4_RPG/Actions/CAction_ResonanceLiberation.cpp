@@ -122,7 +122,7 @@ void UCAction_ResonanceLiberation::OnRep_TargetLocation()
 
 	}
 }
-
+#include "Animation/AnimNotifies/AnimNotify.h"
 void UCAction_ResonanceLiberation::OnRep_TargetDerection()
 {
 	GetOwningComponent()->GetOwner()->SetActorRotation(TargetDerection);
@@ -131,10 +131,9 @@ void UCAction_ResonanceLiberation::OnRep_TargetDerection()
 
 void UCAction_ResonanceLiberation::StartCameraAction_Implementation(ACPlayerCharacter* InstigatorCharacter)
 {
-	ACharacter* PlayerCharacter = Cast<ACharacter>(GetOwningComponent()->GetOwner());
+	ACPlayerCharacter* PlayerCharacter = Cast<ACPlayerCharacter>(GetOwningComponent()->GetOwner());
 	if (!PlayerCharacter) return;
 
-	CLog::Print("insie");
 	ACPlayerController* PlayerController = Cast<ACPlayerController>(PlayerCharacter->GetController());
 	if (!PlayerController) return;
 
@@ -148,7 +147,7 @@ void UCAction_ResonanceLiberation::StartCameraAction_Implementation(ACPlayerChar
 		PlayerController->SetViewTarget(LiberationCameraActor);
 		PlayerController->DisableInput(PlayerController);
 		LiberationCameraActor->OnPlayCinematicFinished.AddDynamic(this, &UCAction_ResonanceLiberation::OnPlayCinematicFinished);
-		PlayCameraAction(InstigatorCharacter);
+		PlayCameraAction(PlayerCharacter);
 	}
 }
 

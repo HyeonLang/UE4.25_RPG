@@ -54,10 +54,10 @@ protected:
 
 
 public:
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	USceneComponent* MidComp;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	USceneComponent* StartComp;
 
 	UPROPERTY(BlueprintReadWrite)

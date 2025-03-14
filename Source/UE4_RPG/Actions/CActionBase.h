@@ -126,6 +126,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Action")
 	TArray<AActor*> IgnoreActors;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Datas")
+	TArray<FActionData> ActionDatas;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
+	int32 ComboIndex;
+
 protected:
 	// Gameplay tags
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayTag")
@@ -152,10 +158,4 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Datas")
 	UCActionData* ActionDataAssets;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Datas")
-	TArray<FActionData> ActionDatas;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combo")
-	int32 ComboIndex;
 };

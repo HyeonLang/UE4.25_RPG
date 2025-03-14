@@ -50,6 +50,7 @@ void ACWeapon::BeginPlay()
 	
 	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ACWeapon::OnActorBeginOverlap);
 	CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &ACWeapon::OnActorEndOverlap);
+	
 
 	if (bAlwaysEquip)
 	{
@@ -75,6 +76,25 @@ void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 	{
 		InstigateAction = NewAction;
 		AttackIndex = NewAttackIndex;
+	}
+
+	// 이미 오버랩된 액터 감지
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+	
+	for (AActor* OverlappingActor : OverlappingActors)
+	{
+		if (OverlappingActor && OverlappingActor != this && OverlappingActor != GetOwner())
+		{
+			FHitResult HitResult = FHitResult();
+			HitResult.Actor = OverlappingActor;
+			HitResult.Location = OverlappingActor->GetActorLocation();
+			UE_LOG(LogTemp, Warning, TEXT("Already overlapping with: %s"), *OverlappingActor->GetName());
+
+			// 수동으로 오버랩 이벤트 실행
+			OnActorBeginOverlap(CapsuleComp, OverlappingActor, nullptr, 0, false, HitResult);
+			
+		}
 	}
 }
 
@@ -110,6 +130,7 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 				if (PlayerCharacter)
 				{
 					InstigateAction->Attack_ElapsedByOverlapEvent(PlayerCharacter, this,  SweepResult, AttackIndex);
+					OverlappedActors.AddUnique(OtherActor);
 				}
 			}
 		}
@@ -124,13 +145,14 @@ void ACWeapon::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 				if (EnemyCharacter)
 				{
 					InstigateAction->Attack_ElapsedByOverlapEvent(EnemyCharacter, this, SweepResult, AttackIndex);
+					OverlappedActors.AddUnique(OtherActor);
 				}
 			}
 		}
 	}
-
-	OverlappedActors.AddUnique(OtherActor);
 }
+
+
 
 void ACWeapon::OnActorEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {

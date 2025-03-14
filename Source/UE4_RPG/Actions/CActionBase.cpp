@@ -53,7 +53,7 @@ void UCActionBase::Attack_Explode_Implementation(ACharacter* InstigatorCharacter
 	{
 		if (ActionDatas[AttackIndex].HitEffectDatas[0].Effects)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(this, ActionDatas[AttackIndex].HitEffectDatas[0].Effects, HitLocation, HitRotation);
+			UGameplayStatics::SpawnEmitterAtLocation(this, ActionDatas[AttackIndex].HitEffectDatas[0].Effects, HitLocation, HitRotation, ActionDatas[AttackIndex].HitEffectDatas[0].EffectTransform.GetScale3D());
 		}
 	}
 }

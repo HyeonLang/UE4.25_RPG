@@ -7,7 +7,7 @@
 #include "Global.h"
 
 #define ISDEBUGLINE true
-#define TRACEDEBUGTYPE EDrawDebugTrace::None
+#define TRACEDEBUGTYPE EDrawDebugTrace::ForDuration
 
 TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UActorComponent* Comp)
 {
@@ -70,6 +70,8 @@ TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*>
 	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
 	
 	
+
+	
 	bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(
 		InWorld,
 		Location,
@@ -101,6 +103,53 @@ TArray<FHitResult> UCFunctionLibrary::SphereTraceForAttackTarget(TArray<AActor*>
 		}
 	}
 	
+
+	return TargetResults;
+}
+
+TArray<FHitResult> UCFunctionLibrary::SphereTracesForAttackTarget(TArray<AActor*> InIgnoreActors, FVector StartLocation, FVector EndLocation, float Radius, UObject* InWorld)
+{
+	TArray<FHitResult> TargetResults;
+
+	TArray<FHitResult> HitResults;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody)));
+	//ObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic)));
+
+
+
+
+	bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(
+		InWorld,
+		StartLocation,
+		EndLocation,
+		Radius,
+		ObjectTypes,
+		false,
+		InIgnoreActors,
+		TRACEDEBUGTYPE,
+		HitResults,
+		true
+	);
+
+	if (!bHit) return TargetResults;
+
+	TArray<AActor*> DetectedActor;
+
+	for (auto HitResult : HitResults)
+	{
+		AActor* HittedActor = HitResult.GetActor();
+		if (DetectedActor.Contains(HittedActor))
+		{
+			continue;
+		}
+		else
+		{
+			DetectedActor.Add(HittedActor);
+			TargetResults.Add(HitResult);
+		}
+	}
+
 
 	return TargetResults;
 }

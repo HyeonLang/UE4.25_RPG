@@ -32,6 +32,9 @@ public:
 	static TArray<FHitResult> SphereTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, float Radius, UObject* InWorld);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static TArray<FHitResult> SphereTracesForAttackTarget(TArray<AActor*> InIgnoreActors, FVector StartLocation, FVector EndLocation, float Radius, UObject* InWorld);
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static TArray<FHitResult> CapsuleTraceForAttackTarget(TArray<AActor*> InIgnoreActors, FVector Location, float Radius, float HalfHeight, UObject* InWorld);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
