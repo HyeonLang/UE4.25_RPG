@@ -61,19 +61,19 @@ void ACPlayerState::Tick(float DeltaTime)
 
 bool ACPlayerState::UseInventoryItem(FName UseItemID, EItemType UseItemType, int32 UseItemCount)
 {
-	if (HasAuthority())
+
+	
+	ACPlayerController* PlayerController = Cast<ACPlayerController>(GetOwner());
+	if (!PlayerController) return false;
+
+	if (PlayerInventory->UseItem(PlayerController->GetPlayerCharacter(), UseItemID, UseItemType, UseItemCount))
 	{
-		ACPlayerController* PlayerController = Cast<ACPlayerController>(GetOwner());
-		if (!PlayerController) return false;
+		if (!PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount)) return false;
 
-		if (PlayerInventory->UseItem(PlayerController->GetPlayerCharacter(), UseItemID, UseItemType, UseItemCount))
-		{
-			if (!PlayerInventory->RemoveItem(UseItemID, UseItemType, UseItemCount)) return false;
-
-			return true;
-		}
+		return true;
 	}
-	else
+	
+	if (!HasAuthority())
 	{
 		CLog::Print("UseItem");
 		ServerUseInventoryItem(UseItemID, UseItemType, UseItemCount);

@@ -6,6 +6,8 @@
 #include "Interfaces/CInitializable.h"
 #include "CItemManager.generated.h"
 
+class UParticleSystem;
+
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
@@ -79,6 +81,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Item Data", meta = (AllowPrivateAccess = true))
     UDataTable* ConsumableItemDataTable;
 
+    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Replicated)
+    TArray<UParticleSystem*> UsingEffects;
+
 public:
     virtual void Initialize() override;
 
@@ -108,4 +113,5 @@ public:
 public:
     UFUNCTION(BlueprintCallable, Category = "ItemUse")
     bool UseConsumableItem(AActor* InstigatorActor, FName ItemID, int32 UseItemCount = 1);
+
 };

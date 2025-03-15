@@ -1,7 +1,8 @@
 #include "CItemManager.h"
 #include "Global.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
-
+#include "Particles/ParticleSystem.h"
 #include "Components/CAbilitySystemComponent.h"
 
 // ΩÃ±€≈Ê ¿ŒΩ∫≈œΩ∫ √ ±‚»≠
@@ -11,6 +12,8 @@ void UCItemManager::Initialize()
 {
     CHelpers::GetAssetDynamic(&ItemDataTable, TEXT("/Game/Data/DT_ItemInfo"));
     CHelpers::GetAssetDynamic(&ConsumableItemDataTable, TEXT("/Game/Data/DT_ConsumableItemInfo"));
+
+    UsingEffects.Add(Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), nullptr, TEXT("/Game/Effects/P_Heal_LongDistance_Target"))));
 }
 
 UCItemManager* UCItemManager::GetInstance()
@@ -80,39 +83,65 @@ FItemInfo UCItemManager::GetItemInfoByName(FName ItemName) const
 
 bool UCItemManager::UseConsumableItem(AActor* InstigatorActor, FName ItemID, int32 UseItemCount)
 {
-    if (!InstigatorActor->HasAuthority()) return false;
-
     FConsumableItemInfo ConsumableItemInfo = GetConsumableItemInfoByID(ItemID);
-    if (ConsumableItemInfo.ItemID != ItemID) return false;
 
-    UCAbilitySystemComponent* InstigatorAbilitySystemComp;
-
-    switch (ConsumableItemInfo.ConsumableItemType)
+    if (!InstigatorActor->HasAuthority())
     {
-    case EConsumableItemType::Potion:
-        std::cout << "Potion item selected!" << std::endl;
-
-        InstigatorAbilitySystemComp = Cast<UCAbilitySystemComponent>(InstigatorActor->GetComponentByClass(UCAbilitySystemComponent::StaticClass()));
-
-
-        if (InstigatorAbilitySystemComp)
+        ACharacter* InstigatorCharacter = Cast<ACharacter>(InstigatorActor);
+        switch (ConsumableItemInfo.ConsumableItemType)
         {
-            InstigatorAbilitySystemComp->ApplyHealthChange(InstigatorActor, ConsumableItemInfo.Delta, FHitResult());
+        case EConsumableItemType::Potion:
+            if (InstigatorCharacter && UsingEffects.IsValidIndex((uint8)EConsumableItemType::Potion) && UsingEffects[(uint8)EConsumableItemType::Potion])
+            {
+                UGameplayStatics::SpawnEmitterAttached(UsingEffects[(uint8)EConsumableItemType::Potion], InstigatorCharacter->GetMesh());
+            }
+            break;
+
+        case EConsumableItemType::Max:
+
+            break;
+
+        default:
+
+            break;
         }
-
-        break;
-
-    case EConsumableItemType::Max:
-        std::cout << "Invalid item selected!" << std::endl;
-        break;
-
-    default:
-        std::cout << "Unknown item type!" << std::endl;
-        break;
     }
 
-    
-    return true;
+    if (InstigatorActor->HasAuthority()) 
+    {
+        if (ConsumableItemInfo.ItemID != ItemID) return false;
+
+        UCAbilitySystemComponent* InstigatorAbilitySystemComp;
+
+        switch (ConsumableItemInfo.ConsumableItemType)
+        {
+        case EConsumableItemType::Potion:
+            
+
+            InstigatorAbilitySystemComp = Cast<UCAbilitySystemComponent>(InstigatorActor->GetComponentByClass(UCAbilitySystemComponent::StaticClass()));
+
+
+            if (InstigatorAbilitySystemComp)
+            {
+                InstigatorAbilitySystemComp->ApplyHealthChange(InstigatorActor, ConsumableItemInfo.Delta, FHitResult());
+            }
+
+            break;
+
+        case EConsumableItemType::Max:
+            
+            break;
+
+        default:
+            
+            break;
+        }
+
+        
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -122,4 +151,5 @@ void UCItemManager::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& 
 
     DOREPLIFETIME(UCItemManager, ItemDataTable);
     DOREPLIFETIME(UCItemManager, ConsumableItemDataTable);
+    DOREPLIFETIME(UCItemManager, UsingEffects);
 }
