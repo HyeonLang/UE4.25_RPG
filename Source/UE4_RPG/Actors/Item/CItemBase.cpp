@@ -28,8 +28,18 @@ ACItemBase::ACItemBase()
 void ACItemBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//SetLifeSpan(30.f);
+
+	FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(SpawnItemID);
+	MeshComp->SetStaticMesh(ItmeInfo.ItemMesh);
+	if (HasAuthority())
+	{
+		SetItemMesh_NetMulticast(ItmeInfo.ItemMesh);
+	}
+
+	if (!FMath::IsNearlyZero(LifeTime))
+	{
+		SetLifeSpan(LifeTime);
+	}
 }
 
 void ACItemBase::Tick(float DeltaTime)
@@ -50,7 +60,7 @@ void ACItemBase::Interact_Implementation(APawn* InstigatorPawn)
 		{
 			UCInventory* PlayerInventory = PlayerState->GetPlayerInventory();
 			if (!PlayerInventory) return;
-			FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(ItemID);
+			FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(SpawnItemID);
 			PlayerInventory->AddItem(ItmeInfo.ItemID, ItmeInfo.ItemType, 1);
 			
 			Destroy();
@@ -61,6 +71,11 @@ void ACItemBase::Interact_Implementation(APawn* InstigatorPawn)
 
 FName ACItemBase::GetInteractName_Implementation(APawn* InstigatorPawn)
 {
-	return UCItemManager::GetInstance()->GetItemInfoByID(ItemID).ItemName;
+	return UCItemManager::GetInstance()->GetItemInfoByID(SpawnItemID).ItemName;
+}
+
+void ACItemBase::SetItemMesh_NetMulticast_Implementation(UStaticMesh* ItemMesh)
+{
+	MeshComp->SetStaticMesh(ItemMesh);
 }
 

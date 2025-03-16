@@ -46,18 +46,24 @@ void ACWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SkeletalMeshComp->SetVisibility(false);
+	if (SkeletalMeshComp)
+		SkeletalMeshComp->SetVisibility(false);
 	
 	CapsuleComp->OnComponentBeginOverlap.AddDynamic(this, &ACWeapon::OnActorBeginOverlap);
 	CapsuleComp->OnComponentEndOverlap.AddDynamic(this, &ACWeapon::OnActorEndOverlap);
 	
+	if (SkeletalMeshComp && TrailAnimSeq)
+	{
+		
+		SkeletalMeshComp->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+		SkeletalMeshComp->PlayAnimation(TrailAnimSeq, true);
+		SkeletalMeshComp->SetPlayRate(0.0);
+	}
 
 	if (bAlwaysEquip)
 	{
 		OnEquip();
 	}
-
-	//OffCollision();
 }
 
 // Called every frame
@@ -96,10 +102,21 @@ void ACWeapon::OnCollision(UCActionBase* NewAction, int32 NewAttackIndex)
 			
 		}
 	}
+
+	if(SkeletalMeshComp && TrailAnimSeq)
+	{
+		SkeletalMeshComp->SetPlayRate(1.0);
+	}
+	
 }
 
 void ACWeapon::OffCollision()
 {
+	if (SkeletalMeshComp && TrailAnimSeq)
+	{
+		SkeletalMeshComp->SetPlayRate(0.0);
+	}
+
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InstigateAction = nullptr;
 	AttackIndex = 0;
@@ -166,7 +183,7 @@ void ACWeapon::OnActorEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 void ACWeapon::OnEquip_Implementation()
 {
-	if (ensure(SkeletalMeshComp))
+	if (SkeletalMeshComp)
 	{
 		SkeletalMeshComp->SetVisibility(true);
 	}
@@ -177,7 +194,7 @@ void ACWeapon::OnUnequip_Implementation()
 {
 	if (bAlwaysEquip) return;
 
-	if (ensure(SkeletalMeshComp))
+	if (SkeletalMeshComp)
 	{
 		SkeletalMeshComp->SetVisibility(false);
 	}

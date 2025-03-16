@@ -29,20 +29,23 @@ struct FItemInfo : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     FName ItemID;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     FName ItemName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     FText ItemDescription;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     UTexture2D* ItemIcon;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     EItemType ItemType;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
+    UStaticMesh* ItemMesh;
 };
 
 USTRUCT(BlueprintType)

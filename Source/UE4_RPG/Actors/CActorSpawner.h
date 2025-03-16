@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float RespawnCooldown;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsAllRespawnMode;
+
 public:
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = "Cooldown")
 	UCCooldownManager* SpawnCooldownManager;

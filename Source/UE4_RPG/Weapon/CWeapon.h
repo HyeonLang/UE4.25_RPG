@@ -86,4 +86,7 @@ protected:
 	UCapsuleComponent* CapsuleComp;
 
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UAnimSequence* TrailAnimSeq;
+
 };

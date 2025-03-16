@@ -11,6 +11,7 @@ ACActorSpawner::ACActorSpawner()
 	SetReplicates(true);
 	SetReplicateMovement(true);
 	RespawnCooldown = 10.f;
+	bIsAllRespawnMode = true;
 }
 
 
@@ -42,13 +43,30 @@ void ACActorSpawner::Tick(float DeltaTime)
 	{
 		if (!SpawnCooldownManager->IsCooldownActive())
 		{
+			bool bAliveCheck = false;
 			for (auto* SpawnTargetPoint : SpawnTargetPoints)
 			{
-				if (!SpawnTargetPoint->GetSpawnedActor() || SpawnTargetPoint->GetSpawnedActor()->IsPendingKill())
+				if (bIsAllRespawnMode)
 				{
-					SpawnCooldownManager->StartCooldown(RespawnCooldown);
-					break;
+					if (SpawnTargetPoint->GetSpawnedActor() && !SpawnTargetPoint->GetSpawnedActor()->IsPendingKill())
+					{
+						bAliveCheck = true;
+						break;
+					}
 				}
+				else
+				{
+					if (!SpawnTargetPoint->GetSpawnedActor() || SpawnTargetPoint->GetSpawnedActor()->IsPendingKill())
+					{
+						SpawnCooldownManager->StartCooldown(RespawnCooldown);
+						break;
+					}
+				}
+			}
+
+			if (bIsAllRespawnMode && !bAliveCheck)
+			{
+				SpawnCooldownManager->StartCooldown(RespawnCooldown);
 			}
 		}
 	}
@@ -67,7 +85,7 @@ void ACActorSpawner::SpawnActorsAtTargetPoints()
 
 	for (auto* SpawnTargetPoint : SpawnTargetPoints)
 	{
-		SpawnTargetPoint->SpawnActorAtPoint();
+		if (!SpawnTargetPoint->GetSpawnedActor()) SpawnTargetPoint->SpawnActorAtPoint();
 	}
 }
 

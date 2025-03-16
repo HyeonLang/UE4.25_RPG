@@ -29,6 +29,10 @@ public:
 	virtual FName GetInteractName_Implementation(APawn* InstigatorPawn) override;
 
 protected:
+	UFUNCTION(NetMulticast, Reliable)
+	void SetItemMesh_NetMulticast(UStaticMesh* ItemMesh);
+
+protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	USphereComponent* SphereComp;
 
@@ -38,6 +42,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UParticleSystemComponent* EffectComp;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Info")
-	FName ItemID;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Info", meta = (ExposeOnSpawn = true))
+	FName SpawnItemID;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float LifeTime;
+
 };
