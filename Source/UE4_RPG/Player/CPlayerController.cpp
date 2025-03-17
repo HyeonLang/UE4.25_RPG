@@ -16,6 +16,7 @@
 #include "../Components/CAimingComponent.h"
 #include "../Components/CStateComponent.h"
 #include "../Components/CActionComponent.h"
+#include "Components/CInteractionComponent.h"
 #include "Actions/CAction.h"
 
 
@@ -80,6 +81,7 @@ void ACPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Key_E", IE_Pressed, this, &ACPlayerController::OnInputKey_E);
 	InputComponent->BindAction("Key_E", IE_Released, this, &ACPlayerController::OnInputKey_E_Released);
 	InputComponent->BindAction("Key_R", IE_Pressed, this, &ACPlayerController::OnInputKey_R);
+	InputComponent->BindAction("Key_F", IE_Pressed, this, &ACPlayerController::OnInputKey_F);
 
 
 	InputComponent->BindAxis("Mouse_X", this, &ACPlayerController::OnMouseX);
@@ -329,6 +331,10 @@ void ACPlayerController::OnInputKey_R()
 
 void ACPlayerController::OnInputKey_F()
 {
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->GetInteractionComponent()->PrimaryInteraction();
+	}
 }
 
 void ACPlayerController::OnInputKey_Q()
