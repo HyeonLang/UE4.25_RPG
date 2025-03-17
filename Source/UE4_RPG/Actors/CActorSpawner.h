@@ -24,6 +24,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void SpawnActorsAtTargetPoints();
+	void SpawnActorsAtRewardPoints();
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
@@ -32,6 +33,9 @@ protected:
 protected:
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TArray<ACSpawnTargetPoint*> SpawnTargetPoints;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	TArray<ACSpawnTargetPoint*> SpawnRewardPoints;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float RespawnCooldown;
@@ -42,5 +46,7 @@ protected:
 public:
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = "Cooldown")
 	UCCooldownManager* SpawnCooldownManager;
+
+	
 
 };

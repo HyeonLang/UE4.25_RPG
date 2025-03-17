@@ -75,7 +75,7 @@ void ACPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SpaceBar", IE_Pressed, this, &ACPlayerController::OnSpaceBar);
 
 	InputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ACPlayerController::OnPrimaryAction);
-	InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
+	//InputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayerController::OnSecondaryAction);
 
 	InputComponent->BindAction("Key_E", IE_Pressed, this, &ACPlayerController::OnInputKey_E);
 	InputComponent->BindAction("Key_E", IE_Released, this, &ACPlayerController::OnInputKey_E_Released);
@@ -406,10 +406,10 @@ void ACPlayerController::OnPrimaryAction()
 
 void ACPlayerController::OnSecondaryAction()
 {
-	if (PlayerCharacter)
+	/*if (PlayerCharacter)
 	{
 		PlayerCharacter->OnDash();
-	}
+	}*/
 }
 
 void ACPlayerController::OnInputKey_Shift()

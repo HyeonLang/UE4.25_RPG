@@ -3,6 +3,7 @@
 
 #include "Game/CCooldownManager.h"
 #include "CSpawnTargetPoint.h"
+#include "CChest.h"
 
 ACActorSpawner::ACActorSpawner()
 {
@@ -27,6 +28,12 @@ void ACActorSpawner::BeginPlay()
 		SpawnTargetPoint->Init(this);
 	}
 	SpawnActorsAtTargetPoints();
+
+	for (auto* SpawnRewardPoint : SpawnRewardPoints)
+	{
+		SpawnRewardPoint->Init(this);
+	}
+	SpawnActorsAtRewardPoints();
 }
 
 
@@ -66,6 +73,14 @@ void ACActorSpawner::Tick(float DeltaTime)
 
 			if (bIsAllRespawnMode && !bAliveCheck)
 			{
+				for (auto* SpawnRewardPoint : SpawnRewardPoints)
+				{
+					ACChest* Reward = Cast<ACChest>(SpawnRewardPoint->GetSpawnedActor());
+					if (Reward)
+					{
+						Reward->SetCanOpen_Implementation(true);
+					}
+				}
 				SpawnCooldownManager->StartCooldown(RespawnCooldown);
 			}
 		}
@@ -89,7 +104,18 @@ void ACActorSpawner::SpawnActorsAtTargetPoints()
 	}
 }
 
+void ACActorSpawner::SpawnActorsAtRewardPoints()
+{
+	if (!HasAuthority()) return;
+
+	for (auto* SpawnRewardPoint : SpawnRewardPoints)
+	{
+		if (!SpawnRewardPoint->GetSpawnedActor()) SpawnRewardPoint->SpawnActorAtPoint();
+	}
+}
+
 void ACActorSpawner::OnCooldownComplete_Implementation(UCCooldownManager* CooldownManager)
 {
 	SpawnActorsAtTargetPoints();
+	SpawnActorsAtRewardPoints();
 }
