@@ -79,11 +79,11 @@ bool UCLoginMenuWidget::Initialize()
 
 void UCLoginMenuWidget::LoginServer()
 {
-	//Todo. Login 로직 추가
-	//FString UserId = DesiredUserID->GetText().ToString();
-	//FString Password = DesiredPassword->GetText().ToString();
-	//OwningInstance->Login(UserId, Password);
-	SwitchMainMenu();
+	//Login 로직
+	FString UserId = DesiredUserID->GetText().ToString();
+	FString Password = DesiredPassword->GetText().ToString();
+	OwningInstance->Login(UserId, Password);
+	
 }
 
 void UCLoginMenuWidget::HostServer()

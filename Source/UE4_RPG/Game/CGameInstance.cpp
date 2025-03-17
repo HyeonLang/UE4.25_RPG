@@ -7,6 +7,7 @@
 #include "Global.h"
 #include "UI/CLoginMenuWidget.h"
 #include "Database/CDBManager.h"
+#include "CLobbyPlayerController.h"
 
 const static FName SESSION_NAME = TEXT("GameSession");
 const static FName SESSION_SETTINGS_KEY = TEXT("ToreKey");
@@ -293,6 +294,7 @@ void UCGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENet
 
 void UCGameInstance::OnLoginSuccessEvent(const FString& UserData)
 {
+
 	// JSON ÀÀ´ä ÆÄ½Ì
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(UserData);
@@ -307,6 +309,8 @@ void UCGameInstance::OnLoginSuccessEvent(const FString& UserData)
 	else
 	{
 		bSuccess = true;
+
+		InitUserInfo(JsonObject);
 	}
 
 	if (LoginMenu)
@@ -338,3 +342,12 @@ void UCGameInstance::OnPostLoadMapWithWorld(UWorld* InLoadedWorld)
 {
 	
 }
+
+void UCGameInstance::InitUserInfo(TSharedPtr<FJsonObject> JsonUserData)
+{
+	UserInfo.UserId = FName(JsonUserData->GetStringField("userid"));
+	UserInfo.UserName = FText::FromString(JsonUserData->GetStringField("username"));
+	UserInfo.UserMainCharacterIndex = FCString::Atoi(*JsonUserData->GetStringField("main_character_index"));
+	
+}
+

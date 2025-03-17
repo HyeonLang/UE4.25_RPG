@@ -24,19 +24,27 @@ private:
 	void StartGameStartTimer();
 	void StartGame();
 
+	UFUNCTION()
+	void SpawnLobbyCharacter(APlayerController* NewPlayer);
+
 public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int32 GetMaxNumberOfPlayers() const { return MaxNumberOfPlayers; };
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetNumberOfPlayers() const { return NumberOfPlayers; };
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 MaxNumberOfPlayers;
 
-protected:
 	UPROPERTY(BlueprintReadWrite)
 	int32 NumberOfPlayers;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<AActor> LobbyCameraActorClass;
+
+protected:
 	FTimerHandle GameStartTimerHandle;
 
-	TSubclassOf<ACharacter> SpawnClass;
-	
 };

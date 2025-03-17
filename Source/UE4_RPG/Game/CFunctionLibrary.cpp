@@ -6,7 +6,7 @@
 #include "Engine/EngineTypes.h"
 #include "Global.h"
 
-#define ISDEBUGLINE true
+#define ISDEBUGLINE false
 #define TRACEDEBUGTYPE EDrawDebugTrace::ForDuration
 
 TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UActorComponent* Comp)

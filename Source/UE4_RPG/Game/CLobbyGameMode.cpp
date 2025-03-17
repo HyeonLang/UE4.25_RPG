@@ -1,26 +1,32 @@
 
 #include "CLobbyGameMode.h"
 #include "TimerManager.h"
+#include "GameFramework/Character.h"
 #include "Global.h"
 #include "CGameInstance.h"
+#include "CLobbyPlayerController.h"
 
 ACLobbyGameMode::ACLobbyGameMode()
 {
 	DefaultPawnClass = nullptr;
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Character/PlayerCharacters/ChangLi/BP_LobbyCharacter_ChangLi"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		SpawnClass = PlayerPawnBPClass.Class;
-	}
-
 	
 }
 
 void ACLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
+
+
+
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), LobbyCameraActorClass, OutActors);
+
+	if (OutActors.IsValidIndex(0))
+	{
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetViewTargetWithBlend(OutActors[0]);
+	}
 
 	++NumberOfPlayers;
 
@@ -72,4 +78,9 @@ void ACLobbyGameMode::StartGame()
 		//bUseSeamlessTravel = true;
 		World->ServerTravel("/Game/Maps/Demo?listen"); // ∞‘¿” ∏  ¿Ãµø
 	}
+}
+
+void ACLobbyGameMode::SpawnLobbyCharacter(APlayerController* NewPlayer)
+{
+	
 }

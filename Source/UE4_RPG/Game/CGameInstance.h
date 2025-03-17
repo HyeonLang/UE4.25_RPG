@@ -20,6 +20,15 @@ struct FUserInfo
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintReadOnly)
+	FName UserId = FName();
+
+	UPROPERTY(BlueprintReadOnly)
+	FText UserName;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 UserMainCharacterIndex;
+	
 };
 
 UCLASS()
@@ -53,6 +62,9 @@ public:
 	UFUNCTION(BlueprintCallable, Exec)
 	void LoadInGameMenu();
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE	FUserInfo GetUserInfo() const { return UserInfo; };
+
 private:
 	void OnCreateSessionCompleted(FName InSessionName, bool bWasSuccessful);
 	void OnDestroySessionCompleted(FName InSessionName, bool bWasSuccessful);
@@ -65,6 +77,8 @@ private:
 
 	void OnPreLoadMap(const FString& InMapName);
 	void OnPostLoadMapWithWorld(UWorld* InLoadedWorld);
+
+	void InitUserInfo(TSharedPtr<FJsonObject> JsonUserData);
 
 public:
 	UPROPERTY(BlueprintReadOnly)
@@ -85,6 +99,7 @@ private:
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
-	
 	FString DesiredSessionName;
+
+	FUserInfo UserInfo;
 };
