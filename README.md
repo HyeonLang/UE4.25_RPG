@@ -56,6 +56,8 @@
 
 캐릭터교체
  모작의 핵심 기능인 캐릭터 교체 기능입니다.
+ 원작 명조와 같이 최대 3개의 플레이어 캐릭터가 온필드에서 동시에 공격을 진행할 수 있습니다. 이를위해 아래의 방법을 사용했습니다.
+ 
  PlayerController가 세 개의 캐릭터를 다뤄야 하기 때문에 default pawn class로 캐릭터를 생성하지 않고 직접 게임 실행시 GameMode를 통해 직접 캐릭터들을 스폰한 뒤 Possess하는 방식을 사용했습니 
  다. PlayerController에서 TArray 변수로 세개의 PlayerCharacter를 다룹니다.
 
@@ -74,15 +76,52 @@
 
  협주 교체 구현 부분은 Delegate 를 사용하여 UnpossessCharacter()의 부분을 온필드 액션이 종료 된 후의 Delegate.Broadcast()로 실행시켜 구현하였습니다.
 
+
 상호작용
+ 플레이어 캐릭터(혹은 플레이어)와 Interaction 액터 사이에 상호작용을 구현했습니다.
+ 상호작용 구현이 필요한 액터는 UCInteractionInterface 클래스를 상속받아 Interact() 함수를 구현하여 상호작용시 일어날 액션을 구현합니다.
+ 플레이어가 F입력 시 플레이어 캐릭터의 InteractionComponent에서 Trace하여 주변 일정 거리에 상호작용 가능한 액터를 찾습니다.
+ 그리고 찾은 액터에 구현된 Interact() 함수를 서버 RPC 함수로 서버에서 호출하여 상호작용 작업이 모든 클라이언트에서 일정하게 일어나도록 합니다. (클라이언트에서만 상호작용이 일어나는 버그 현상 방지)
+
+ 예를들어 ItemBase 클래스로 구현된 아이템은 상호작용시 아이템 획득이 되고, Chest 클래스로 구현된 보물상자는 상호작용시 열리면서 아이템을 스폰하게 됩니다. 
+ 
 
 적
+적은 EnemtCharacter 클래스로 구성되며 공격등의 액션은 플레이어 캐릭터와 비슷하게 NPCActionComponent에서 호출하여 실행합니다.
+적은 AiController에서 위와같은 Behavior Tree를 실행하여 작동합니다. 적의 상태에 따라 공격, Hitted, 이동, 대기 등의 동작이 있습니다.
+
+게임에서 적은 ActorSpawner를 상속받은 EnemySpawner에 의해 스폰되고 관리 됩니다.
+EnemySpawner는 지정된 SpawnTargetPoint에 적을 스폰하고 적이 모두 죽은 상태가 되면 지정된 시간이 지난 후 다시 적을 스폰합니다.
 
 아이템
+아이템의 데이터는 위와 같이 DataTable에 의해 저장되고 ItemManager 클래스에서 관리할 수 있습니다. ItemManager 에서 ItemID로 아이템의 모든 정보를 불러올 수 있고 사용할 수 있습니다.
+ItemManager클래스는 싱글톤 클래스로 어느 클래스에서나 불러와 사용할 수 있습니다.
+
+아이템은 ItemBase 클래스에 의해 객체로 존재하는 경우와 플레이어 인벤토리에 데이터로 존재하는 경우로 나뉩니다.
+ItemBase 는 아이템의 외형을 가지며 상호작용이 플레이어 인벤토리에 획득됩니다.
 원작 명조의 드롭아이템 획득은 플레이어에게 직접 획득되는 방식입니다. 하지만 이 프로젝트에서는 다른 게임인 원신 처럼 일정 액터를 가진 드롭아이템 형식으로 구현했습니다.
 
-UI
+획득된 아이템은 정보 형태로 PlayerStarte의 Inventory에서 관리되며 여기서 사용아이템을 사용할 수 있습니다.
 
+
+UI
+ 미니맵
+ 미니맵은 MinimapCameraActor 로 캐릭터 상부에서 캐릭터 방향으로 CaptureScene() 하여 생성합니다.
+ 두개의 USceneCaptureComponent2D는 다음과 같은 역할을 합니다.
+ SceneCaptureComp : 맵의 색을 캡쳐합니다.
+ DepthCaptureComp : 맵의 depth를 캡쳐합니다.
+ 두 캡쳐본으로 미니맵 머티리얼을 만들어 Wb_Minimap UI에 보여지도록 합니다.
+
+ 미니맵 카메라의 경우 로컬에서만 존재해도 되므로 Wb_Minimap에서 스폰됩니다.
+
+ UI
+ 스킬, 체력, 캐릭터 교체 UI는 각각의 객체에서 정보를 가져와 보여줍니다.
+ 화면의 보여지는 UI는 WB_MainHuD에서 관리됩니다.
+ 게임 참여시 액터의 생성시기는 서로 다르므로 정보를 가져올 액터가 아직 생성되지 않았을 경우 WB_MainHuD의 초기화를 다시 시행합니다.
+ 스킬과 교체UI, 아이템의 아이콘은 Soft References로 하여 필요할 때 데이터를 가져와 초기 데이터 로딩을 줄이는 방법을 사용했습니다.
+ 
+
+ 
 로그인 및 게임참여
 로그인은 여타 웹 로그인방식과 유사합니다. 
 게임 <--> flask 서버 <--> mysql db 구조로 http post 방식을 사용하여 유저의 데이터를 요청했습니다.
