@@ -7,8 +7,8 @@
 [![My YouTube Video](https://i9.ytimg.com/vi_webp/EG2duBoVsuM/mq2.webp?sqp=COTt674G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFQgWShlMA8=&rs=AOn4CLCC7OT1-52ze-JqiDs5XrDxD3Mizw)](https://youtu.be/EG2duBoVsuM)
 (클릭시 유튜브로 이동)
 * 수정된 영상에 나온 버그  
-고블린이 죽어도 고블린 몽둥이가 남는 버그는 다음 버전에서 수정되었습니다.  
-드롭 아이템이 클라이언트에서 보이지 않는 버그는 다음버전에서 수정되었습니다.
+*고블린이 죽어도 고블린 몽둥이가 남는 버그는 다음 버전에서 수정되었습니다.*  
+*드롭 아이템이 클라이언트에서 보이지 않는 버그는 다음버전에서 수정되었습니다.*
 
 이 프로젝트에 특히 중점을 둔 것은 모듈화와 멀티플레이(서버-클라이언트의 동기화)입니다.  
 게임의 설계를 하는 기획자들이 쉽게 게임을 조정할 수 있도록 기본 기능에서 디테일한 기능으로 단계별로 클래스를 분리하는것을 원칙으로 클래스를 설계했습니다.  
