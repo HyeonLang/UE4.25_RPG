@@ -18,11 +18,30 @@
 ## 액션
  액션은 캐릭터의 스킬 등의 특정 행동을 담당하여 실행합니다.  
  액션의 클래스 구조는 다음 사진과 같습니다.
+```
+CActionBase
+│
+├── CAction
+│   ├── CAction_NormalAttack (일반공격)
+│   ├── CAction_ResonanceLiberation (궁극기)
+│   ├── CAction_ResonanceSkill (스킬)
+│   ├── CAction_CancelLoop
+│
+└── CNPCAction
+```
  
  이 프로젝트의 캐릭터들은 일정한 형식의 액션을 가지고 있습니다. 예를 들면 플레이어 캐릭터들은 일반공격 액션 약 4~5개와 스킬 액션, 궁극기 액션을 가지고 있습니다.  
  액션의 특성에 맞게 모듈화하여 블루프린트로 상속받아 액션제작을 쉽게 하도록 하였습니다. 공통된 부분은 Action 클래스에서 처리한 후 상속받아 함수들을 추가 혹은 override하여 만들 수 있도록 했습니다.  
  
  액션은 객체 생성시 지정된 데이터에셋에서 데이터를 받습니다.  
+
+ ```
+Character->ActionComponent->StartActionByName() 액션 호출
+if (CanStart())
+{
+   StartAction() --> 액션 실행 ---> StopAction() : 액션 종료
+}
+ ```
  액션은 플레이어 캐릭터 혹은 NPC의 ActionCompnent에서 호출된 후 CanStart()로 실행 조건 검사를 거쳐 StartAction()으로 실행됩니다.  
  StartAction() 에서 몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어 등의 공통적인 역할을 합니다.  
  액션이 실행 된 후 몽타주의 Notify, 캔슬 조건에 의한 액션 캔슬에 의해 StopAction()이 실행되며 액션이 종료됩니다.  
