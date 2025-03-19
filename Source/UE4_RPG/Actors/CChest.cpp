@@ -29,6 +29,7 @@ ACChest::ACChest()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bCanOpen = false;
+	
 
 	SetReplicates(true);
 }
@@ -94,6 +95,24 @@ FName ACChest::GetInteractName_Implementation(APawn* InstigatorPawn)
 	return FName("Chest");
 }
 
+void ACChest::SetActive(bool bNewActive)
+{
+	if (bNewActive)
+	{ 
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+		LidMesh->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+		BaseMesh->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+		TreasureMesh->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+	}
+	else
+	{
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		LidMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		BaseMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		TreasureMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	}
+}
+
 void ACChest::DestroyAction_Implementation()
 {
 	if (HasAuthority())
@@ -120,12 +139,14 @@ void ACChest::OnRep_CanOpen()
 void ACChest::OnRep_LidOpen()
 {
 	float CurrentPitch = bLidOpen ? MaxPitch : 0.f;
-	CLog::Print(CurrentPitch);
+	
 	if (LidMesh)
 	{
 		LidMesh->SetRelativeRotation(FRotator(CurrentPitch, 0, 0));
 	}
 
+	SetActive(!bLidOpen);
+	
 	DestroyAction();
 }
 

@@ -7,7 +7,7 @@
 #include "Global.h"
 
 #define ISDEBUGLINE false
-#define TRACEDEBUGTYPE EDrawDebugTrace::ForDuration
+#define TRACEDEBUGTYPE EDrawDebugTrace::None
 
 TArray<ACPlayerCharacter*> UCFunctionLibrary::GetPlayerCharactersByComponent(UActorComponent* Comp)
 {

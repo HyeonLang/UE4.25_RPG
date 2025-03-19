@@ -34,6 +34,9 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SpawnItems(APawn* InstigatorPawn);
 
+	UFUNCTION(BlueprintCallable)
+	void SetActive(bool bNewActive);
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void DestroyAction();
 

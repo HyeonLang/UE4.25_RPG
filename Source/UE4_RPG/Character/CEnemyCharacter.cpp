@@ -131,6 +131,10 @@ void ACEnemyCharacter::NetMulticastPawnSeen_Implementation()
 
 void ACEnemyCharacter::Dead_Implementation()
 {
+	if (Weapon && !Weapon->IsPendingKill())
+	{
+		Weapon->Destroy();
+	}
 }
 
 

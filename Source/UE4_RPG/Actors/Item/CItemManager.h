@@ -39,7 +39,7 @@ public:
     FText ItemDescription;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
-    UTexture2D* ItemIcon;
+    TSoftObjectPtr<UTexture2D> ItemIcon;// soft 래퍼런스
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Info")
     EItemType ItemType;

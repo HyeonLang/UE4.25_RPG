@@ -53,7 +53,7 @@ void UCInteractionComponent::SetInteractionMode(bool NewMode)
 
 void UCInteractionComponent::FindNearestInteractable()
 {
-	bool bDrawDebug = true;// CVarDrawDebug.GetValueOnGameThread();
+	bool bDrawDebug = false;// CVarDrawDebug.GetValueOnGameThread();
 
 
 	TArray<FHitResult> HitResults;
@@ -122,7 +122,7 @@ void UCInteractionComponent::FindNearestInteractable()
 
 					if (OnAddFocusedActor.IsBound())
 					{
-							OnAddFocusedActor.Broadcast(this, HitActor);
+						OnAddFocusedActor.Broadcast(this, HitActor);
 					}
 					
 				}

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Game/CGameInstance.h"
 #include "Game/CLobbyGameMode.h"
+#include "Character/CLobbyCharacter.h"
 #include "Global.h"
 
 ACLobbyPlayerController::ACLobbyPlayerController()
@@ -21,14 +22,14 @@ void ACLobbyPlayerController::BeginPlay()
 
 	if (IsLocalController())
 	{
-		float Index = GI->GetUserInfo().UserMainCharacterIndex;
-		ServerSpawnLobbyCharacter(Index);
+		FUserInfo UserInfo = GI->GetUserInfo();
+		
+		ServerSpawnLobbyCharacter(UserInfo);
 	}
 
 }
 
-
-void ACLobbyPlayerController::ServerSpawnLobbyCharacter_Implementation(float Index)
+void ACLobbyPlayerController::ServerSpawnLobbyCharacter_Implementation(FUserInfo InUserInfo)
 {
 	ACLobbyGameMode* GM = Cast<ACLobbyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	float LocationY = (GM->GetNumberOfPlayers() * 150.f) - 300.f;
@@ -37,9 +38,14 @@ void ACLobbyPlayerController::ServerSpawnLobbyCharacter_Implementation(float Ind
 	FM.SetLocation(Location);
 	FM.SetRotation(FRotator(0, -180, 0).Quaternion());
 
-	if (LobbyCharacterClassList.IsValidIndex(Index))
+	if (LobbyCharacterClassList.IsValidIndex(InUserInfo.UserMainCharacterIndex))
 	{
-		LobbyCharacter = GetWorld()->SpawnActorDeferred<ACharacter>(LobbyCharacterClassList[Index], FM, this);
+		LobbyCharacter = GetWorld()->SpawnActorDeferred<ACLobbyCharacter>(LobbyCharacterClassList[InUserInfo.UserMainCharacterIndex], FM, this);
 		LobbyCharacter->FinishSpawning(FM);
+		LobbyCharacter->SetUserName(InUserInfo.UserName);
 	}
 }
+
+
+
+

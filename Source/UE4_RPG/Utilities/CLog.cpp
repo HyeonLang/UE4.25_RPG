@@ -4,27 +4,37 @@ DEFINE_LOG_CATEGORY_STATIC(GameProject, Display, All)
 
 void CLog::Print(int32 InValue, int32 InKey, float InDuration, FColor InColor)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::FromInt(InValue));
+#endif
 }
 
 void CLog::Print(float InValue, int32 InKey, float InDuration, FColor InColor)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::SanitizeFloat(InValue));
+#endif
 }
 
 void CLog::Print(const FString& InValue, int32 InKey, float InDuration, FColor InColor)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue);
+#endif
 }
 
 void CLog::Print(const FVector& InValue, int32 InKey, float InDuration, FColor InColor)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
+#endif
 }
 
 void CLog::Print(const FRotator& InValue, int32 InKey, float InDuration, FColor InColor)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
+#endif
 }
 
 void CLog::Log(int32 InValue)
@@ -77,6 +87,7 @@ void CLog::Log(const FString& InFuncName, int32 InLineNumber)
 
 void CLog::LogOnScreen(UObject* WorldContext, FString Msg, FColor Color, float Duration)
 {
+#if WITH_EDITOR
 	if (!ensure(WorldContext))
 	{
 		return;
@@ -93,4 +104,5 @@ void CLog::LogOnScreen(UObject* WorldContext, FString Msg, FColor Color, float D
 	{
 		GEngine->AddOnScreenDebugMessage(-1, Duration, Color, Prefix + Msg);
 	}
+#endif
 }

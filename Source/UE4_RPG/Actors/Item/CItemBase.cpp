@@ -29,10 +29,10 @@ void ACItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(SpawnItemID);
-	MeshComp->SetStaticMesh(ItmeInfo.ItemMesh);
 	if (HasAuthority())
 	{
+		FItemInfo ItmeInfo = UCItemManager::GetInstance()->GetItemInfoByID(SpawnItemID);
+		MeshComp->SetStaticMesh(ItmeInfo.ItemMesh);
 		SetItemMesh_NetMulticast(ItmeInfo.ItemMesh);
 	}
 

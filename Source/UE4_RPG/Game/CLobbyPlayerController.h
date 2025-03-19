@@ -7,6 +7,7 @@
 #include "Game/CGameInstance.h"
 #include "CLobbyPlayerController.generated.h"
 
+class ACLobbyCharacter;
 /**
  * 
  */
@@ -26,10 +27,10 @@ public:
 
 protected:
 	UFUNCTION(Reliable, Server)
-	void ServerSpawnLobbyCharacter(float Index);
+	void ServerSpawnLobbyCharacter(FUserInfo InUserInfo);
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<TSubclassOf<ACharacter>> LobbyCharacterClassList;
+	TArray<TSubclassOf<ACLobbyCharacter>> LobbyCharacterClassList;
 
-	ACharacter* LobbyCharacter;
+	ACLobbyCharacter* LobbyCharacter;
 };
