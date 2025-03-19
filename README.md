@@ -4,7 +4,9 @@
 명조 게임플레이의 주요 특징인 플레이어의 캐릭터 교체를 활용한 전투 시스템, 아이템 드롭과 획득, 리워드 획득, 미니맵 등의 UI, 게임참여 시스템 등을 직접 구현했습니다. 
 
 데모 버전 영상
+
 [![My YouTube Video](https://i9.ytimg.com/vi_webp/EG2duBoVsuM/mq2.webp?sqp=COTt674G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFQgWShlMA8=&rs=AOn4CLCC7OT1-52ze-JqiDs5XrDxD3Mizw)](https://youtu.be/EG2duBoVsuM)
+(클릭시 유튜브로 이동)
 * 수정된 영상에 나온 버그
 고블린이 죽어도 고블린 몽둥이가 남는 버그는 다음 버전에서 수정되었습니다.
 드롭 아이템이 클라이언트에서 보이지 않는 버그는 다음버전에서 수정되었습니다.
