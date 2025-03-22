@@ -1,4 +1,4 @@
-데모 시연 영상  
+데모 시연 영상 (이미지 클릭↓)
 [![데모 시연 영상](https://github.com/user-attachments/assets/8b280d82-3860-4e9a-a907-525951274d3f)](https://youtu.be/EG2duBoVsuM)
 * 수정된 영상에 나온 버그  
 *고블린이 죽어도 고블린 몽둥이가 남는 버그는 다음 버전에서 수정되었습니다.*  
