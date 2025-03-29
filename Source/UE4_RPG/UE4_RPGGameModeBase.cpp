@@ -1,5 +1,6 @@
 #include "UE4_RPGGameModeBase.h"
-
+#include "GameFramework/PlayerStart.h"
+#include "EngineUtils.h"
 #include "Character/CPlayerCharacter.h"
 #include "Player/CPlayerController.h"
 #include "Player/CPlayerCameraActor.h"
@@ -12,9 +13,26 @@ AUE4_RPGGameModeBase::AUE4_RPGGameModeBase()
 	StartSpawnTransform.SetLocation(FVector(0, 0, 130));
 }
 
+void AUE4_RPGGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	if (!GetWorld()) return;
+
+	for (TActorIterator<APlayerStart> It(GetWorld()); It; ++It)
+	{
+		APlayerStart* PlayerStart = *It;
+		StartSpawnTransform = PlayerStart->GetActorTransform();
+		
+		break;
+	}
+}
+
 void AUE4_RPGGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
+	
+
 
 	ACPlayerController* PlayerController = Cast<ACPlayerController>(NewPlayer);
 	SpawnAndPossessCharacters(PlayerController);
@@ -24,12 +42,17 @@ void AUE4_RPGGameModeBase::PostLogin(APlayerController* NewPlayer)
 void AUE4_RPGGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 }
 
 void AUE4_RPGGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	ClientSetViewTarget(PC);
+
+	
+	
 }
 
 void AUE4_RPGGameModeBase::ClientSetViewTarget_Implementation(ACPlayerController* NewPlayer)

@@ -15,9 +15,11 @@ public:
 	AUE4_RPGGameModeBase();
 
 protected:
+	virtual void InitGame(const FString & MapName, const FString & Options, FString & ErrorMessage);
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void BeginPlay() override;
 	virtual void StartPlay() override;
+	
 protected:
 	UFUNCTION(Client, Reliable)
 	void ClientSetViewTarget(ACPlayerController* NewPlayer);
