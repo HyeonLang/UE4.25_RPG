@@ -1,41 +1,71 @@
-# UE4.25_RPG
-
-게임 명조를 모작한 프로젝트입니다.  
-명조 게임플레이의 주요 특징인 플레이어의 캐릭터 교체를 활용한 전투 시스템, 아이템 드롭과 획득, 리워드 획득, 미니맵 등의 UI, 게임참여 시스템 등을 직접 구현했습니다. 
-
-데모 버전 영상  
-[![My YouTube Video](https://i9.ytimg.com/vi_webp/EG2duBoVsuM/mq2.webp?sqp=COTt674G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFQgWShlMA8=&rs=AOn4CLCC7OT1-52ze-JqiDs5XrDxD3Mizw)](https://youtu.be/EG2duBoVsuM)
-(클릭시 유튜브로 이동)
-* 수정된 영상에 나온 버그  
+데모 시연 영상 (이미지 클릭↓)
+[![데모 시연 영상](https://github.com/user-attachments/assets/8b280d82-3860-4e9a-a907-525951274d3f)](https://youtu.be/EG2duBoVsuM)
+* 영상에 나온 버그 픽스  
 *고블린이 죽어도 고블린 몽둥이가 남는 버그는 다음 버전에서 수정되었습니다.*  
 *드롭 아이템이 클라이언트에서 보이지 않는 버그는 다음버전에서 수정되었습니다.*
 
-이 프로젝트에 특히 중점을 둔 것은 모듈화와 멀티플레이(서버-클라이언트의 동기화)입니다.  
-게임의 설계를 하는 기획자들이 쉽게 게임을 조정할 수 있도록 기본 기능에서 디테일한 기능으로 단계별로 클래스를 분리하는것을 원칙으로 클래스를 설계했습니다.  
-대체적으로 중심이 되는 C++ 클래스와 그것을 상속받은 블루프린트 클래스로 하여 필요한 곳 마다 커스텀할 수 있도록 구현했습니다.  
+# 게임 `명조`를 모작한 멀티플레이 기반 게임
 
-# 목차
-1. [액션](#액션)
-   - [대쉬 점프 스프린트](#대쉬-점프-스프린트)
-   - [공격액션의 특징](#공격액션의-특징)
-   - [일반공격](#일반공격)
-   - [스킬](#스킬)
-   - [궁극기](#궁극기)
-2. [캐릭터교체](#캐릭터교체)
-3. [상호작용](#상호작용)
-4. [적](#적)
-5. [아이템](#아이템)
-6. [유저인터페이스](#유저인터페이스)
-   - [미니맵](#미니맵)
-   - [Main UI](#main-ui)
-7. [로그인 및 게임참여](#로그인-및-게임참여)
+## 프로젝트 개요 (Project Overview)
+| 항목 | 내용 |
+|------|------|
+| **프로젝트명** | UE4.25_RPG |
+| **개발 기간** | 2024.09 - 2025.03 (6개월) |
+| **목표** | '명조'의 주요 시스템을 모작하여 **멀티플레이 RPG 전투 시스템과 캐릭터 교체 기능을 구현** |
+| **주요 기능** | 캐릭터 교체 시스템, 액션 시스템(일반공격/스킬/궁극기), 멀티플레이 동기화, 미니맵 및 UI 개발 |
+| **기여도** | 1인 개발 (설계부터 구현까지 전체 담당) |
 
 ---
 
+## 주요 기능 및 기술적 구현 (Key Features & Implementation)
+| 기능명 | 설명 및 구현 방식 | 관련 기술 |
+|--------|-----------------|------------|
+| **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환 및 교체 가능 | `APlayerController::Possess()` |
+| **액션 시스템** | 일반 공격, 스킬, 궁극기 등의 액션을 모듈화 | `CActionBase` 상속 |
+| **멀티플레이** | 서버-클라이언트 동기화, RPC 사용 | `NetMulticast`, `RepNotify` |
+| **미니맵** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 |
+| **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
 
-## 액션
- 액션은 캐릭터의 스킬 등의 특정 행동을 담당하여 실행합니다.  
- 액션의 클래스 구조는 다음 사진과 같습니다.
+---
+
+## 목차 (인덱스)
+1. **[캐릭터 교체 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#1-%EC%BA%90%EB%A6%AD%ED%84%B0-%EA%B5%90%EC%B2%B4-%EC%8B%9C%EC%8A%A4%ED%85%9C-character-switching-system)**
+2. **[액션 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#2-%EC%95%A1%EC%85%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-action-system)**
+3. **[전투 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#3-%EC%A0%84%ED%88%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-combat-system)**
+4. **[상호작용 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#4-%EC%83%81%ED%98%B8%EC%9E%91%EC%9A%A9-%EC%8B%9C%EC%8A%A4%ED%85%9C-interaction-system)**
+5. **[적 AI 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#5-%EC%A0%81-ai-%EC%8B%9C%EC%8A%A4%ED%85%9C-enemy-ai-system)**
+6. **[미니맵 및 UI 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#6-%EB%AF%B8%EB%8B%88%EB%A7%B5-%EB%B0%8F-ui-%EC%8B%9C%EC%8A%A4%ED%85%9C)**
+7. **[로그인 및 게임 참여 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#7-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EB%B0%8F-%EA%B2%8C%EC%9E%84-%EC%B0%B8%EC%97%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C)**
+8. **[포트폴리오 영상 & 코드 링크](https://github.com/simeddk/github_features/blob/main/Test.md#8-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EC%98%81%EC%83%81--%EC%BD%94%EB%93%9C-%EB%A7%81%ED%81%AC)**
+
+## 1. 캐릭터 교체 시스템 (Character Switching System)
+### 🛠 온필드, 오프필드 시스템 구현
+- 모작의 핵심 기능
+- 세명의 캐릭터를 제어. 일반 교체와 협주 교체 등 협동 스킬 구현
+- 이벤트 기반을 통한 멀티플레이 동기화
+- ![image](https://github.com/user-attachments/assets/1145a362-fdf9-4abc-b508-d9d9d166cbaa)
+
+### 🔹 캐릭터 교체 방식
+| 유형 | 설명 |
+|-----|-----|
+| **일반 교체** | A → B 캐릭터 교체 시, A가 즉시 오프필드, B가 온필드 |
+| **협주 교체** | A → B 캐릭터 교체 시, A가 실행 중인 액션이 끝난 후 오프필드 |
+
+### 🔹 멀티플레이 환경 적용
+- 로컬 클라이언트에서 `PossessCharacter()` 실행 후, 서버에서 RPC 실행  
+- `RepNotify`를 활용하여 클라이언트에 상태 동기화  
+- `Delegate.Broadcast()`로 협주 교체 후 UnpossessCharacter() 실행
+
+---
+
+## 2. 액션 시스템 (Action System)
+### 🛠 캐릭터 교체 액션 및 네트워크 동기화
+- 상태 변경 관련된 버그에 특히 신경을 많이 썼습니다.(액션 캔슬 전용 애님노티파이 적용)
+- 액션 도중 캐릭터 교체와 같은 예외적인 상황을 대비하도록 설계되었습니다.
+- 서버 RPC와 네트워크 복제를 활용하여 액션의 상태와 동작이 모든 유저에게 동일하도록 보장합니다.
+![image](https://github.com/user-attachments/assets/051b4bbd-9711-4cc0-8a60-5aa2cd7aa22a)
+
+🔹 액션 클래스 구조
 ```
 CActionBase
 │
@@ -47,132 +77,97 @@ CActionBase
 │
 └── CNPCAction
 ```
- 
- 이 프로젝트의 캐릭터들은 일정한 형식의 액션을 가지고 있습니다. 예를 들면 플레이어 캐릭터들은 일반공격 액션 약 4~5개와 스킬 액션, 궁극기 액션을 가지고 있습니다.  
- 액션의 특성에 맞게 모듈화하여 블루프린트로 상속받아 액션제작을 쉽게 하도록 하였습니다. 공통된 부분은 Action 클래스에서 처리한 후 상속받아 함수들을 추가 혹은 override하여 만들 수 있도록 했습니다.  
- 
- 액션은 객체 생성시 지정된 데이터에셋에서 데이터를 받습니다.  
 
- ```
+### 🔹 액션 실행 흐름
+```cpp
 Character->ActionComponent->StartActionByName() 액션 호출
 if (CanStart())
 {
-   StartAction() --> 액션 실행 ---> StopAction() : 액션 종료
+  StartAction(); // 액션 실행
+  StopAction();  // 액션 종료
 }
- ```
- 액션은 플레이어 캐릭터 혹은 NPC의 ActionCompnent에서 호출된 후 CanStart()로 실행 조건 검사를 거쳐 StartAction()으로 실행됩니다.  
- StartAction() 에서 몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어 등의 공통적인 역할을 합니다.  
- 액션이 실행 된 후 몽타주의 Notify, 캔슬 조건에 의한 액션 캔슬에 의해 StopAction()이 실행되며 액션이 종료됩니다.  
- StopAction() 에서는 StartAction()에서 설정한 부분 및 액션 실행 중 설정한 부분을 다시 원상태로 되돌립니다.  
- 
- 멀티플레이 게임이므로 액션은 서버와 클라이언트에서 각각 실행되는 구조를 가집니다.  
- 서버에서 ActionComponent 호출에 의해 액션을 실행하며 RPC함수에 의해  클라이언트에서도 행해집니다. 그렇지 못한 경우를 대비하여  서버에서 액션 실행 시 Replicated RepData구조체의 RepData.bIsRunning가 변경되는 것을 활용하여 RepNotify함수에서 클라이언트 액션을 실행시킵니다.
+```
 
- 액션 실행 시 캐릭터들의 상태 변화 버그에 대해서 신경을 많이 썼습니다.  
- 특히 StartAction() 에서 상태가 변경된 후 몽타주 끊김 등에 의해 원상태로 복구되지않아 생기는 버그가 나지 않도록 했습니다.  
- 액션 실행시 동작하는 모든 몽타주에 StopAction AnimNotify를 추가함과 동시에 캔슬되는 액션에 대비해서 모든 몽타주 캔슬은 몽타주 캔슬 전용 함수로 동작하도록 했습니다.  
- 전용 함수는 StopAction을 호출한 뒤 몽타주 중단을 하는 내용입니다. 
+1. `ActionComponent`에서 `CanStart()`를 호출하여 실행 가능 여부 확인  
+2. `StartAction()` 실행 시 **몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어** 적용  
+3. `StopAction()`을 통해 액션 종료 후 초기 상태 복구  
 
- ### 대쉬 점프 스프린트
-  캐릭터의 Dash(), Jump(), Sprint()는 플레이어 캐릭터가 모두 가지고 있는 공통적인 액션입니다. 따라서 상속하여 몽타주 데이터만 각각 받아 액션을 실행 할 수 있도록 했습니다.
+### 🔹 서버-클라이언트 동기화
+- 서버에서 `ActionComponent`를 호출하여 액션 실행  
+- RPC 함수(`NetMulticast`, `RepNotify`)를 사용하여 클라이언트에서도 실행  
+- Replicated `RepData.bIsRunning` 값을 활용하여 클라이언트에서 `RepNotify()` 함수 호출  
 
- ### 공격액션의 특징
-  공격액션들은 기본적으로 AmingComponent에서 주변의 적을 우선순위에 따라 타켓팅(없을경우 정면 기본값) 하여 방향과 위치를 변경하여 실행됩니다.  
-  일반적으로 방향은 타겟을 바라보도록 하며, 위치는 타겟이 멀 경우 액션이 적용되는 위치까지 가까이 이동하도록 했습니다. 
-  이는 플레이어가 공격하는 난이도를 쉽게 만들도록 원작 명조와 같이 의도했습니다.
-
-  키다운 액션에 경우 키가 Release되어 종료되는 경우가 아닌 경우(캐릭터의 교체 등의 경우)를, 액션실행 중 다른 액션으로 끊는 방법(CAction_CancelLoop를 실행시키는 방법)을 구현했습니다.
-  
- ### 일반공격
-  NPC의 공격은 단일 공격으로 설정해두었습니다. 따라서 공격의 연계등은 BT에서 담당하도록 하였습니다.  
-  플레이어 캐릭터의 모든 공격은 기본적으로 콤보 공격을 염두하고 만들었습니다. 따라서 같은 키 입력에도 다른 액션이 실행되어야 합니다.  
-  Notifiy에서 타이밍에 따라 bCanCombo 변수를 설정하여 bCanCombo = true 인 경우 ActionComponent에서 다음 콤보 액션을 실행시키도록 했습니다.  
-  유기적인 액션 연결을 위해 액션 클래스에서 다음 콤보의 ActionName만 입력하면 그 액션이 나갈 수 있도록 구현했습니다.
-  
- ### 스킬
-  스킬의 특징은 액션에 쿨타임을 부여했습니다. 쿨타임은 UObject를 상속받은 CCooldownManager 클래스 객체를 액션마다 추가하여 쿨타임을 관리하도록 했습니다.
-
- ### 궁극기
-  궁극기의 특징은 전용 카메라 액션이 있습니다. 이를 위해 전용 카메라 액터 객체를 추가하고 실행시 SetViewTarget으로 카메라 빙의를 변경하도록 했습니다.  
-  카메라는 미리 지정된 카메라 설정 커브에 따라 카메라 액션을 취한 뒤 몽타주의 AnimNotify를 받아 다시 플레이어 카메라로 빙의하도록 했습니다.
-  궁극기 상태에서는 캐릭터 교체가 불가합니다.
+### 🔹 액션 실행 시 버그 방지
+- 모든 몽타주(애니메이션)에 `StopAction AnimNotify` 추가  
+- `Montage Cancel` 전용 함수(`StopAction()` 호출 후 애니메이션 중단) 사용  
 
 
-## 캐릭터교체
- 모작의 핵심 기능인 캐릭터 교체 기능입니다.  
- 원작 명조와 같이 최대 3개의 플레이어 캐릭터가 온필드에서 동시에 공격을 진행할 수 있습니다. 이를위해 아래의 방법을 사용했습니다.
- 
- PlayerController가 세 개의 캐릭터를 다뤄야 하기 때문에 default pawn class로 캐릭터를 생성하지 않고 직접 게임 실행시 GameMode를 통해 직접 캐릭터들을 스폰한 뒤 Possess하는 방식을 사용했습니다. PlayerController에서 TArray 변수로 세개의 PlayerCharacter를 다룹니다.  
+---
 
- 캐릭터가 교체 될 때마다 플레이어 카메라의 위치, 회전이 초기화 또는 변경되지 않도록 했습니다.  
- 이를 위해 플레이어 카메라 액터 객체를 따로 만들어 온필드 캐릭터의 위치에만 바인딩하고 캐릭터 교체에 영향을 받지 않도록 했습니다.  
- 
- 캐릭터는 보이지 않고 조종할 수 없는 오프필드 상태, 보이며 Controller로 조종하는 온필드 상태 두가지 상태가 있습니다.  
+## 3. 전투 시스템 (Combat System)
+### 🛠 전투의 흐름
+- 명조와 동일하게 타겟팅에 따라 액션 방향의 우선 순위를 실행할 수 있도록 하였습니다.
+- 적 캐릭터는 AI 기능을 활용하여 구현하였습니다.
+- 3명의 플레이어블 캐릭터에게 고유한 일반공격, 스킬, 궁극기를 구현하였습니다.
+![image](https://github.com/user-attachments/assets/0a347fc7-97df-4b4b-9076-fbded3c64416)
 
- 캐릭터 교체의 방식은 일반 교체와 협주 교체 두가지가 있습니다.  
- 예를 들어 현재 A캐릭터가 온필드이고 B캐릭터로 교체한다고 가정해보겠습니다.  
- 일반 교체는 일반적인 상황에서 캐릭터를 교체하는 것이며 즉시 A캐릭터가 오프필드되고, B캐릭터가 온필드됩니다.  
- 협주 교체는 온필드 캐릭터가 일반공격, 스킬 액션이 실행되고있는 상태에서 교체하는 것이며 즉시 B캐릭터가 온필드 되며 A캐릭터는 실행중인 액션이 끝난 후 오프필드 됩니다.
+### 🔹 대쉬, 점프, 스프린트
+- 모든 플레이어 캐릭터가 `Dash()`, `Jump()`, `Sprint()` 공통 기능을 보유  
+- 상속 구조로 구성하여 **블루프린트에서 모듈화 가능**  
 
- 이 교체를 멀티플레이 환경에서 구현하기 위해 액션과 비슷한 방식을 사용하였습니다.  
- 조작감을 위해 로컬 클라이언트에서 PossessCharacter(), UnpossessCharacter()를 한 뒤 서버RPC함수로 서버에서 같은 코드를 실행시켰습니다. Replicate된 변수들이 Replicate Notify 함수를 실행시켜  서버에 적용된 변경점을 각 클라이언트에 전달하도록 했습니다.
-
- 협주 교체 구현 부분은 Delegate 를 사용하여 UnpossessCharacter()의 부분을 온필드 액션이 종료 된 후의 Delegate.Broadcast()로 실행시켜 구현하였습니다.
-
-
-## 상호작용
- 플레이어 캐릭터(혹은 플레이어)와 Interaction 액터 사이에 상호작용을 구현했습니다.  
- 상호작용 구현이 필요한 액터는 UCInteractionInterface 클래스를 상속받아 Interact() 함수를 구현하여 상호작용시 일어날 액션을 구현합니다.  
- 플레이어가 F입력 시 플레이어 캐릭터의 InteractionComponent에서 Trace하여 주변 일정 거리에 상호작용 가능한 액터를 찾습니다.  
- 그리고 찾은 액터에 구현된 Interact() 함수를 서버 RPC 함수로 서버에서 호출하여 상호작용 작업이 모든 클라이언트에서 일정하게 일어나도록 합니다. (클라이언트에서만 상호작용이 일어나는 버그 현상 방지)
-
- 예를들어 ItemBase 클래스로 구현된 아이템은 상호작용시 아이템 획득이 되고, Chest 클래스로 구현된 보물상자는 상호작용시 열리면서 아이템을 스폰하게 됩니다. 
- 
-
-## 적
- 적은 EnemtCharacter 클래스로 구성되며 공격등의 액션은 플레이어 캐릭터와 비슷하게 NPCActionComponent에서 호출하여 실행합니다.  
- 적은 AiController에서 위와같은 Behavior Tree를 실행하여 작동합니다. 적의 상태에 따라 공격, Hitted, 이동, 대기 등의 동작이 있습니다.
-
- 게임에서 적은 ActorSpawner를 상속받은 EnemySpawner에 의해 스폰되고 관리 됩니다.  
- EnemySpawner는 지정된 SpawnTargetPoint에 적을 스폰하고 적이 모두 죽은 상태가 되면 지정된 시간이 지난 후 다시 적을 스폰합니다.
-
-## 아이템
- 아이템의 데이터는 위와 같이 DataTable에 의해 저장되고 ItemManager 클래스에서 관리할 수 있습니다. ItemManager 에서 ItemID로 아이템의 모든 정보를 불러올 수  있고 사용할 수 있습니다.
- ItemManager클래스는 싱글톤 클래스로 어느 클래스에서나 불러와 사용할 수 있습니다.
-
- 아이템은 ItemBase 클래스에 의해 객체로 존재하는 경우와 플레이어 인벤토리에 데이터로 존재하는 경우로 나뉩니다.  
- ItemBase 는 아이템의 외형을 가지며 상호작용이 플레이어 인벤토리에 획득됩니다.  
- 원작 명조의 드롭아이템 획득은 플레이어에게 직접 획득되는 방식입니다. 하지만 이 프로젝트에서는 다른 게임인 원신 처럼 일정 액터를 가진 드롭아이템 형식으로 
- 구현했습니다.
-
- 획득된 아이템은 정보 형태로 PlayerStarte의 Inventory에서 관리되며 여기서 사용아이템을 사용할 수 있습니다.
+### 🔹 공격 시스템
+| 공격 유형 | 구현 방식 | 관련 기술 |
+|---------|--------|---------|
+| **일반 공격** | `AimingComponent`에서 적 타겟팅 후 방향과 위치 조정 | `ActionComponent` |
+| **콤보 시스템** | `bCanCombo` 변수를 활용하여 연속 공격 가능 | `Notify` 활용 |
+| **스킬 시스템** | `CCooldownManager`를 활용하여 쿨타임 관리 | `UObject` 상속 |
+| **궁극기 시스템** | 전용 카메라 액션 적용 (`SetViewTarget`) | `AnimNotify` |
 
 
-## 유저인터페이스
- ### 미니맵
- 미니맵은 MinimapCameraActor 로 캐릭터 상부에서 캐릭터 방향으로 CaptureScene() 하여 생성합니다.  
- 두개의 USceneCaptureComponent2D는 다음과 같은 역할을 합니다.  
- SceneCaptureComp : 맵의 색을 캡쳐합니다.  
- DepthCaptureComp : 맵의 depth를 캡쳐합니다.  
- 두 캡쳐본으로 미니맵 머티리얼을 만들어 Wb_Minimap UI에 보여지도록 합니다.  
+---
 
- 미니맵 카메라의 경우 로컬에서만 존재해도 되므로 Wb_Minimap에서 스폰됩니다.
+## 4. 상호작용 시스템 (Interaction System)
+### 🛠 동작 방식
+- `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현  
+- `F` 키 입력 시 `InteractionComponent`에서 Trace하여 주변의 상호작용 가능한 액터 탐색  
+- 서버 RPC 함수로 실행하여 모든 클라이언트에서 일관된 상호작용 보장
 
- ### Main UI
- 스킬, 체력, 캐릭터 교체 UI는 각각의 객체에서 정보를 가져와 보여줍니다.  
- 화면의 보여지는 UI는 WB_MainHuD에서 관리됩니다.  
- 게임 참여시 액터의 생성시기는 서로 다르므로 정보를 가져올 액터가 아직 생성되지 않았을 경우 WB_MainHuD의 초기화를 다시 시행합니다.
- 
- 스킬과 교체UI, 아이템의 아이콘은 Soft References로 하여 필요할 때 데이터를 가져와 초기 데이터 로딩을 줄이는 방법을 사용했습니다.
- 
+![image](https://github.com/user-attachments/assets/14162f50-8d52-4908-8889-e5474d82bedc)
 
- 
-## 로그인 및 게임참여
- 로그인은 여타 웹 로그인방식과 유사합니다.  
- 게임 <--> flask 서버 <--> mysql db 구조로 http post 방식을 사용하여 유저의 데이터를 요청했습니다.
- DB연결을 위한 이러한 작업은 GameInstance에 생성된 DBManager에서 담당합니다. 
- 로비창에서는 요청한 유저의 데이터에서 자신이 설정한 닉네임과 로비 캐릭터가 보여지도록 했습니다.
+| 상호작용 대상 | 동작 |
+|-------------|-----|
+| **보물상자 (Chest)** | 상호작용 시 보물상자가 열리며 아이템 스폰 |
+| **아이템 (ItemBase)** | 플레이어 인벤토리에 아이템 추가 |
 
+---
+
+## 5. 적 AI 시스템 (Enemy AI System)
+### 🛠 언리얼 AI 및 리스폰 기능
+- `EnemyCharacter` 클래스로 구성, `NPCActionComponent`에서 공격 실행  
+- `AIController` 및 `Behavior Tree`를 활용하여 AI 상태 관리  
+- `EnemySpawner`를 활용하여 적 스폰 및 자동 리스폰 구현
+![image](https://github.com/user-attachments/assets/0397e47c-5e99-4771-b5cd-1d231b2d8587)
 
 
-[ActionComponent]: https://github.com/HyeonLang/UE4.25_RPG/blob/main/Source/UE4_RPG/Components/CActionComponent.h
+---
+## 6. 미니맵 및 UI 시스템
+### 🛠 실시간 미니맵과 인벤토리의 동적 로딩
+- `SceneCaptureComponent2D`를 활용한 실시간 미니맵 구현  
+- `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
+- `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소  
+![image](https://github.com/user-attachments/assets/69de4475-3bf5-4178-944b-883068b2d23a)
+
+---
+
+## 7. 로그인 및 게임 참여 시스템
+### 🛠 DB 시스템을 활용한 로그인 인증
+- `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
+- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리  
+![image](https://github.com/user-attachments/assets/2d3967e3-ffdb-403a-bb52-e0e04ca22a40)
+
+---
+
+## 8. 포트폴리오 영상 & 코드 링크
+- 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://www.youtube.com/watch?v=EG2duBoVsuM))**  
+- 📌 **[GitHub 코드 확인](https://github.com/HyeonLang/UE4.25_RPG)**  
+- 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**  
