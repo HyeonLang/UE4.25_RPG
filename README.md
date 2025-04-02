@@ -162,10 +162,9 @@ if (CanStart())
 ## 7. 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
-- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리  
+- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리
+  
 #### 📌 클라이언트-서버-데이터베이스 요청 흐름
-
-<small>
 | 클라이언트       | 서버 (Backend)                  | 데이터베이스 (DB)            |
 |------------------|----------------------------------|------------------------------|
 | POST 요청 전송    |                                 |                              |
@@ -173,7 +172,7 @@ if (CanStart())
 |                  |                                  | 🡆 쿼리 실행 및 결과 반환 🡆  |
 |                  |     🡄 DB 응답을 받아 처리        |                             |
 | 🡄 서버 응답 반환 |                                  |                             |
-</small>
+
 ![image](https://github.com/user-attachments/assets/2d3967e3-ffdb-403a-bb52-e0e04ca22a40)
 
 ---
