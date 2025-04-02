@@ -1,4 +1,4 @@
-▶️ ## 데모 시연 영상 (이미지 클릭↓)
+## ▶️ 데모 시연 영상 (이미지 클릭↓)
 [![데모 시연 영상](https://github.com/user-attachments/assets/8b280d82-3860-4e9a-a907-525951274d3f)](https://youtu.be/nGRqgbBO1Gg)
 
 
