@@ -183,10 +183,11 @@ if (CanStart())
 ---
 ## 6. 미니맵 및 UI 시스템
 ### 🛠 실시간 미니맵과 인벤토리의 동적 로딩
-- `SceneCaptureComponent2D`를 활용한 실시간 미니맵 구현  
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
+- 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현
+  ![Minimap](https://github.com/user-attachments/assets/e90488fc-4226-4d10-ba9a-1ff8d15fe94d) 
 - `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소  
-![image](https://github.com/user-attachments/assets/69de4475-3bf5-4178-944b-883068b2d23a)
+
 
 - Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
 ---
