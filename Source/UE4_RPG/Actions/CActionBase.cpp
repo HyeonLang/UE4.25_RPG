@@ -136,7 +136,7 @@ void UCActionBase::OnRep_RepData()
 		// 로컬 인스티게이터가 아닌 서버 인스티게이터를 넘겨야함
 		// 서버에서 StartAction내의 인스티게이터를 넣어준것을 다시 로컬에 넘겨줌
 		StartAction(RepData.Instigator);
-		CLog::Print("In", -1, 2.0f);
+		//CLog::Print("In", -1, 2.0f);
 	}
 	else
 	{
