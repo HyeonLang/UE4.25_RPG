@@ -92,6 +92,8 @@ CActionBase
 │   ├── CAction_CancelLoop
 │
 └── CNPCAction
+
+// C++ 코드를 상속받아 Unreal Blueprint 클래스로 다변화
 ```
 
 ### 🔹 액션 실행 흐름
