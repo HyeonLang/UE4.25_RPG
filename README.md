@@ -185,7 +185,8 @@ if (CanStart())
 ### 🛠 실시간 미니맵과 인벤토리의 동적 로딩
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
 - 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현
-  ![Minimap](https://github.com/user-attachments/assets/e90488fc-4226-4d10-ba9a-1ff8d15fe94d) 
+  ![Minimap](https://github.com/user-attachments/assets/a0ef2f68-f892-4ffc-a8e7-058f35b6b7de)
+
 - `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소  
 
 
