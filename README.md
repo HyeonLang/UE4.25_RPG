@@ -34,8 +34,9 @@
 4. **[상호작용 시스템](#4-상호작용-시스템-interaction-system)**
 5. **[적 AI 시스템](#5-적-ai-시스템-enemy-ai-system)**
 6. **[미니맵 및 UI 시스템](#6-미니맵-및-ui-시스템)**
-7. **[로그인 및 게임 참여 시스템](#7-로그인-및-게임-참여-시스템)**
-8. **[포트폴리오 영상 & 코드 링크](#8-포트폴리오-영상--코드-링크)**  
+7. **[데이터 및 에셋 관리](#7-데이터-및-에셋-관리)**
+8. **[로그인 및 게임 참여 시스템](#8-로그인-및-게임-참여-시스템)**
+9. **[포트폴리오 영상 & 코드 링크](#9-포트폴리오-영상--코드-링크)**  
 
   
 ## 0. 멀티플레이 동기화 (Multiplayer Game Sync Techniques)
@@ -185,9 +186,13 @@ if (CanStart())
 - `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소  
 ![image](https://github.com/user-attachments/assets/69de4475-3bf5-4178-944b-883068b2d23a)
 
+- Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
 ---
 
-## 7. 로그인 및 게임 참여 시스템
+## 7. 데이터 및 에셋 관리
+### 🛠 데이터 테이블과 데이터 에셋을 통한 관리
+
+## 8. 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
 - `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리
@@ -205,7 +210,7 @@ if (CanStart())
 
 ---
 
-## 8. 포트폴리오 영상 & 코드 링크
+## 9. 포트폴리오 영상 & 코드 링크
 - 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://youtu.be/nGRqgbBO1Gg))**  
 - 📌 **[GitHub 코드 확인](https://github.com/HyeonLang/UE4.25_RPG)**  
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**  
