@@ -50,7 +50,8 @@
   * 체력, 아이템 정보 등의 **변수 동기화**와 액터의 **상태 변화 변수** 동기화를 다루기위해 사용된 방법.
   * 변수 동기화 후 클라이언트에서 후속 처리가 필요한 경우 Relicated Notify를 사용하여 처리를 한다.
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
-   ![Rep](https://github.com/user-attachments/assets/1214034c-412b-4553-a0a0-36021a231090) ![OnRep](https://github.com/user-attachments/assets/247827ed-2b23-4356-815e-7ad97ea7862f)
+   ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
+
 
 
 ## 1. 캐릭터 교체 시스템 (Character Switching System)
