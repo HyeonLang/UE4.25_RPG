@@ -222,5 +222,5 @@ if (CanStart())
 
 ## 9. 포트폴리오 영상 & 코드 링크
 - 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://youtu.be/nGRqgbBO1Gg))**  
-- 📌 **[GitHub 코드 확인](https://github.com/HyeonLang/UE4.25_RPG)**  
+- 📌 **[GitHub 소스코드 확인](https://github.com/HyeonLang/UE4.25_RPG/tree/main/Source)**  
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**  
