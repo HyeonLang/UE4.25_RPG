@@ -156,7 +156,7 @@ if (CanStart())
 ### 🛠 동작 방식
 - `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현  
 - `F` 키 입력 시 `InteractionComponent`에서 Trace하여 주변의 상호작용 가능한 액터 탐색  
-- 서버 RPC 함수로 실행하여 모든 클라이언트에서 일관된 상호작용 보장 [RPC 패턴 사용](#🛠-UE4.25_RPG-멀티플레이-동기화를-위해-사용한-코딩-패턴)
+- 서버 RPC 함수로 실행하여 모든 클라이언트에서 일관된 상호작용 보장 [RPC 패턴 사용](#ue425_rpg-멀티플레이-동기화를-위해-사용한-코딩-패턴)
 
 ![image](https://github.com/user-attachments/assets/14162f50-8d52-4908-8889-e5474d82bedc)
 
@@ -165,7 +165,7 @@ if (CanStart())
 | **보물상자 (Chest)** | 상호작용 시 보물상자가 열리며 아이템 스폰 |
 | **아이템 (ItemBase)** | 플레이어 인벤토리에 아이템 추가 |
 
-- 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#🛠-UE4.25_RPG-멀티플레이-동기화를-위해-사용한-코딩-패턴)
+- 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#ue425_rpg-멀티플레이-동기화를-위해-사용한-코딩-패턴)
 
 ---
 
