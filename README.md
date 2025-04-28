@@ -1,5 +1,6 @@
 ## ▶️ 데모 시연 영상 (이미지 클릭↓)
-[![데모 시연 영상](https://github.com/user-attachments/assets/3005f72c-76cd-4450-91b4-6279399317e0)
+![데모 시연 영상](https://github.com/user-attachments/assets/3005f72c-76cd-4450-91b4-6279399317e0)  
+![MainImage](https://github.com/user-attachments/assets/42cb8952-a857-4a2b-9f74-9e2542959d09)
 
 
 
