@@ -105,8 +105,9 @@ if (CanStart())
 ```
 ![image](https://github.com/user-attachments/assets/91ecc691-97c0-4a3e-baa4-f31cb3949c11)  
 1. `ActionComponent`에서 `CanStart()`를 호출하여 실행 가능 여부 확인  
-2. `StartAction()` 실행 시 **몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어** 적용  
-3. `StopAction()`을 통해 액션 종료 후 초기 상태 복구
+2. `StartAction()` 실행 시 **몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어** 적용
+3. 애니메이션 몽타주 등으로 `StopAction()` 호출
+4. `StopAction()`을 통해 액션 종료 후 초기 상태 복구
 
  
 
