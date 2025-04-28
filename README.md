@@ -28,7 +28,7 @@
 
 ## 목차 (인덱스)
 1. **[캐릭터 교체 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#1-%EC%BA%90%EB%A6%AD%ED%84%B0-%EA%B5%90%EC%B2%B4-%EC%8B%9C%EC%8A%A4%ED%85%9C-character-switching-system)**
-2. **[액션 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#2-%EC%95%A1%EC%85%98-%EC%8B%9C%EC%8A%A4%ED%85%9C-action-system)**
+2. **[액션 시스템](#2. 액션 시스템 (Action System))**
 3. **[전투 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#3-%EC%A0%84%ED%88%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-combat-system)**
 4. **[상호작용 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#4-%EC%83%81%ED%98%B8%EC%9E%91%EC%9A%A9-%EC%8B%9C%EC%8A%A4%ED%85%9C-interaction-system)**
 5. **[적 AI 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#5-%EC%A0%81-ai-%EC%8B%9C%EC%8A%A4%ED%85%9C-enemy-ai-system)**
