@@ -192,15 +192,16 @@ if (CanStart())
 ## 7. 데이터 및 에셋 관리
 ### 🛠 데이터 테이블을 통한 관리
 - 캐릭터의 GameAblitySystem의 **AttributeSet을 위한 Attribute(HP 등의 수치)** 데이터 테이블  
-  ![Attribute](https://github.com/user-attachments/assets/8961721d-f9df-4140-94c0-3a9b855cf658)  
+  ![Attribute](https://github.com/user-attachments/assets/4d75a88c-99b2-4d3c-94f1-b058029408e3)  
+
 - **아이템의 각 정보**를 담은 ItemInfo 및 ConsumableItemInfo(소비) 데이터 테이블  
-  ![ItemInfo](https://github.com/user-attachments/assets/99a2b245-080c-461f-bf41-62c5151cd61d)
+  ![Item](https://github.com/user-attachments/assets/843c93e9-040e-4686-8443-7454e871586b)  
 
 
 ### 🛠 데이터 에셋을 통한 관리
 - 캐릭터의 각 **액션(전투 스킬 등)**마다 사용하는 사거리 등 **수치 데이터** 및 **몽타주, 이펙트 등의 에셋**을 관리하는 데이터 에셋
-  ![ActionDataAsset](https://github.com/user-attachments/assets/f7b43891-81fc-463b-9d7a-7fa94f7d7cb3)
-  ![actiondata](https://github.com/user-attachments/assets/8f9bb513-a00b-4462-a386-5d3249c0e960)
+  ![ActionDataAsset](https://github.com/user-attachments/assets/f847bab2-a9ad-4132-bdb8-c04bb7f83c0f)
+
 
 
 
