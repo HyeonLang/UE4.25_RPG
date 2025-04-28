@@ -51,11 +51,11 @@ void ACPlayerState::Tick(float DeltaTime)
 			b = "true";
 		}
 		FString Str = "MIsc : " + FString::FromInt(PlayerInventory->MiscItemList.Num()) + "Is Server : " + b;
-		CLog::Print(Str, -1, DeltaTime);
+		//CLog::Print(Str, -1, DeltaTime);
 	}
 	else
 	{
-		CLog::Print("No INven", -1, DeltaTime);
+		//CLog::Print("No INven", -1, DeltaTime);
 	}
 }
 

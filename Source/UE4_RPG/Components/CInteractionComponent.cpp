@@ -131,10 +131,10 @@ void UCInteractionComponent::FindNearestInteractable()
 
 	}
 
-	FString Str = "Hit : ";
+	/*FString Str = "Hit : ";
 	for (AActor* A : FocusedActors)
 		Str = Str + " " + A->GetName();
-	CLog::Print(Str, -1, 0.f);
+	CLog::Print(Str, -1, 0.f);*/
 }
 
 void UCInteractionComponent::OnCooldownComplete()
