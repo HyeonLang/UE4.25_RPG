@@ -18,23 +18,23 @@
 ## 주요 기능 및 기술적 구현 (Key Features & Implementation)
 | 기능명 | 설명 및 구현 방식 | 관련 기술 |
 |--------|-----------------|------------|
-| **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환 및 교체 가능 | `APlayerController::Possess()` |
-| **액션 시스템** | 일반 공격, 스킬, 궁극기 등의 액션을 모듈화 | `CActionBase` 상속 |
+| **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환, 동시 소환 및 교체 가능 | `APlayerController::Possess()` | `APlayerController::UnPossess()`
+| **액션 시스템** | 일반 공격, 스킬, 궁극기 등의 액션을 모듈화 | `CActionBase` 상속 | 타켓팅 시스템
 | **멀티플레이** | 서버-클라이언트 동기화, RPC 사용 | `NetMulticast`, `RepNotify` |
-| **미니맵** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 |
+| **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 | UI
 | **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
 
 ---
 
 ## 목차 (인덱스)
-1. **[캐릭터 교체 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#1-%EC%BA%90%EB%A6%AD%ED%84%B0-%EA%B5%90%EC%B2%B4-%EC%8B%9C%EC%8A%A4%ED%85%9C-character-switching-system)**
+1. **[캐릭터 교체 시스템](#1-캐릭터-교체-시스템-character-switching-system)**
 2. **[액션 시스템](#2-액션-시스템-action-system)**
-3. **[전투 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#3-%EC%A0%84%ED%88%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-combat-system)**
-4. **[상호작용 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#4-%EC%83%81%ED%98%B8%EC%9E%91%EC%9A%A9-%EC%8B%9C%EC%8A%A4%ED%85%9C-interaction-system)**
-5. **[적 AI 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#5-%EC%A0%81-ai-%EC%8B%9C%EC%8A%A4%ED%85%9C-enemy-ai-system)**
-6. **[미니맵 및 UI 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#6-%EB%AF%B8%EB%8B%88%EB%A7%B5-%EB%B0%8F-ui-%EC%8B%9C%EC%8A%A4%ED%85%9C)**
-7. **[로그인 및 게임 참여 시스템](https://github.com/simeddk/github_features/blob/main/Test.md#7-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EB%B0%8F-%EA%B2%8C%EC%9E%84-%EC%B0%B8%EC%97%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C)**
-8. **[포트폴리오 영상 & 코드 링크](https://github.com/simeddk/github_features/blob/main/Test.md#8-%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4-%EC%98%81%EC%83%81--%EC%BD%94%EB%93%9C-%EB%A7%81%ED%81%AC)**
+3. **[전투 시스템](#3-전투-시스템-combat-system)**
+4. **[상호작용 시스템](#4-상호작용-시스템-interaction-system)**
+5. **[적 AI 시스템](#5-적-ai-시스템-enemy-ai-system)**
+6. **[미니맵 및 UI 시스템](#6-미니맵-및-ui-시스템)**
+7. **[로그인 및 게임 참여 시스템](#7-로그인-및-게임-참여-시스템)**
+8. **[포트폴리오 영상 & 코드 링크](#8-포트폴리오-영상--코드-링크)**
 
 ## 1. 캐릭터 교체 시스템 (Character Switching System)
 ### 🛠 온필드, 오프필드 시스템 구현
