@@ -48,7 +48,7 @@
 
 - 변수 Replication 사용
   * 체력, 아이템 정보 등의 **변수 동기화**와 액터의 **상태 변화 변수** 동기화를 다루기위해 사용된 방법.
-  * 변수 동기화 후 클라이언트에서 후속 처리가 필요한 경우 Relicated Notify를 사용하여 처리를 한다.
+  * 변수 동기화 후 **클라이언트에서 후속 처리**가 필요한 경우 **Replicated Notify**를 사용하여 처리를 한다.
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
    ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
 
