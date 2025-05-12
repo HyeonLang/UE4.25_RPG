@@ -5,7 +5,7 @@
 #include "Global.h"
 #include "Character/CPlayerCharacter.h"
 
-static EDrawDebugTrace::Type DrawDebugTrace = EDrawDebugTrace::ForDuration;
+static EDrawDebugTrace::Type DrawDebugTrace = EDrawDebugTrace::None;
 
 ACEnemySpawner::ACEnemySpawner()
 {
