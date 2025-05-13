@@ -20,7 +20,7 @@ void UCInventory::PostInitProperties()
 // Todo. DB connect
 bool UCInventory::AddItem(FName AddItemID, EItemType AddItemType, int32 AddItemCount)
 {
-	//¾ÆÀÌÅÛ ¹øÈ£ °Ë»ç (¸Å´ÏÀú¿¡¼­)
+	//ì•„ì´í…œ ë²ˆí˜¸ ê²€ì‚¬ 
 	if (AddItemCount <= 0) return false;
 	
 	if (AddItemList(AddItemID, AddItemType, AddItemCount))
@@ -39,7 +39,7 @@ bool UCInventory::AddItem(FName AddItemID, EItemType AddItemType, int32 AddItemC
 // Todo. DB connect
 bool UCInventory::RemoveItem(FName RemoveItemID, EItemType RemoveItemType, int32 RemoveItemCount)
 {
-	//¾ÆÀÌÅÛ ¹øÈ£ °Ë»ç (¸Å´ÏÀú¿¡¼­)
+	//ì•„ì´í…œ ë²ˆí˜¸ ê²€ì‚¬
 	if (RemoveItemCount <= 0) return false;
 
 	if (RemoveItemList(RemoveItemID, RemoveItemType, RemoveItemCount))
@@ -93,7 +93,7 @@ TMap<FName, int32>& UCInventory::GetItemListByItemType(EItemType ItemType)
 
 bool UCInventory::AddItemList(FName AddItemID, EItemType AddItemType, int32 AddItemCount)
 {
-	//¾ÆÀÌÅÛ ¹øÈ£ °Ë»ç (¸Å´ÏÀú¿¡¼­)
+	//ì•„ì´í…œ ë²ˆí˜¸ ê²€ì‚¬ 
 	if (AddItemCount <= 0) return false;
 ;
 	if (GetItemListByItemType(AddItemType).Contains(AddItemID))
@@ -112,7 +112,7 @@ bool UCInventory::AddItemList(FName AddItemID, EItemType AddItemType, int32 AddI
 
 bool UCInventory::RemoveItemList(FName RemoveItemID, EItemType RemoveItemType, int32 RemoveItemCount)
 {
-	//¾ÆÀÌÅÛ ¹øÈ£ °Ë»ç (¸Å´ÏÀú¿¡¼­)
+	//ì•„ì´í…œ ë²ˆí˜¸ ê²€ì‚¬
 	if (RemoveItemCount <= 0) return false;
 
 	if (GetItemListByItemType(RemoveItemType).Contains(RemoveItemID))
@@ -137,7 +137,7 @@ void UCInventory::OnRep_ItemListRepData()
 	switch (ItemListRepData.InventoryChangeType)
 	{
 	case EInventoryChangeType::Add:
-		// ¾ÆÀÌÅÛ ¼ö·®À» Áõ°¡½ÃÅ°´Â ·ÎÁ÷
+		// ì•„ì´í…œ ìˆ˜ëŸ‰ì„ ì¦ê°€
 		CLog::Print("ItemListRepData Add");
 		AddItemList(ItemListRepData.ItemID, ItemListRepData.ItemType, ItemListRepData.ItemCount);
 
@@ -145,7 +145,7 @@ void UCInventory::OnRep_ItemListRepData()
 		break;
 
 	case EInventoryChangeType::Remove:
-		// ¾ÆÀÌÅÛ ¼ö·®À» °¨¼Ò½ÃÅ°´Â ·ÎÁ÷
+		// ì•„ì´í…œ ìˆ˜ëŸ‰ì„ ê°ì†Œ
 		CLog::Print("ItemListRepData ReMove");
 		RemoveItemList(ItemListRepData.ItemID, ItemListRepData.ItemType, ItemListRepData.ItemCount);
 
@@ -153,7 +153,7 @@ void UCInventory::OnRep_ItemListRepData()
 		break;
 
 	case EInventoryChangeType::Max:
-		// Max °ª¿¡ ´ëÇÑ Ã³¸® (º¸Åë ¿¹¿Ü Ã³¸®°¡ ÇÊ¿äÇÒ ¶§ »ç¿ë)
+		// Max ê°’ ì²˜ë¦¬
 		CLog::Print("ItemListRepData Invalid");
 		UE_LOG(LogTemp, Warning, TEXT("Invalid Inventory Change Type"));
 		break;
