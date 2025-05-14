@@ -248,7 +248,7 @@ if (CanStart())
 - [IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
 
 ## 10. 기술 이슈 및 해결 기록  
-## IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패
+### IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패
 
 * **상태**: ❌ 해결 불가 (보류)
 * **원인**: 캐릭터 발 본 방향이 언리얼 기본 마네킹과 반대 → IK 적용 시 발 위치가 머리 위로 이동
