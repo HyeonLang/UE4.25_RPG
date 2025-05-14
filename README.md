@@ -245,7 +245,7 @@ if (CanStart())
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**
 
 ---
-- [IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
+ [#📌](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
 
 ## 10. 기술 이슈 및 해결 기록  
 ### IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패
