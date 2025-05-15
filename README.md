@@ -17,10 +17,12 @@
 | **주요 기능** | 캐릭터 교체 시스템, 액션 시스템(일반공격/스킬/궁극기), 멀티플레이 동기화, 상호 작용, 미니맵 및 UI 개발 |
 | **기여도** | 2인 개발 (게임플레이 설계 및 구현 전체 담당), (에셋 관련 담당) |
 
+
 ---  
   
 ## 게임의 목표 (The Goal of The Game)
 ### **3개의 캐릭터를 조종**하여 **적을 처치**하고 **보물상자**를 열어 **아이템을 획득**하자!
+
 
 ---  
 
@@ -32,6 +34,7 @@
 | **멀티플레이** | 서버-클라이언트 동기화, RPC 사용 | `NetMulticast`, `RepNotify` |
 | **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 | UI
 | **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
+
 
 ---
 
@@ -47,6 +50,10 @@
 8. **[로그인 및 게임 참여 시스템](#8-로그인-및-게임-참여-시스템)**
 9. **[포트폴리오 영상 & 코드 링크](#9-포트폴리오-영상--코드-링크)**
 10. **[기술 이슈 및 해결 기록](#10-기술-이슈-및-해결-기록)**
+
+
+
+---
 
   
 ## 0. 멀티플레이 동기화 (Multiplayer Game Sync Techniques)
@@ -86,6 +93,7 @@
 - `Delegate.Broadcast()`로 협주 교체 후 UnpossessCharacter() 실행
 
 ---
+
 
 ## 2. 액션 시스템 (Action System)
 ### 🛠 캐릭터 교체 액션 및 네트워크 동기화
@@ -138,6 +146,7 @@ if (CanStart())
 
 ---
 
+
 ## 3. 전투 시스템 (Combat System)
 ### 🛠 전투의 흐름
 - 명조와 동일하게 **타겟팅**에 따라 액션 방향의 우선 순위를 실행할 수 있도록 하였습니다.
@@ -169,6 +178,7 @@ if (CanStart())
 
 ---
 
+
 ## 4. 상호작용 시스템 (Interaction System)
 ### 🛠 동작 방식
 - `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현  
@@ -195,6 +205,8 @@ if (CanStart())
 
 
 ---
+
+
 ## 6. 미니맵 및 UI 시스템
 ### 🛠 실시간 미니맵, UI와 인벤토리의 동적 로딩
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
@@ -209,6 +221,8 @@ if (CanStart())
 
 
 - Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
+
+  
 ---
 
 ## 7. 데이터 및 에셋 관리
@@ -227,6 +241,7 @@ if (CanStart())
 
 ---
 
+
 ## 8. 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
@@ -243,14 +258,19 @@ if (CanStart())
 
 ![image](https://github.com/user-attachments/assets/2d3967e3-ffdb-403a-bb52-e0e04ca22a40)
 
+
 ---
+
 
 ## 9. 포트폴리오 영상 & 코드 링크
 - 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://youtu.be/nGRqgbBO1Gg))**  
 - 📌 **[GitHub 소스코드 확인](https://github.com/HyeonLang/UE4.25_RPG/tree/main/Source)**  
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**
 
+
 ---
+
+
  [#📌](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
 
 ## 10. 기술 이슈 및 해결 기록  
