@@ -205,7 +205,9 @@ if (CanStart())
 ## 5. 적 AI 시스템 (Enemy AI System)
 ### 🛠 언리얼 AI 및 리스폰 기능
 - `EnemyCharacter` 클래스로 구성, `NPCActionComponent`에서 공격 실행  
-- `AIController` 및 `Behavior Tree`를 활용하여 AI 상태 관리  
+- `AIController` 및 `Behavior Tree`를 활용하여 AI 상태 관리
+  ![bihavior](https://github.com/user-attachments/assets/23039c93-e182-4685-90c6-b5c9ec44a84e)
+
 - `EnemySpawner`를 활용하여 적 스폰 및 자동 리스폰 구현
 ![image](https://github.com/user-attachments/assets/0397e47c-5e99-4771-b5cd-1d231b2d8587)
 
