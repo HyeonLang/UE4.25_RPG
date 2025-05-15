@@ -147,9 +147,7 @@ if (CanStart())
 
 - 적 캐릭터는 AI 기능을 활용하여 구현하였습니다.
 - 3명의 플레이어블 캐릭터에게 고유한 일반공격, 스킬, 궁극기를 구현하였습니다.
-![image](https://github.com/user-attachments/assets/0a347fc7-97df-4b4b-9076-fbded3c64416)
-![궁극기gif](https://github.com/user-attachments/assets/cb5079ec-4055-4e84-9427-4e50f593ac4a)
-
+  ![궁극기gif](https://github.com/user-attachments/assets/cb5079ec-4055-4e84-9427-4e50f593ac4a)
    (궁극기 컷씬 모습)
 
 
