@@ -143,7 +143,8 @@ if (CanStart())
 - 명조와 동일하게 **타겟팅**에 따라 액션 방향의 우선 순위를 실행할 수 있도록 하였습니다.
   * **타켓팅**은 카메라가 바라보는 방향과 가까운 액터를 가중치로하여 **우선순위큐**로 액터 하나를 지정하여 실행합니다.
   * 플레이어의 캐릭터는 액션 사용시 **타겟**의 방향을 **바라보고 이동**하여 공격합니다.  
- ![targeting](https://github.com/user-attachments/assets/b2d70988-5ad3-464b-ac19-10538996b051)
+  ![타켓팅](https://github.com/user-attachments/assets/afea5203-fe22-4303-9856-7eae5b09baef) ![타겟팅gif](https://github.com/user-attachments/assets/59ffb2e6-57a0-445f-b72d-d5ea59601580)
+
 
 
 
