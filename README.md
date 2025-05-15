@@ -92,7 +92,7 @@
 - 상태 변경 관련된 버그에 특히 신경을 많이 썼습니다.(액션 캔슬 전용 애님노티파이 적용)
 - 액션 도중 캐릭터 교체와 같은 예외적인 상황을 대비하도록 설계되었습니다.
 - 서버 RPC와 네트워크 복제를 활용하여 액션의 상태와 동작이 모든 유저에게 동일하도록 보장합니다.
-![image](https://github.com/user-attachments/assets/051b4bbd-9711-4cc0-8a60-5aa2cd7aa22a)
+![동기화](https://github.com/user-attachments/assets/301c57d7-21d9-4d5b-851d-d97b778c8f22)
 
 🔹 액션 클래스 구조
 ```
