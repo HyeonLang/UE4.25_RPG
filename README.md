@@ -6,7 +6,9 @@
 # 게임 `명조`를 모작한 멀티플레이 기반 게임  
  
 
+&nbsp;
 ---  
+&nbsp;
 ## 프로젝트 개요 (Project Overview)
 | 항목 | 내용 |
 |------|------|
@@ -18,15 +20,15 @@
 | **기여도** | 2인 개발 (게임플레이 설계 및 구현 전체 담당), (에셋 관련 담당) |
 
 
+&nbsp;
 ---  
+&nbsp; 
   
 ## 게임의 목표 (The Goal of The Game)
 ### **3개의 캐릭터를 조종**하여 **적을 처치**하고 **보물상자**를 열어 **아이템을 획득**하자!
 
-
+&nbsp;
 ---  
-&nbsp;
-&nbsp;
 &nbsp;
 ## 주요 기능 및 기술적 구현 (Key Features & Implementation)
 | 기능명 | 설명 및 구현 방식 | 관련 기술 |
@@ -38,7 +40,9 @@
 | **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 ## 목차 (인덱스)
 0. **[멀티플레이 동기화](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)**
@@ -55,7 +59,9 @@
 
 
 
----
+&nbsp;
+---  
+&nbsp;
 
   
 ## 0. 멀티플레이 동기화 (Multiplayer Game Sync Techniques)
@@ -94,7 +100,9 @@
 - `RepNotify`를 활용하여 클라이언트에 상태 동기화  
 - `Delegate.Broadcast()`로 협주 교체 후 UnpossessCharacter() 실행
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 2. 액션 시스템 (Action System)
@@ -146,7 +154,9 @@ if (CanStart())
 - `Montage Cancel` 전용 함수(`StopAction()` 호출 후 애니메이션 중단) 사용  
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 3. 전투 시스템 (Combat System)
@@ -178,7 +188,9 @@ if (CanStart())
 | **궁극기 시스템** | 전용 카메라 액션 적용 (`SetViewTarget`) | `AnimNotify` |
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 4. 상호작용 시스템 (Interaction System)
@@ -196,7 +208,9 @@ if (CanStart())
 
 - 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)
 
----
+&nbsp;
+---  
+&nbsp;
 
 ## 5. 적 AI 시스템 (Enemy AI System)
 ### 🛠 언리얼 AI 및 리스폰 기능
@@ -206,7 +220,9 @@ if (CanStart())
 ![image](https://github.com/user-attachments/assets/0397e47c-5e99-4771-b5cd-1d231b2d8587)
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 6. 미니맵 및 UI 시스템
@@ -225,7 +241,9 @@ if (CanStart())
 - Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
 
   
----
+&nbsp;
+---  
+&nbsp;
 
 ## 7. 데이터 및 에셋 관리
 ### 🛠 데이터 테이블을 통한 관리
@@ -241,7 +259,9 @@ if (CanStart())
   ![ActionDataAsset](https://github.com/user-attachments/assets/f847bab2-a9ad-4132-bdb8-c04bb7f83c0f)
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 8. 로그인 및 게임 참여 시스템
@@ -261,7 +281,9 @@ if (CanStart())
 ![image](https://github.com/user-attachments/assets/2d3967e3-ffdb-403a-bb52-e0e04ca22a40)
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
 ## 9. 포트폴리오 영상 & 코드 링크
@@ -270,7 +292,9 @@ if (CanStart())
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**
 
 
----
+&nbsp;
+---  
+&nbsp;
 
 
  [#📌](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
