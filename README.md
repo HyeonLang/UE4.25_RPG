@@ -125,8 +125,10 @@ Character->ActionComponent->StartActionByName() 액션 호출
 if (CanStart())
 {
   StartAction(); // 액션 실행
-  StopAction();  // 액션 종료
 }
+
+// AnimNotify 혹은 몽타주 끊김 이벤트에서
+---> StopAction();  // 액션 종료 호출
 ```
 ![image](https://github.com/user-attachments/assets/91ecc691-97c0-4a3e-baa4-f31cb3949c11)  
 1. `ActionComponent`에서 `CanStart()`를 호출하여 실행 가능 여부 확인  
