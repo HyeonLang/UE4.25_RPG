@@ -136,7 +136,14 @@ if (CanStart())
 3. 애니메이션 몽타주 등으로 `StopAction()` 호출
 4. `StopAction()`을 통해 액션 종료 후 초기 상태 복구
 
- 
+
+- **루프 액션 (키다운 공격)의 흐름**
+  - (일반적) 키 누름 유지로 Loop하는 공격은 키를 떼면 공격 종료 (`Loop Action(루프 액션)`)
+  - (특수 상황) `Loop Action(루프 액션)` 실행 중 캐릭터 교체 시 **키를 떼는 동작**이 **교체된 캐릭터의 입력**으로 넘어가므로 공격 종료 입력불가
+  - 따라서 `CancelLoop Action(취소 액션)` 실행으로 **루프 액션의 중단**을 호출
+  - 여기서 루프 중단이란 **몽타주 Loop 섹션을 break** 하는 것이다. (AnimNotify로 자연스럽게 `StopAction` 된다.) 
+   ![루프액션종료-교체시](https://github.com/user-attachments/assets/70086e0c-00b2-4000-af90-175251a1d999)
+
 
 ### 🔹 서버-클라이언트 동기화
 - 서버에서 `ActionComponent`를 호출하여 액션 실행  
@@ -158,8 +165,6 @@ if (CanStart())
   * **타켓팅**은 카메라가 바라보는 방향과 가까운 액터를 가중치로하여 **우선순위큐**로 액터 하나를 지정하여 실행합니다.
   * 플레이어의 캐릭터는 액션 사용시 **타겟**의 방향을 **바라보고 이동**하여 공격합니다.  
   ![타켓팅](https://github.com/user-attachments/assets/afea5203-fe22-4303-9856-7eae5b09baef) ![타겟팅gif](https://github.com/user-attachments/assets/59ffb2e6-57a0-445f-b72d-d5ea59601580)
-
-
 
 
 - 적 캐릭터는 AI 기능을 활용하여 구현하였습니다.
