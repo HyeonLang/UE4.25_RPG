@@ -170,7 +170,7 @@ if (CanStart())
 
 ### 🔹 대쉬, 점프, 스프린트
 - 모든 플레이어 캐릭터가 `Dash()`, `Jump()`, `Sprint()` 공통 기능을 보유  
-- 상속 구조로 구성하여 **블루프린트에서 모듈화 가능**
+- 상속 구조로 구성하여 **블루프린트에서 모듈화 가능**  
   ![대쉬점프gif](https://github.com/user-attachments/assets/a7b5d747-40ce-4ee1-9aa6-0d8049004c21)
 
 
