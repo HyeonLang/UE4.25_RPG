@@ -72,12 +72,13 @@
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
    ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
 
+&nbsp;
 ## 1. 플레이어 캐릭터 시스템 (Player Character System)
 ### 🛠 플레이어의 캐릭터 사용
   - 플레이어는 각각 3개의 캐릭터(`PlayerCharacter`)를 사용한다.
   - 플레이어의 입력은 동시에 1개의 만 받을 수 있으며 캐릭터 교체 시스템으로 제어된다.
-    - `PlayerController`의 제어로 각 캐릭터에 `Possess` / `UnPossess` 및 `SetViewTarget` 카메라 제어
-    - `PlayerController` 소유의 `PlayerCamera`가 캐릭터의 적절한 위치에서 화면을 보여줌  
+    - `PlayerController`의 제어로 각 캐릭터에 `Possess` / `UnPossess` 및 `SetViewTarget` 카메라 제어 
+    - `PlayerController` 소유의 `PlayerCamera`가 캐릭터의 적절한 위치에서 화면을 보여줌 [카메라 이슈](#카메라-이슈-beginplay-시-카메라-빙의-실패)
   
 ### 🔹 플레이어 캐릭터 구조
   ```
@@ -100,9 +101,10 @@
 | **InteractionComponent** | 상호 작용 관련 처리 (아이템 줍기, 보물 상자 열기 등) |
 | **AbilityComponent** | GAS와 연동하여 AttributeSet 사용 |
 | &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 Attribute를 정의 및 조정하는 클래스 |
-| ~~IKComponent~~     | ~~IK 담당 컴포넌트~~ |
+| ~~IKComponent~~     | ~~IK 담당 컴포넌트~~[IK 이슈](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패) |
 | **Weapon**          | 캐릭터의 무기. Damage 처리를 위해 무기의 Collision 및 위치 정보 사용 |
 
+&nbsp;
 ## 2. 캐릭터 교체 시스템 (Character Swiching System)
 ### 🛠 온필드, 오프필드 시스템 구현
 - 모작의 **핵심 기능**
