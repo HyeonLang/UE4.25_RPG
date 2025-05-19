@@ -338,19 +338,19 @@ if (CanStart())
 ---  
 &nbsp;
 ## 10-코스메틱-시스템-Cosmetic-System  
-  ### 🔹 Ghost Trail
-    - `Character`의 `Skeletal`을 Copy Pose 후 Trail Material로 Ghost Trail 액터 생성
-    - 몽타주 실행시 필요한 구간에 GhostTrail 생성 AnimNotify 실행  
-    ![Trail](https://github.com/user-attachments/assets/d1d840ac-f6d6-4898-bf53-ed06fb67aa2c)
+#### 🔹 Ghost Trail
+  - `Character`의 `Skeletal`을 Copy Pose 후 Trail Material로 Ghost Trail 액터 생성
+  - 몽타주 실행시 필요한 구간에 GhostTrail 생성 AnimNotify 실행  
+  ![Trail](https://github.com/user-attachments/assets/d1d840ac-f6d6-4898-bf53-ed06fb67aa2c)
 
-  ### 🔹 Weapon 세팅 
-    - 원작과 같이 액션 사용, 대기 모션 등 필요할 때만 무기가 등장하도록 구현  
-    ![WeaponSet](https://github.com/user-attachments/assets/db46c872-9c68-434b-a78b-cb1a017f87cd)
+#### 🔹 Weapon 세팅 
+  - 원작과 같이 액션 사용, 대기 모션 등 필요할 때만 무기가 등장하도록 구현  
+  ![WeaponSet](https://github.com/user-attachments/assets/db46c872-9c68-434b-a78b-cb1a017f87cd)
 
-  ### 🔹 Weapon Trail
-    - 반복하는 Weapon Trail Animation을 생성, 사용해서 Weapon Trail 구현
-    - Trail 필요에 따라 Weapon Trail Animation ON/OFF  
-    ![TrailAttack](https://github.com/user-attachments/assets/288023b1-a41a-4101-a75e-e9305085a84d)
+#### 🔹 Weapon Trail
+  - 반복하는 Weapon Trail Animation을 생성, 사용해서 Weapon Trail 구현
+  - Trail 필요에 따라 Weapon Trail Animation ON/OFF  
+  ![TrailAttack](https://github.com/user-attachments/assets/288023b1-a41a-4101-a75e-e9305085a84d)
 ---  
 &nbsp;
 ## 11. 포트폴리오 영상 & 코드 링크
