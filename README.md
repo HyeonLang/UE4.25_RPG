@@ -337,7 +337,7 @@ if (CanStart())
 
 ---  
 &nbsp;
-## 10-코스메틱-시스템-Cosmetic-System
+## 10-코스메틱-시스템-Cosmetic-System  
   ### 🔹 Ghost Trail
     - `Character`의 `Skeletal`을 Copy Pose 후 Trail Material로 Ghost Trail 액터 생성
     - 몽타주 실행시 필요한 구간에 GhostTrail 생성 AnimNotify 실행  
