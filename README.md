@@ -48,9 +48,10 @@
 6. **[적 AI 시스템](#6-적-ai-시스템-enemy-ai-system)**
 7. **[미니맵 및 UI 시스템](#7-미니맵-및-ui-시스템)**
 8. **[데이터 및 에셋 관리](#8-데이터-및-에셋-관리)**
-9. **[로그인 및 게임 참여 시스템](#9-DB를-활용한-로그인-및-게임-참여-시스템)**
-10. **[포트폴리오 영상 & 코드 링크](#10-포트폴리오-영상--코드-링크)**
-11. **[기술 이슈 및 해결 기록](#11-기술-이슈-및-해결-기록)**
+9. **[DB를 활용한 로그인 및 게임 참여 시스템](#9-DB를-활용한-로그인-및-게임-참여-시스템)**
+10. **[코스메틱 시스템](#10-코스메틱-시스템-Cosmetic-System)**
+11. **[포트폴리오 영상 & 코드 링크](#11-포트폴리오-영상--코드-링크)**
+12. **[기술 이슈 및 해결 기록](#12-기술-이슈-및-해결-기록)**
 
 
 
@@ -336,9 +337,23 @@ if (CanStart())
 
 ---  
 &nbsp;
+## 10-코스메틱-시스템-Cosmetic-System
+  ### 🔹 Ghost Trail
+    - `Character`의 `Skeletal`을 Copy Pose 후 Trail Material로 Ghost Trail 액터 생성
+    - 몽타주 실행시 필요한 구간에 GhostTrail 생성 AnimNotify 실행  
+    ![Trail](https://github.com/user-attachments/assets/d1d840ac-f6d6-4898-bf53-ed06fb67aa2c)
 
+  ### 🔹 Weapon 세팅 
+    - 원작과 같이 액션 사용, 대기 모션 등 필요할 때만 무기가 등장하도록 구현  
+    ![WeaponSet](https://github.com/user-attachments/assets/db46c872-9c68-434b-a78b-cb1a017f87cd)
 
-## 10. 포트폴리오 영상 & 코드 링크
+  ### 🔹 Weapon Trail
+    - 반복하는 Weapon Trail Animation을 생성, 사용해서 Weapon Trail 구현
+    - Trail 필요에 따라 Weapon Trail Animation ON/OFF  
+    ![TrailAttack](https://github.com/user-attachments/assets/288023b1-a41a-4101-a75e-e9305085a84d)
+---  
+&nbsp;
+## 11. 포트폴리오 영상 & 코드 링크
 - 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://youtu.be/nGRqgbBO1Gg))**  
 - 📌 **[GitHub 소스코드 확인](https://github.com/HyeonLang/UE4.25_RPG/tree/main/Source)**  
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**
@@ -346,10 +361,7 @@ if (CanStart())
 
 ---  
 &nbsp;
-
-
-
-## 11. 기술 이슈 및 해결 기록  
+## 12. 기술 이슈 및 해결 기록  
 &nbsp;
 ### 멀티플레이 이슈: 클라이언트 동기화 실패 
 [🔙복귀](#0-멀티플레이-동기화-multiplayer-game-sync-techniques)
@@ -357,7 +369,7 @@ if (CanStart())
 * **원인**: 서버 실행 중 클라이언트 접속 시 자동 리플리케이션 누락
 * **해결**: 클라이언트 초기화 시 RPC 함수 등으로 수동 동기화 트리거 처리
 * **고찰**: 상태 초기화 및 재동기화 설계 필요  
-  
+
 &nbsp;
 ### 카메라 이슈: BeginPlay 시 카메라 빙의 실패
 [🔙복귀](#1-플레이어-캐릭터-시스템-player-character-system)
