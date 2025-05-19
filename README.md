@@ -109,7 +109,7 @@
 | &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 Attribute를 정의 및 조정하는 클래스 |
 | ~~IKComponent~~     | ~~IK 담당 컴포넌트~~[*#IK 이슈*](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패) |
 | **Weapon**          | 캐릭터의 무기. Damage 처리를 위해 무기의 Collision 및 위치 정보 사용 |
-| **Invectory**        | 소유하는 Item을 관리 및 획득, 삭제, 사용 등의 처리 관리 |
+| **Invectory**        | 소유하는 Item을 관리 및 획득, 삭제, 사용 등의 처리 관리 |  
 [*#캐릭터 외곽선 이슈*](#캐릭터-외곽선-이슈-outline-mesh와-본-mesh의-애니메이션-불일치)
 
 &nbsp;
