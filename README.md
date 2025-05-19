@@ -29,7 +29,7 @@
 | 기능명 | 설명 및 구현 방식 | 관련 기술 |
 |--------|-----------------|------------|
 | **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환, 동시 소환 및 교체 가능 | `APlayerController::Possess()` | `APlayerController::UnPossess()`
-| **액션 시스템** | 일반 공격, 스킬, 궁극기 등의 액션을 모듈화 | `CActionBase` 상속 | 타켓팅 시스템
+| **액션 시스템** | Unreal GAS를 모티브로 한 일반 공격, 스킬, 궁극기 등의 모듈화된 액션 클래스 | `CActionBase` 상속 | 타겟팅 시스템
 | **멀티플레이** | 서버-클라이언트 동기화, RPC 사용 | `NetMulticast`, `RepNotify` |
 | **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 | UI
 | **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
@@ -40,16 +40,17 @@
 
 ## 목차 (인덱스)
 0. **[멀티플레이 동기화](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)**
-1. **[캐릭터 교체 시스템](#1-캐릭터-교체-시스템-character-switching-system)**
-2. **[액션 시스템](#2-액션-시스템-action-system)**
-3. **[전투 시스템](#3-전투-시스템-combat-system)**
-4. **[상호작용 시스템](#4-상호작용-시스템-interaction-system)**
-5. **[적 AI 시스템](#5-적-ai-시스템-enemy-ai-system)**
-6. **[미니맵 및 UI 시스템](#6-미니맵-및-ui-시스템)**
-7. **[데이터 및 에셋 관리](#7-데이터-및-에셋-관리)**
-8. **[로그인 및 게임 참여 시스템](#8-로그인-및-게임-참여-시스템)**
-9. **[포트폴리오 영상 & 코드 링크](#9-포트폴리오-영상--코드-링크)**
-10. **[기술 이슈 및 해결 기록](#10-기술-이슈-및-해결-기록)**
+1. **[캐릭터 시스템](#1-캐릭터-시스템-player-character-system)**
+2. **[캐릭터 교체 시스템](#3-캐릭터-교체-시스템-character-swiching-system)**
+3. **[액션 시스템](#3-액션-시스템-action-system)**
+4. **[전투 시스템](#4-전투-시스템-combat-system)**
+5. **[상호작용 시스템](#5-상호작용-시스템-interaction-system)**
+6. **[적 AI 시스템](#6-적-ai-시스템-enemy-ai-system)**
+7. **[미니맵 및 UI 시스템](#7-미니맵-및-ui-시스템)**
+8. **[데이터 및 에셋 관리](#8-데이터-및-에셋-관리)**
+9. **[로그인 및 게임 참여 시스템](#9-DB를-활용한-로그인-및-게임-참여-시스템)**
+10. **[포트폴리오 영상 & 코드 링크](#10-포트폴리오-영상--코드-링크)**
+11. **[기술 이슈 및 해결 기록](#11-기술-이슈-및-해결-기록)**
 
 
 
@@ -71,18 +72,23 @@
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
    ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
 
+## 1. 플레이어 캐릭터 시스템 (Player Character System)
+### 🔹 플레이어의 캐릭터 사용
+  - 플레이어는 각각 3개의 캐릭터(`PlayerCharacter`)를 사용한다.
+  - 플레이어의 입력은 동시에 1개의 만 받을 수 있으며 캐릭터 교체 시스템으로 제어된다.
+    - `PlayerController`의 제어로 각 캐릭터에 `Possess` / `UnPossess` 및 `SetViewTarget` 카메라 제어
+    - 
 
-
-## 1. 캐릭터 교체 시스템 (Character Switching System)
+## 2. 캐릭터 교체 시스템 (Character Swiching System)
 ### 🛠 온필드, 오프필드 시스템 구현
-- 모작의 핵심 기능
-- 세명의 캐릭터를 제어. 일반 교체와 협주 교체 등 협동 스킬 구현
+- 모작의 **핵심 기능**
+- 세명의 캐릭터를 제어. 일반 교체와 협동 공격 교체 등 협동 스킬 구현
 - 이벤트 기반을 통한 멀티플레이 동기화
   ![교체](https://github.com/user-attachments/assets/d7ea0256-7c9c-4b64-9bb8-47f6e67ec42b)
 
 
 ### 🔹 캐릭터 교체 방식
-| **일반 교체** | **협주 교체** |
+| **일반 교체** | **협동 공격 교체** |
 |-----|-----|
 | ![일반교체gif](https://github.com/user-attachments/assets/7603d5be-95d7-4ea5-b61b-69ac08130309) | ![협주교체gif](https://github.com/user-attachments/assets/c12467b0-1b6b-4181-99e9-dd37f4de55a5) | 
 | A → B 캐릭터 교체 시, A가 **즉시** 오프필드, B가 온필드 | A → B 캐릭터 교체 시, A가 **실행 중인 액션이 끝난 후** 오프필드. |
@@ -97,14 +103,14 @@
 &nbsp;
 
 
-## 2. 액션 시스템 (Action System)
-### 🛠 캐릭터 교체 액션 및 네트워크 동기화
-- 상태 변경 관련된 버그에 특히 신경을 많이 썼습니다.(액션 캔슬 전용 애님노티파이 적용)
+## 3. 액션 시스템 (Action System)
+### 🛠 캐릭터 액션 및 네트워크 동기화
+- 상태 변경 관련된 버그에 특히 신경을 많이 썼습니다.(액션 캔슬 전용 애님노티파이 적용 등)
 - 액션 도중 캐릭터 교체와 같은 예외적인 상황을 대비하도록 설계되었습니다.
 - 서버 RPC와 네트워크 복제를 활용하여 액션의 상태와 동작이 모든 유저에게 동일하도록 보장합니다.
 ![동기화](https://github.com/user-attachments/assets/301c57d7-21d9-4d5b-851d-d97b778c8f22)
 
-🔹 액션 클래스 구조
+### 🔹 액션 클래스 구조
 ```
 CActionBase
 │
@@ -119,6 +125,14 @@ CActionBase
 // C++ 코드를 상속받아 Unreal Blueprint 클래스로 다변화
 ```
 
+### 🔹 액션과 Unreal GAS  
+- 본 게임의 액션은 GAS의 **Gameplay Ability**를 참고하여 제작하여 다음과 같은 특징을 공유한다
+    - **Action-Start(GAS-Activate) --- Action-Stop(GAS-End)** 구조를 가짐
+    - CanStart(GAS-CanActivate), Cooldown-Manager(GAS-Cooldown)을 사용하여 액션의 실행을 관리
+    - ActionName(GAS-Tag)으로 **Name 기반 액션 호출**
+    - FGameplayTagContainer::**ActiveGameplayTags(GAS-Ability Tags)의 사용**으로 액션의 **조건 제어, 중첩 제한** 등을 관리  
+      ![tags](https://github.com/user-attachments/assets/7b06cb01-75fe-4597-a1cc-bba001555f1f)
+      
 ### 🔹 액션 실행 흐름
 ```cpp
 Character->ActionComponent->StartActionByName() 액션 호출
@@ -135,7 +149,7 @@ if (CanStart())
 2. `StartAction()` 실행 시 **몽타주 실행, Gamepaly tag 추가, 쿨타임 실행, 이동 입력 제어** 적용
 3. 애니메이션 몽타주 등으로 `StopAction()` 호출
 4. `StopAction()`을 통해 액션 종료 후 초기 상태 복구
-
+      
 &nbsp;
 - **루프 액션 (키다운 공격)의 흐름**
   - (일반적) 키 누름 유지로 Loop하는 공격은 키를 떼면 공격 종료 (`Loop Action(루프 액션)`)
@@ -159,7 +173,7 @@ if (CanStart())
 &nbsp;
 
 
-## 3. 전투 시스템 (Combat System)
+## 4. 전투 시스템 (Combat System)
 ### 🛠 전투의 흐름
 - 명조와 동일하게 **타겟팅**에 따라 액션 방향의 우선 순위를 실행할 수 있도록 하였습니다.
   * **타켓팅**은 카메라가 바라보는 방향과 가까운 액터를 가중치로하여 **우선순위큐**로 액터 하나를 지정하여 실행합니다.
@@ -192,7 +206,7 @@ if (CanStart())
 &nbsp;
 
 
-## 4. 상호작용 시스템 (Interaction System)
+## 5. 상호작용 시스템 (Interaction System)
 ### 🛠 동작 방식
 - `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현  
 - `F` 키 입력 시 `InteractionComponent`에서 Trace하여 주변의 상호작용 가능한 액터 탐색  
@@ -211,7 +225,7 @@ if (CanStart())
 ---  
 &nbsp;
 
-## 5. 적 AI 시스템 (Enemy AI System)
+## 6. 적 AI 시스템 (Enemy AI System)
 ### 🛠 언리얼 AI 및 리스폰 기능
 - `EnemyCharacter` 클래스로 구성, `NPCActionComponent`에서 공격 실행  
 - `AIController` 및 `Behavior Tree`를 활용하여 AI 상태 관리
@@ -229,7 +243,7 @@ if (CanStart())
 &nbsp;
 
 
-## 6. 미니맵 및 UI 시스템
+## 7. 미니맵 및 UI 시스템
 ### 🛠 실시간 미니맵, UI와 인벤토리의 동적 로딩
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
   ![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
@@ -247,7 +261,7 @@ if (CanStart())
 ---  
 &nbsp;
 
-## 7. 데이터 및 에셋 관리
+## 8. 데이터 및 에셋 관리
 ### 🛠 데이터 테이블을 통한 관리
 - 캐릭터의 GameAblitySystem의 **AttributeSet을 위한 Attribute(HP 등의 수치)** 데이터 테이블  
   ![Attribute](https://github.com/user-attachments/assets/4d75a88c-99b2-4d3c-94f1-b058029408e3)  
@@ -265,7 +279,7 @@ if (CanStart())
 &nbsp;
 
 
-## 8. 로그인 및 게임 참여 시스템
+## 9. DB를 활용한 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
 - `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리
@@ -286,7 +300,7 @@ if (CanStart())
 &nbsp;
 
 
-## 9. 포트폴리오 영상 & 코드 링크
+## 10. 포트폴리오 영상 & 코드 링크
 - 📌 **[포트폴리오 영상 보기](https://youtu.be/xxxxxxx](https://youtu.be/nGRqgbBO1Gg))**  
 - 📌 **[GitHub 소스코드 확인](https://github.com/HyeonLang/UE4.25_RPG/tree/main/Source)**  
 - 📌 **[게임 데모 다운로드](https://github.com/HyeonLang/UE4.25_RPG)**
@@ -298,7 +312,7 @@ if (CanStart())
 
  [#📌](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패)
 
-## 10. 기술 이슈 및 해결 기록  
+## 11. 기술 이슈 및 해결 기록  
 ### IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패
 
 * **상태**: ❌ 해결 불가 (보류)
