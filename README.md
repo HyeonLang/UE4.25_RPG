@@ -101,12 +101,12 @@
 ```
  | 컴포넌트 및 소유          | 설명 |
 |-------------------|------|
-| **`AimingComponent`** | Action 실행 시 필요한 타겟팅 처리 (우선순위에 따라 Target 지정) |
-| **`StateComponent`**  | MovementComponent의 MaxSpeeds 관리 및 StateType 변화 시 바인딩된 이벤트 처리 |
+| **`AimingComponent`** | `Action` 실행 시 필요한 타겟팅 처리 (우선순위에 따라 Target 지정) |
+| **`StateComponent`**  | `MovementComponent`의 `MaxSpeeds` 관리 및 `StateType` 변화 시 바인딩된 이벤트 처리 |
 | **`ActionComponent`** | 스킬, 점프 등의 액션 실행 |
 | **InteractionComponent** | 상호 작용 관련 처리 (아이템 줍기, 보물 상자 열기 등) |
-| **AbilityComponent** | GAS와 연동하여 AttributeSet 사용 |
-| &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 Attribute를 정의 및 조정하는 클래스 |
+| **AbilityComponent** | GAS와 연동하여 `AttributeSet` 사용 |
+| &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 `Attribute`를 정의 및 조정하는 클래스 |
 | ~~IKComponent~~     | ~~IK 담당 컴포넌트~~[*#IK 이슈*](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패) |
 | **Weapon**          | 캐릭터의 무기. Damage 처리를 위해 무기의 Collision 및 위치 정보 사용 |
 | **Invectory**        | 소유하는 Item을 관리 및 획득, 삭제, 사용 등의 처리 관리 |  
@@ -282,9 +282,10 @@ if (CanStart())
 ## 7. 미니맵 및 UI 시스템
 ### 🛠 실시간 미니맵, UI와 인벤토리의 동적 로딩
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리
+  ![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
   - 액터의 정보 생성 생명주기와 UI 생성 생명주기가 맞지 않을 수 있어 Null참조 주의 [*#UI 이슈*](#ui-이슈-ui와-데이터-생성-타이밍-불일치)
-![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
-
+  - ![UI정보과정](https://github.com/user-attachments/assets/18e1b3c1-0722-4453-9a60-29713b8fdee5)
+    
 
 - 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현 [#*미니맵 이슈*](#미니맵-이슈-rendertarget-공유-및-렌더링-문제)
   ![Minimap](https://github.com/user-attachments/assets/b51a393c-fd4e-46f3-9922-64ba2dd53290)
