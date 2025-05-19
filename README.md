@@ -350,27 +350,24 @@ if (CanStart())
 
 ## 11. 기술 이슈 및 해결 기록  
 &nbsp;
-[🔙복귀](#0-멀티플레이-동기화-multiplayer-game-sync-techniques)
 ### 멀티플레이 이슈: 클라이언트 동기화 실패 
-
+[🔙복귀](#0-멀티플레이-동기화-multiplayer-game-sync-techniques)
 * **상태**: ✅ 해결됨
 * **원인**: 서버 실행 중 클라이언트 접속 시 자동 리플리케이션 누락
 * **해결**: 클라이언트 초기화 시 RPC 함수 등으로 수동 동기화 트리거 처리
 * **고찰**: 상태 초기화 및 재동기화 설계 필요  
   
 &nbsp;
-[🔙복귀](#1-플레이어-캐릭터-시스템-player-character-system)
 ### 카메라 이슈: BeginPlay 시 카메라 빙의 실패
-
+[🔙복귀](#1-플레이어-캐릭터-시스템-player-character-system)
 * **상태**: ✅ 해결됨
 * **원인**: `bAutoManageActiveCameraTarget`로 인한 카메라 자동 빙의 충돌
 * **해결**: 해당 옵션 비활성화 후 수동 빙의 처리
 * **고찰**: 카메라 제어의 명확한 주체 설정 중요  
   
 &nbsp;
-[🔙복귀](#1-플레이어-캐릭터-시스템-player-character-system)
 ### IK 이슈: Skeletal Mesh 구조 불일치로 인한 IK 실패
-
+[🔙복귀](#1-플레이어-캐릭터-시스템-player-character-system)
 * **상태**: ❌ 해결 불가 (보류)
 * **원인**: 캐릭터 발 본 방향이 언리얼 기본 마네킹과 반대 → IK 적용 시 발 위치가 머리 위로 이동
 * **해결**: 언리얼4 구조와 호환되지 않아 구조적으로 IK 적용 불가
@@ -386,90 +383,80 @@ if (CanStart())
 * **고찰**: 포스트 프로세스 기반 외곽선 처리로 전환 고려  
 
 &nbsp;
-[🔙복귀](#5-상호작용-시스템-interaction-system)
 ### 인벤토리 이슈: TMap 및 UObject 리플리케이션 문제
-
+[🔙복귀](#5-상호작용-시스템-interaction-system)
 * **상태**: ✅ 해결됨
 * **원인**: 인벤토리 아이템 정보 저장을 위한 `TMap`은 Replicate 불가, `UObject`는 RPC 미지원
 * **해결**: `Rep_Struct` 사용, `NetMulticast` 대신 `OnRep` 기반 동기화
 * **고찰**: 서버 응답 지연 대비 Interaction 쿨타임 1초 설정  
 
 &nbsp;
-[🔙복귀](#9-db를-활용한-로그인-및-게임-참여-시스템)
 ### DB 이슈: 간헐적 접속 실패
-
+[🔙복귀](#9-db를-활용한-로그인-및-게임-참여-시스템)
 * **상태**: ✅ 해결됨
 * **원인**: MySQL C++ 커넥터의 연결 불안정 문제
 * **해결**: Flask 중계 서버 구축, HTTP 방식으로 MySQL 연결 처리
 * **고찰**: 안정성과 실시간성을 위한 REST 기반 아키텍처 설계 고려  
 
 &nbsp;
-[🔙복귀](#7-미니맵-및-ui-시스템)
 ### UI 이슈: UI와 데이터 생성 타이밍 불일치
-
+[🔙복귀](#7-미니맵-및-ui-시스템)
 * **상태**: ✅ 해결됨
 * **원인**: 데이터를 참조하는 UI가 데이터 생성보다 먼저 실행되어 null 접근 발생
 * **해결**: UI를 순회하며 데이터 연결을 검사하는 로직 및 실패 시 데이터 재요청 로직 추가
 * **고찰**: UI-데이터 의존성 파악 및 타이밍 제어 중요  
 
 &nbsp;
-[🔙복귀](#7-미니맵-및-ui-시스템)
 ### 미니맵 이슈: RenderTarget 공유 및 렌더링 문제
-
+[🔙복귀](#7-미니맵-및-ui-시스템)
 * **상태**: ✅ 해결됨
 * **원인**: 머티리얼 에셋 공유로 `TextureRenderTarget2D`을 마지막 클라이언트가 덮어씀
 * **해결**: `NewObject`로 RenderTarget 생성, 복수의 CaptureSource 조합 사용
 * **고찰**: 에셋 공유 최소화, 런타임 객체 생성 선호  
 
 &nbsp;
-[🔙복귀](#3-액션-시스템-action-system)
 ### 액션 이슈: 공중 몽타주 동작 실패
-
+[🔙복귀](#3-액션-시스템-action-system)
 * **상태**: ✅ 해결됨
 * **원인**: 공중에서 몽타주 루트모션 적용 실패
 * **해결**: 실행 시 Flying 설정해야 공중 몽타주가 적용됨 → 종료 후 상태 복원
 * **고찰**: 상태 기반 액션 로직 구현 중요    
 
 &nbsp;
-[🔙복귀](#3-액션-시스템-action-system)
 ### Blueprint 이슈: NativeEvent와 TArray 레퍼런스 호환성
-
+[🔙복귀](#3-액션-시스템-action-system)
 * **상태**: ✅ 해결됨
 * **원인**: `TArray&`는 `BlueprintNativeEvent`함수에서 매개변수로 사용불가
 * **해결**: `const TArray&` 또는 복사 방식으로 수정
 * **고찰**: BP ↔ C++ 함수 시그니처 제약 사항 숙지 필요   
 
 &nbsp;
-[🔙복귀](#3-액션-시스템-action-system)
 ### UObject Tick 이슈: 오브젝트 기반 Tick 비효율
-
+[🔙복귀](#3-액션-시스템-action-system)
 * **상태**: ✅ 해결됨
 * **원인**: `UObject`는 Tick 미지원으로 지속 처리 어려움
 * **해결**: Owner `AActor` Tick 내에서 UObject의 커스텀 Tick 호출
 * **고찰**: UObject vs AActor의 라이프사이클과 구조 차이 이해 중요  
 
 &nbsp;
-[🔙복귀](#7-미니맵-및-ui-시스템)
 ### Icon 이슈: SoftReference 이미지 로딩 실패
-
+[🔙복귀](#7-미니맵-및-ui-시스템)
 * **상태**: ✅ 해결됨
 * **원인**: `SetBrushFromSoftTexture`에 SoftReference 직접 사용 시 로딩 안됨
 * **해결**: 블루프린트에서 비동기 로딩 후 이미지 적용
 * **고찰**: SoftReference 사용 시 로딩 유의  
 
 &nbsp;
-[🔙복귀](#0-멀티플레이-동기화-multiplayer-game-sync-techniques)
 ### OnRep 이슈: 서버에서 OnRep 미동작 [복귀](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)
-
+[🔙복귀](#0-멀티플레이-동기화-multiplayer-game-sync-techniques)
 * **상태**: ✅ 해결됨
 * **원인**: `OnRep` 함수는 클라이언트에서만 자동 실행
 * **해결**: 서버에서 수동으로 `OnRep` 함수 호출
 * **고찰**: OnRep의 동작 범위 정확히 이해해야 혼란 방지    
 
 &nbsp;
-[🔙복귀](#4-전투-시스템-combat-system)
 ### 카메라 연출 이슈: 캐릭터 중심 시네마틱 카메라 구현
-
+[🔙복귀](#4-전투-시스템-combat-system)
 * **상태**: ✅ 해결됨
 * **원인**: 레벨 시퀀서가 월드 기준 Transform으로 캐릭터 기준 연출 실패
 * **해결**: (0, 0, 0) 좌표를 기준으로 레벨 시퀀서로 구현. 그후 커브 추출 후 캐릭터 위치를 더해 별개의 카메라에 타임라인 적용
