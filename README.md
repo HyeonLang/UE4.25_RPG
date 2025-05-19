@@ -285,7 +285,7 @@ if (CanStart())
   ![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
   - 액터의 정보 생성 생명주기와 UI 생성 생명주기가 맞지 않을 수 있어 Null참조 주의 [*#UI 이슈*](#ui-이슈-ui와-데이터-생성-타이밍-불일치)
   - ![UI정보과정](https://github.com/user-attachments/assets/18e1b3c1-0722-4453-9a60-29713b8fdee5)
-    
+  
 
 - 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현 [#*미니맵 이슈*](#미니맵-이슈-rendertarget-공유-및-렌더링-문제)
   ![Minimap](https://github.com/user-attachments/assets/b51a393c-fd4e-46f3-9922-64ba2dd53290)
