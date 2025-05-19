@@ -87,7 +87,7 @@
   ├── StateComponent          // 상태 관리 (Movement 등)
   ├── ActionComponent         // 액션 실행 (공격, 점프, 스킬 등)
   ├── InteractionComponent    // 상호작용 처리 (아이템 줍기, 보물 상자 열기 등)
-  ├── AbilityComponent        // GAS 연동 : AttributeSet을 사용
+  ├── AbilityComponent        // GAS 연동 : AttributeSet을 사용 (HP 등)
   │   └── AttributeSet        // 캐릭터의 Attribute담은 클래스 
   ├── ~~IKComponent~~             // IK 제어
   └── Weapon                  // 장착 무기 
