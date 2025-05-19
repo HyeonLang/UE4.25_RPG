@@ -245,7 +245,9 @@ if (CanStart())
 
 ## 5. 상호작용 시스템 (Interaction System)
 ### 🛠 동작 방식
-- `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현  
+- 캐릭터의 `InteractionComponent`에서 담당
+- `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현
+  - 상호작용시 발생할 이벤트 구현
 - `F` 키 입력 시 `InteractionComponent`에서 Trace하여 주변의 상호작용 가능한 액터 탐색  
 - 서버 RPC 함수로 실행하여 모든 클라이언트에서 일관된 상호작용 보장 [RPC 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)
 
