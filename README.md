@@ -20,7 +20,7 @@
 &nbsp; 
   
 ## 게임의 목표 (The Goal of The Game)
-### **3개의 캐릭터를 조종**하여 **적을 처치**하고 **보물상자**를 열어 **아이템을 획득**하자!
+### **3개의 캐릭터를 조종**하여 **다른 플레이어와** 함께 **적을 처치**하고 **보물상자**를 열어 **아이템을 획득**하자!
 
 &nbsp;
 ---  
@@ -73,11 +73,35 @@
    ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
 
 ## 1. 플레이어 캐릭터 시스템 (Player Character System)
-### 🔹 플레이어의 캐릭터 사용
+### 🛠 플레이어의 캐릭터 사용
   - 플레이어는 각각 3개의 캐릭터(`PlayerCharacter`)를 사용한다.
   - 플레이어의 입력은 동시에 1개의 만 받을 수 있으며 캐릭터 교체 시스템으로 제어된다.
     - `PlayerController`의 제어로 각 캐릭터에 `Possess` / `UnPossess` 및 `SetViewTarget` 카메라 제어
-    - 
+    - `PlayerController` 소유의 `PlayerCamera`가 캐릭터의 적절한 위치에서 화면을 보여줌  
+  
+### 🔹 플레이어 캐릭터 구조
+  ```
+  PlayerCharacter (Character 상속)
+  │
+  ├── AimingComponent         // 타겟팅 관련 처리 
+  ├── StateComponent          // 상태 관리 (Movement 등)
+  ├── ActionComponent         // 액션 실행 (공격, 점프, 스킬 등)
+  ├── InteractionComponent    // 상호작용 처리 (아이템 줍기, 보물 상자 열기 등)
+  ├── AbilityComponent        // GAS 연동 : AttributeSet을 사용
+  │   └── AttributeSet        // 캐릭터의 Attribute담은 클래스 
+  ├── ~~IKComponent~~             // IK 제어
+  └── Weapon                  // 장착 무기 
+```
+ | 컴포넌트 및 소유          | 설명 |
+|-------------------|------|
+| **AimingComponent** | Action 실행 시 필요한 타겟팅 처리 (우선순위에 따라 Target 지정) |
+| **StateComponent**  | MovementComponent의 MaxSpeeds 관리 및 StateType 변화 시 바인딩된 이벤트 처리 |
+| **ActionComponent** | 스킬, 점프 등의 액션 실행 |
+| **InteractionComponent** | 상호 작용 관련 처리 (아이템 줍기, 보물 상자 열기 등) |
+| **AbilityComponent** | GAS와 연동하여 AttributeSet 사용 |
+| &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 Attribute를 정의 및 조정하는 클래스 |
+| ~~IKComponent~~     | ~~IK 담당 컴포넌트~~ |
+| **Weapon**          | 캐릭터의 무기. Damage 처리를 위해 무기의 Collision 및 위치 정보 사용 |
 
 ## 2. 캐릭터 교체 시스템 (Character Swiching System)
 ### 🛠 온필드, 오프필드 시스템 구현
