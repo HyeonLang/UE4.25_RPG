@@ -68,10 +68,11 @@
 
 **- 변수 Replication 사용**
   * 체력, 아이템 정보 등의 **변수 동기화**와 액터의 **상태 변화 변수** 동기화를 다루기위해 사용된 방법.
-  * 변수 동기화 후 **클라이언트에서 후속 처리**가 필요한 경우 **Replicated Notify**를 사용하여 처리를 한다.
+  * 변수 동기화 후 **클라이언트에서 후속 처리**가 필요한 경우 **Replicated Notify**를 사용하여 처리를 한다. [*#동기화 이슈*](#멀티플레이-이슈-클라이언트-동기화-실패)
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
-   ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
-
+   ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)  
+    [#*OnRep 이슈*](#onrep-이슈-서버에서-onrep-미동작)
+    
 &nbsp;
 ## 1. 플레이어 캐릭터 시스템 (Player Character System)
 ### 🛠 플레이어의 캐릭터 사용
@@ -91,18 +92,24 @@
   ├── AbilityComponent        // GAS 연동 : GAS-AttributeSet을 사용 (HP 등)
   │   └── AttributeSet        // 캐릭터의 Attribute담은 클래스 
   ├── ~~IKComponent~~             // IK 제어
-  └── Weapon                  // 장착 무기 
+  └── Weapon                  // 장착 무기
+
+  PlayerState
+  |
+  ├── Invectory               // 소유하는 Item 관리 
 ```
  | 컴포넌트 및 소유          | 설명 |
 |-------------------|------|
-| **AimingComponent** | Action 실행 시 필요한 타겟팅 처리 (우선순위에 따라 Target 지정) |
-| **StateComponent**  | MovementComponent의 MaxSpeeds 관리 및 StateType 변화 시 바인딩된 이벤트 처리 |
-| **ActionComponent** | 스킬, 점프 등의 액션 실행 |
+| **`AimingComponent`** | Action 실행 시 필요한 타겟팅 처리 (우선순위에 따라 Target 지정) |
+| **`StateComponent`**  | MovementComponent의 MaxSpeeds 관리 및 StateType 변화 시 바인딩된 이벤트 처리 |
+| **`ActionComponent`** | 스킬, 점프 등의 액션 실행 |
 | **InteractionComponent** | 상호 작용 관련 처리 (아이템 줍기, 보물 상자 열기 등) |
 | **AbilityComponent** | GAS와 연동하여 AttributeSet 사용 |
 | &nbsp;&nbsp;└── *AttributeSet* | 캐릭터의 Attribute를 정의 및 조정하는 클래스 |
 | ~~IKComponent~~     | ~~IK 담당 컴포넌트~~[*#IK 이슈*](#ik-이슈-skeletal-mesh-구조-불일치로-인한-ik-실패) |
 | **Weapon**          | 캐릭터의 무기. Damage 처리를 위해 무기의 Collision 및 위치 정보 사용 |
+| **Invectory**        | 소유하는 Item을 관리 및 획득, 삭제, 사용 등의 처리 관리 |
+[*#캐릭터 외곽선 이슈*](#캐릭터-외곽선-이슈-outline-mesh와-본-mesh의-애니메이션-불일치)
 
 &nbsp;
 ## 2. 캐릭터 교체 시스템 (Character Swiching System)
@@ -192,7 +199,8 @@ if (CanStart())
 
 ### 🔹 액션 실행 시 버그 방지
 - 모든 몽타주(애니메이션)에 `StopAction AnimNotify` 추가  
-- `Montage Cancel` 전용 함수(`StopAction()` 호출 후 애니메이션 중단) 사용  
+- `Montage Cancel` 전용 함수(`StopAction()` 호출 후 애니메이션 중단) 사용
+- 액션 실행시 필요한 상태 변화(`CharacterMovement` State 관련)에 대해 원상 복귀를 엄격히 시행  [*#액션 이슈*](#액션-이슈-공중-몽타주-동작-실패)
 
 
 ---  
@@ -210,7 +218,7 @@ if (CanStart())
 - 적 캐릭터는 AI 기능을 활용하여 구현하였습니다.
 - 3명의 플레이어블 캐릭터에게 고유한 일반공격, 스킬, 궁극기를 구현하였습니다.
   ![궁극기gif](https://github.com/user-attachments/assets/cb5079ec-4055-4e84-9427-4e50f593ac4a)
-   (궁극기 컷씬 모습)
+   (궁극기 컷씬 모습) [#*카메라 연출 이슈*](#카메라-연출-이슈-캐릭터-중심-시네마틱-카메라-구현)
 
 
 ### 🔹 대쉬, 점프, 스프린트
@@ -243,9 +251,9 @@ if (CanStart())
 | 상호작용 대상 | 동작 |
 |-------------|-----|
 | **보물상자 (Chest)** | 상호작용 시 보물상자가 열리며 아이템 스폰 |
-| **아이템 (ItemBase)** | 플레이어 인벤토리에 아이템 추가 |
+| **아이템 (ItemBase)** | 플레이어 `Inventory`에 아이템 추가 |
 
-- 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)
+- 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques) [*#인벤토리 이슈*](#인벤토리-이슈-tmap-및-uobject-리플리케이션-문제)  
 
 
 ---  
@@ -271,15 +279,16 @@ if (CanStart())
 
 ## 7. 미니맵 및 UI 시스템
 ### 🛠 실시간 미니맵, UI와 인벤토리의 동적 로딩
-- `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리  
-  ![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
+- `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리
+  - 액터의 정보 생성 생명주기와 UI 생성 생명주기가 맞지 않을 수 있어 Null참조 주의 [*#UI 이슈*](#ui-이슈-ui와-데이터-생성-타이밍-불일치)
+![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
 
 
-- 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현
+- 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현 [#*미니맵 이슈*](#미니맵-이슈-rendertarget-공유-및-렌더링-문제)
   ![Minimap](https://github.com/user-attachments/assets/b51a393c-fd4e-46f3-9922-64ba2dd53290)
 
 
-- `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소  
+- `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소 [*#Soft References 이슈*](#icon-이슈-softreference-이미지-로딩-실패)
 
 
 - Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
@@ -307,8 +316,8 @@ if (CanStart())
 
 ## 9. DB를 활용한 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
-- `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  
-- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리
+- `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  [*#DB 이슈*](#db-이슈-간헐적-접속-실패)
+- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리 
   
 #### 📌 클라이언트-서버-데이터베이스 요청 흐름
 | 클라이언트       | 서버 (Backend)                  | 데이터베이스 (DB)            |
