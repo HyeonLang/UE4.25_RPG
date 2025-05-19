@@ -83,20 +83,21 @@
   
 ### 🔹 플레이어 캐릭터 구조
   ```
-  PlayerCharacter (Character 상속)
-  │
-  ├── AimingComponent         // 타겟팅 관련 처리 
-  ├── StateComponent          // 상태 관리 (Movement 등)
-  ├── ActionComponent         // 액션 실행 (공격, 점프, 스킬 등)
-  ├── InteractionComponent    // 상호작용 처리 (아이템 줍기, 보물 상자 열기 등)
-  ├── AbilityComponent        // GAS 연동 : GAS-AttributeSet을 사용 (HP 등)
-  │   └── AttributeSet        // 캐릭터의 Attribute담은 클래스 
-  ├── ~~IKComponent~~             // IK 제어
-  └── Weapon                  // 장착 무기
-
-  PlayerState
+ PlayerController
   |
-  ├── Invectory               // 소유하는 Item 관리 
+  ├── PlayerCharacter (Character 상속)
+  |   |
+  │   ├── AimingComponent         // 타겟팅 관련 처리
+  │   ├── StateComponent          // 상태 관리 (Movement 등)
+  │   ├── ActionComponent         // 액션 실행 (공격, 점프, 스킬 등)
+  │   ├── InteractionComponent    // 상호작용 처리 (아이템 줍기, 보물 상자 열기 등)
+  │   ├── AbilityComponent        // GAS 연동 : GAS-AttributeSet을 사용 (HP 등)
+  │   │   └── AttributeSet        // 캐릭터의 Attribute 담은 클래스 
+  │   ├── ~~IKComponent~~         // IK 제어
+  │   └── Weapon                  // 장착 무기
+  |
+  └── PlayerState
+      └── Inventory               // 소유하는 Item 관리
 ```
  | 컴포넌트 및 소유          | 설명 |
 |-------------------|------|
