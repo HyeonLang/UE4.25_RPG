@@ -259,6 +259,34 @@ if (CanStart())
 | **스킬 시스템** | `CCooldownManager`를 활용하여 쿨타임 관리 | `UObject` 상속 |
 | **궁극기 시스템** | 전용 카메라 액션 적용 (`SetViewTarget`) | `AnimNotify` |
 
+#### 콤보 시스템 구현
+ - `ActionComponent`에서 `bCanCombo`변수를 체크
+ - **`bCanCombo` + 키입력**시 콤보 실행
+ -  미리 지정된 **다음 콤보 액션**을 실행. (`Action`마다 있는 `Action->NextComboActionName`을 사전에 데이터로 지정)
+ -  키입력 시 받는 **BaseAction이 실행할 콤보의 ActionName을 변경**하면서 콤보 실행
+ ```
+bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, bool bBaseAction)
+{
+	...
+	// NextCombo
+	if (Action->GetCanCombo())
+	{
+		...
+		Action->SetCanCombo(false); // 현재 액션의 콤보 상태를 false로 돌려줌
+		Action->CurrentComboActionName = CurrentComboAction->NextComboActionName; // 액션의 현재 콤보를 다음 콤보로 옮김
+
+		StartActionByName(Instigator, Action->CurrentComboActionName, false); // **옮긴 콤보 액션을 재귀적으로 StartAction실행**
+		
+		if (GetActionByName(Action->CurrentComboActionName)->NextComboActionName == "None")
+		{	// 콤보가 끝나면 콤보를 원상태로 복귀
+			Action->CurrentComboActionName = ActionName;
+		}
+		return false; // 직접 액션을 Start하지 않았으므로 false
+	}
+	...
+	// 일반적인 StartAction 실행 코드
+}
+ ```
 
 ---  
 &nbsp;
