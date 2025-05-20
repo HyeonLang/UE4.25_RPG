@@ -136,11 +136,11 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
     switch (InMode)
 	{
 	case EChangeMode::None:
-      	// 일반 교체시 바로 Hide
+      		// 일반 교체시 바로 Hide
 		HideCharacter(PlayerCharacter);
 		break;
 	case EChangeMode::Concerto:
-      // 협동 공격 교체시 액션 종료시 호출되는 Delegate에 Hide 바인딩
+      		// 협동 공격 교체시 액션 종료시 호출되는 Delegate에 Hide 바인딩
 		PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
 		break;
 	default:
