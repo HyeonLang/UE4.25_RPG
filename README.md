@@ -18,7 +18,7 @@
 
 ---  
 &nbsp; 
-  
+![main-압축](https://github.com/user-attachments/assets/6442ada5-a42d-4ccd-a902-6f039d468909)  
 ## 게임의 목표 (The Goal of The Game)
 ### **3개의 캐릭터를 조종**하여 **다른 플레이어와** 함께 **적을 처치**하고 **보물상자**를 열어 **아이템을 획득**하자!
 
