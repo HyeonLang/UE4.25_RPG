@@ -128,7 +128,27 @@
 |-----|-----|
 | ![일반교체gif](https://github.com/user-attachments/assets/7603d5be-95d7-4ea5-b61b-69ac08130309) | ![협주교체gif](https://github.com/user-attachments/assets/c12467b0-1b6b-4181-99e9-dd37f4de55a5) | 
 | A → B 캐릭터 교체 시, A가 **즉시** 오프필드, B가 온필드 | A → B 캐릭터 교체 시, A가 **실행 중인 액션이 끝난 후** 오프필드. |
-| 동시에 한 캐릭만 필드에 존재한다. |  2명 이상이 온필드로 여러 캐릭터의 액션을 동시에 실행할 수 있다. |   
+| 동시에 한 캐릭만 필드에 존재한다. |  2명 이상이 온필드로 여러 캐릭터의 액션을 동시에 실행할 수 있다. |
+```
+void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode InMode)
+{   // 캐릭터 UnPossess(교체되어 들어가는) 함수
+    ...
+    switch (InMode)
+		case EChangeMode::None:
+      // 일반 교체시 바로 Hide
+			HideCharacter(PlayerCharacter);
+			break;
+		case EChangeMode::Concerto:
+      // 협동 공격 교체시 액션 종료시 호출되는 Delegate에 Hide 바인딩
+			PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
+			break;
+		default:
+			break;
+		}
+    ...
+    // 캐릭터 멀티플레이 동기화 (서버 RPC) 및 쿨타임 등 수행
+}
+```
 
 ### 🔹 멀티플레이 환경 적용
 - 로컬 클라이언트에서 `PossessCharacter()` 실행 후, 서버에서 RPC 실행  
