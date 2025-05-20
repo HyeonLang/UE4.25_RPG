@@ -344,12 +344,15 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 - 2개의 `SceneCaptureComponent2D`를(맵의 **깊이 + 색**) 활용한 실시간 미니맵 구현 [#*미니맵 이슈*](#미니맵-이슈-rendertarget-공유-및-렌더링-문제)
   ![Minimap](https://github.com/user-attachments/assets/b51a393c-fd4e-46f3-9922-64ba2dd53290)
+  
+- **Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)**  
+  ![물약-압축](https://github.com/user-attachments/assets/0f48bec8-d892-46c4-9338-47f518629dd1)
 
-
+  
 - `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소 [*#Soft References 이슈*](#icon-이슈-softreference-이미지-로딩-실패)
 
 
-- Inventory UI 에서 포션과 같은 소비아이템 사용가능 (아이템의 효과 생성)
+ 
 
 ---  
 &nbsp;
