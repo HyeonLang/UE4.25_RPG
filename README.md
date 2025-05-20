@@ -370,7 +370,30 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 ## 9. DB를 활용한 로그인 및 게임 참여 시스템
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  [*#DB 이슈*](#db-이슈-간헐적-접속-실패)
-- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리 
+- `GameInstance`에 `DBManager`를 생성하여 유저 데이터 관리
+  ```
+void UCDBManager::RequestLogin(const FString& Username, const FString& Password)
+{
+	// 로그인 데이터 생성 및 중복 방지
+	...
+  	Request->OnProcessRequestComplete().BindUObject(this, &UCDBManager::OnLoginResponse); // 응답 Delegate 바인딩
+ 	Request->ProcessRequest(); // 로그인 요청
+	...
+}
+
+void UCDBManager::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully)
+{
+	// 로그인 요청 완료 및 응답 받은 데이터 설정
+ 	...
+  	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
+    	{
+		OnLoginSuccessEvent.Broadcast(ResponseString);  // 로그인 성공 시 사용자 데이터 전달
+	}
+  	...
+}
+
+
+  ```
   
 #### 📌 클라이언트-서버-데이터베이스 요청 흐름
 | 클라이언트       | 서버 (Backend)                  | 데이터베이스 (DB)            |
