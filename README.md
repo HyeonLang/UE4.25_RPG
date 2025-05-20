@@ -134,17 +134,18 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 {   // 캐릭터 UnPossess(교체되어 들어가는) 함수
     ...
     switch (InMode)
-		case EChangeMode::None:
-      // 일반 교체시 바로 Hide
-			HideCharacter(PlayerCharacter);
-			break;
-		case EChangeMode::Concerto:
+	{
+	case EChangeMode::None:
+      	// 일반 교체시 바로 Hide
+		HideCharacter(PlayerCharacter);
+		break;
+	case EChangeMode::Concerto:
       // 협동 공격 교체시 액션 종료시 호출되는 Delegate에 Hide 바인딩
-			PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
-			break;
-		default:
-			break;
-		}
+		PlayerCharacter->GetActionComponent()->OnActionStopped.AddDynamic(this, &ACPlayerController::OnActionStopped_HideCharacter);
+		break;
+	default:
+		break;
+	}
     ...
     // 캐릭터 멀티플레이 동기화 (서버 RPC) 및 쿨타임 등 수행
 }
