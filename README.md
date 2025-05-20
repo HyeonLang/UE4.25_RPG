@@ -320,8 +320,12 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 - **`EnemySpawner`**를 활용하여 적 스폰 및 자동 리스폰 구현
   - `EnemySpawner` 중심과의 거리에 따라 적의 어그로를 조절
-  - `EnemySpawner` 하위의 **`SpawnTargetPoint`**에서 적이 생성되며 대기 및 리스폰 위치 관리  
-    ![image](https://github.com/user-attachments/assets/0397e47c-5e99-4771-b5cd-1d231b2d8587)
+     ![적](https://github.com/user-attachments/assets/0b129081-f7de-4c4c-b40a-44179dd6e1df)
+
+  - `EnemySpawner` 하위의 **`SpawnTargetPoint`**에서 적이 생성되며 대기 및 리스폰 위치 관리
+    - 적 모두 처치 후 리스폰 시간 UI 출력  
+      ![리스폰](https://github.com/user-attachments/assets/d1415971-e156-432f-aaba-2fb98d47fa9a)
+
 
 
 
