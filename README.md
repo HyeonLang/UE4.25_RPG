@@ -360,11 +360,13 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 ## 8. 데이터 및 에셋 관리
 ### 🛠 데이터 테이블을 통한 관리
-- 캐릭터의 GameAblitySystem의 **AttributeSet을 위한 Attribute(HP 등의 수치)** 데이터 테이블  
+- 캐릭터의 GameAblitySystem의 **AttributeSet을 위한 Attribute(HP 등의 수치)** 데이터 테이블
   ![Attribute](https://github.com/user-attachments/assets/4d75a88c-99b2-4d3c-94f1-b058029408e3)  
 
-- **아이템의 각 정보**를 담은 ItemInfo 및 ConsumableItemInfo(소비) 데이터 테이블  
-  ![Item](https://github.com/user-attachments/assets/843c93e9-040e-4686-8443-7454e871586b)  
+- **아이템의 각 정보**를 담은 ItemInfo 및 ConsumableItemInfo(소비) 데이터 테이블
+  ![Item](https://github.com/user-attachments/assets/baf59ed0-ed0e-460c-bcd9-1995738c2d2d)
+
+
 
 
 ### 🛠 데이터 에셋을 통한 관리
