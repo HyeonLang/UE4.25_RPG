@@ -300,6 +300,7 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
   - 상호작용시 발생할 이벤트 구현
 - `F` 키 입력 시 `InteractionComponent`에서 Trace하여 주변의 상호작용 가능한 액터 탐색  
 - 서버 RPC 함수로 실행하여 모든 클라이언트에서 일관된 상호작용 보장 [RPC 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)
+![상호작용](https://github.com/user-attachments/assets/9f4a8027-4bf9-421f-a4b3-1422a1654865)  
 
 | **보물상자 (Chest)** | **아이템 (ItemBase)** |
 |-------------|-----|
