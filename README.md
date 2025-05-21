@@ -367,8 +367,9 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 
 ### 🛠 데이터 에셋을 통한 관리
-- 캐릭터의 각 **액션(전투 스킬 등)**마다 사용하는 사거리 등 **수치 데이터** 및 **몽타주, 이펙트 등의 에셋**을 관리하는 데이터 에셋  
-  ![ActionDataAsset](https://github.com/user-attachments/assets/f847bab2-a9ad-4132-bdb8-c04bb7f83c0f)
+- 캐릭터의 각 **액션(전투 스킬 등)**마다 사용하는 사거리 등 **수치 데이터** 및 **몽타주, 이펙트 등의 에셋**을 관리하는 데이터 에셋   
+  ![ActionDataAsset](https://github.com/user-attachments/assets/8437e7ff-ab99-42a5-bae4-0223448892c5)
+
 
 
 ---  
