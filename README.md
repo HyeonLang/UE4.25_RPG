@@ -338,11 +338,12 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 | 상호작용 시 보물상자가 열리며 아이템 스폰 | 플레이어 `Inventory`에 아이템 추가 |
 
 - 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques) [*#인벤토리 이슈*](#인벤토리-이슈-tmap-및-uobject-리플리케이션-문제)  
-
-### 목적과 이유
+  
+### 💡 구현과 목적
 - 상호작용은 단일 플레이어의 반응에 그치지 않고, 모든 플레이어에게 동일한 결과가 보여져야 함.
  - 서버에서 실행한 후, 클라이언트로 전달, 복제(Broadcast)되도록 설계.
 - 모든 상호작용 액터는 `UCInteractionInterface`를 상속받도록 하여, 기능 구현 및 구분이 쉽게 되도록 구조화함.
+- 
 ---  
 &nbsp;
 
