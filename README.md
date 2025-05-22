@@ -42,7 +42,7 @@
 0. **[멀티플레이 동기화 - RPC, Replication, RepNotify 사용 패턴](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques)**
 1. **[캐릭터 시스템 - 캐릭터의 구조](#1-캐릭터-시스템-player-character-system)**
 2. **[캐릭터 교체 시스템 - 동시 제어 교체 구현](#3-캐릭터-교체-시스템-character-swiching-system)**
-3. **[액션 시스템 - GAS를 참고한 멀티플레이 액션](#3-액션-시스템-action-system)**
+3. **[액션 시스템 - GAS 스타일 멀티플레이 액션의 구조](#3-액션-시스템-action-system)**
 4. **[전투 시스템 - 타겟팅 및 전투 액션](#4-전투-시스템-combat-system)**
 5. **[상호작용 시스템 - 액터간 상호작용 실행 방식](#5-상호작용-시스템-interaction-system)**
 6. **[적 AI 시스템 - 적의 개별 알고리즘 및 집단적 관리](#6-적-ai-시스템-enemy-ai-system)**
@@ -125,7 +125,7 @@
  - 키 입력 또한 다수의 캐릭터에 적용해야 하기 때문에 `PlayerController`에서 받음
 
 &nbsp;
-## 2. 캐릭터 교체 시스템 (Character Swiching System)
+## 2. 캐릭터 교체 시스템 (Character Swiching System) - 전환 기반 멀티캐릭터 제어 시스템
 ### 🛠 온필드, 오프필드 시스템 구현
 - 모작의 **핵심 기능**
 - 세명의 캐릭터를 제어. 일반 교체와 협동 공격 교체 등 협동 스킬 구현
