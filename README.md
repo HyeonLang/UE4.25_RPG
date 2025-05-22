@@ -71,7 +71,11 @@
   * 체력, 아이템 정보 등의 **변수 동기화**와 액터의 **상태 변화 변수** 동기화를 다루기위해 사용된 방법.
   * 변수 동기화 후 **클라이언트에서 후속 처리**가 필요한 경우 **Replicated Notify**를 사용하여 처리를 한다. [*#동기화 이슈*](#멀티플레이-이슈-클라이언트-동기화-실패)
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩 [#*OnRep 이슈*](#onrep-이슈-서버에서-onrep-미동작)  
-   ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)  
+   ![Rep](https://github.com/user-attachments/assets/53a7dfe8-6c8d-4c21-bb5f-74bedd7b1e6d)
+
+### 목적과 이유
+ - 멀티플레이 게임에서 동기화는 필수 요소이며, 설계 없이 진행할 경우 코드가 얽히고 유지보수가 어려워짐.
+ - 일정한 코딩 패턴을 정해두어 동기화 문제를 줄이고, 디버깅과 협업이 용이한 구조를 만듦.
     
     
 &nbsp;
@@ -114,6 +118,12 @@
   
 [*#캐릭터 외곽선 이슈*](#캐릭터-외곽선-이슈-outline-mesh와-본-mesh의-애니메이션-불일치)
 
+
+### 💡 구현과 목적
+ - 캐릭터 제어가 핵심 기능이므로, 구조를 기능별 컴포넌트로 분리해 가독성과 유지보수성을 높임
+ - 캐릭터 교체 시에도 시점을 일정하게 유지하기 위해, 카메라는 캐릭터가 아닌 'PlayerController'에서 생성·관리함
+ - 키 입력 또한 다수의 캐릭터에 적용해야 하기 때문에 `PlayerController`에서 받음
+
 &nbsp;
 ## 2. 캐릭터 교체 시스템 (Character Swiching System)
 ### 🛠 온필드, 오프필드 시스템 구현
@@ -152,9 +162,15 @@ void ACPlayerController::UnPossessCharacter(FVector& OutVelocity, EChangeMode In
 ```
 
 ### 🔹 멀티플레이 환경 적용
-- 로컬 클라이언트에서 `PossessCharacter()` 실행 후, 서버에서 RPC 실행  
-- `RepNotify`를 활용하여 클라이언트에 상태 동기화  
+- 로컬 클라이언트에서 `PossessCharacter()` 실행 후, 서버에서 RPC 실행
+- ServerRPC를 활용하여 기능 수행 및 변수를 변경하고 `RepNotify`를 활용하여 클라이언트에 상태 동기화  
 - `Delegate.Broadcast()`로 협주 교체 후 UnpossessCharacter() 실행
+
+### 💡 구현과 목적
+ - 일반 캐릭터 교체는 Possess → Unpossess 순서가 보장되지만, 협동 공격 교체는 이 순서가 보장되지 않음.
+ - 따라서 Possess를 먼저 수행하고, Unpossess 관련 처리는 액션 종료 후 실행되도록 delegate에 바인딩해 예약 처리함.
+ - 협동 공격 교체시 교체하여 나오는 캐릭터가 겹치는 문제의 해결을 위해
+  - 카메라의 RightVector 방향으로 일정거리 이동하여 나타나도록 함.
 
 ---  
 &nbsp;
@@ -226,6 +242,13 @@ if (CanStart())
 - `Montage Cancel` 전용 함수(`StopAction()` 호출 후 애니메이션 중단) 사용
 - 액션 실행시 필요한 상태 변화(`CharacterMovement` State 관련)에 대해 원상 복귀를 엄격히 시행  [*#액션 이슈*](#액션-이슈-공중-몽타주-동작-실패)
 
+  
+### 💡 구현과 목적
+- GAS는 검증된 효율적인 시스템이므로 참고하는 것이 프로젝트의 발전을 위해 좋다고 생각. 
+- 액션을 서버에서 먼저 실행하면 입력 반응이 느려 조작감이 떨어짐.
+ - 조작감이 중요한 부분(몽타주 등)은 클라이언트가 먼저 실행하게 하고 다만 몽수치 변화나 판정 등 핵심 로직은 서버에서 처리함.
+- 루프 액션의 종료를 액션으로 만든 것의 경우 루프 액션의 종료 호출도 사용자가 입력하는 실행이기 때문에 액션으로 구현.
+
 
 ---  
 &nbsp;
@@ -235,7 +258,7 @@ if (CanStart())
 ![전투_압축](https://github.com/user-attachments/assets/3a110907-bb21-4877-94cb-2a7aa97a9c75)  
 ### 🛠 전투의 흐름
 - 명조와 동일하게 **타겟팅**에 따라 액션 방향의 우선 순위를 실행할 수 있도록 하였습니다.
-  * **타켓팅**은 카메라가 바라보는 방향과 가까운 액터를 가중치로하여 **우선순위큐**로 액터 하나를 지정하여 실행합니다.
+  * **타켓팅**은 일정 범위 안에 있는 타겟을 모두 `Trace`한 뒤, 카메라가 바라보는 방향과 가까운 액터를 가중치로하여 **우선순위큐**로 가중치가 가장 높은 액터 하나를 지정하여 실행합니다.
   * 플레이어의 캐릭터는 액션 사용시 **타겟**의 방향을 **바라보고 이동**하여 공격합니다.  
   ![타켓팅](https://github.com/user-attachments/assets/afea5203-fe22-4303-9856-7eae5b09baef) ![타겟팅gif](https://github.com/user-attachments/assets/59ffb2e6-57a0-445f-b72d-d5ea59601580)
 
@@ -289,6 +312,13 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 }
  ```
 
+### 💡 구현과 목적
+- 원작 명조와 같은 게임의 난이도는 다양한 사람들이 즐기기 좋게 설계되어있고 이것에는 타겟팅이 핵심 기능.
+- 스킬 입력은 `PlayerController`, 실행은 `ActionComponent`에서 이루어져 콤보 입력 제어가 복잡함.
+- 또한 `bCanCombo`에 따라 입력을 분기해야 하지만, 입력과 실행 위치가 분리되어 있어 구현이 난해했음.
+ - 따라서 키 입력을 하나의 베이스 `Action`으로 통일하여 처리.
+ - 해당 `Action` 내부에 연계 가능한 `Action`들의 정보를 포함시켜 콤보 입력과 실행 흐름을 `ActionComponent`에서 일관되게 제어할 수 있도록 설계함.
+ 
 ---  
 &nbsp;
 
@@ -309,7 +339,10 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 - 인벤토리의 아이템 갯수는 변수 Replication 사용 [Replication 패턴 사용](#0-멀티플레이-동기화-Multiplayer-Game-Sync-Techniques) [*#인벤토리 이슈*](#인벤토리-이슈-tmap-및-uobject-리플리케이션-문제)  
 
-
+### 목적과 이유
+- 상호작용은 단일 플레이어의 반응에 그치지 않고, 모든 플레이어에게 동일한 결과가 보여져야 함.
+ - 서버에서 실행한 후, 클라이언트로 전달, 복제(Broadcast)되도록 설계.
+- 모든 상호작용 액터는 `UCInteractionInterface`를 상속받도록 하여, 기능 구현 및 구분이 쉽게 되도록 구조화함.
 ---  
 &nbsp;
 
@@ -328,7 +361,10 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
     - 적 모두 처치 후 리스폰 시간 UI 출력  
       ![리스폰](https://github.com/user-attachments/assets/d1415971-e156-432f-aaba-2fb98d47fa9a)
 
-
+### 💡 구현과 목적
+ - 적 배치와 전투 흐름을 설계할 때, 개별  행동과 집단 시스템 로직이 섞이면 유지보수와 확장성이 떨어짐.
+ - 이동, 공격, 아이템 드롭 같은 액션 부분은 개별  단위로 관리.
+ - 어그로, 리스폰, 보물상자 해금 등 시스템적인 집단 단위 처리는 `Spawner`-`SpawnTargetPoint` 구조로 관리해 설계를 단순화함.
 
 
 ---  
@@ -350,10 +386,13 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
   ![물약-압축](https://github.com/user-attachments/assets/0f48bec8-d892-46c4-9338-47f518629dd1)
 
   
-- `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소 [*#Soft References 이슈*](#icon-이슈-softreference-이미지-로딩-실패)
+- `Soft References`를 활용하여 UI 최적화 및 데이터 로딩 감소 [*#Soft References 이슈*](#icon-이슈-softreference-이미지-로딩-실패)  
 
 
- 
+### 💡 구현과 목적
+- UI는 공통 로직과 Tick이 중요한 부분만 C++로 구현하고, 나머지는 Blueprint로 구현.
+ - 개발함에 있어서 시각적 요소가 많고 디자인과 밀접하게 연관된 UI는 Blueprint가 빠르게 반복 작업을 하기 적합하다고 생각함.  
+
 
 ---  
 &nbsp;
@@ -375,7 +414,11 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
   ![ActionDataAsset](https://github.com/user-attachments/assets/21b8c75a-6cac-4fc8-a7f3-eb76c096a1ce)
 
 
-
+### 목적과 이유
+- 공통적으로 사용하는 대량의 데이터를 다루는 경우. (ex:아이템 정보)
+ - 데이터 테이블의 사용이 데이터 사용, 수정에 용이.
+- 전용으로 사용되는 데이터 집합의 경우. (ex:`Action`)
+ - 각각 데이터 에셋을 두어 필요한 데이터 집합을 구분하면 데이터 사용에 대한 접근성이 올라가고 수정이 용이.
 
 ---  
 &nbsp;
@@ -435,6 +478,8 @@ void UCDBManager::OnLoginResponse(FHttpRequestPtr Request, FHttpResponsePtr Resp
   - 반복하는 Weapon Trail Animation을 생성, 사용해서 Weapon Trail 구현
   - Trail 필요에 따라 Weapon Trail Animation ON/OFF  
   ![TrailAttack](https://github.com/user-attachments/assets/288023b1-a41a-4101-a75e-e9305085a84d)
+
+
 ---  
 &nbsp;
 ## 11. 포트폴리오 영상 & 코드 링크
