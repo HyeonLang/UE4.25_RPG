@@ -344,7 +344,7 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 - 상호작용은 단일 플레이어의 반응에 그치지 않고, 모든 플레이어에게 동일한 결과가 보여져야 함.
  - 서버에서 실행한 후, 클라이언트로 전달, 복제(Broadcast)되도록 설계.
 - 모든 상호작용 액터는 `UCInteractionInterface`를 상속받도록 하여, 기능 구현 및 구분이 쉽게 되도록 구조화함.
-- 
+
 ---  
 &nbsp;
 
