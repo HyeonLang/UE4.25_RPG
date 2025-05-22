@@ -61,13 +61,13 @@
   
 ## 0. 멀티플레이 동기화 (Multiplayer Game Sync Techniques)
 ### 🛠 UE4.25_RPG 멀티플레이 동기화를 위해 사용한 코딩 패턴
-**- RPC(Remote Procedure Call) 사용**
+#### **- RPC(Remote Procedure Call) 사용**
   * **캐릭터 교체와 액션, 액터 스폰 등, 멀티플레이 흐름**에 사용된 방법.
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩
     ![RPC](https://github.com/user-attachments/assets/f36ed2b9-d430-4436-8ac0-0ab8c01b2483)
     
 
-**- 변수 Replication 사용**
+#### **- 변수 Replication 사용**
   * 체력, 아이템 정보 등의 **변수 동기화**와 액터의 **상태 변화 변수** 동기화를 다루기위해 사용된 방법.
   * 변수 동기화 후 **클라이언트에서 후속 처리**가 필요한 경우 **Replicated Notify**를 사용하여 처리를 한다. [*#동기화 이슈*](#멀티플레이-이슈-클라이언트-동기화-실패)
   * 동기화 패턴이 아래와 같은 원리를 가지도록 코딩 [#*OnRep 이슈*](#onrep-이슈-서버에서-onrep-미동작)  
