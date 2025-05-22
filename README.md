@@ -33,7 +33,7 @@
 | **멀티플레이** | 서버-클라이언트 동기화, RPC, Replicate 사용 | `NetMulticast`, `RepNotify` |
 | **상호작용** | 주변 오브젝트와 상호작용 가능, 입력 시 트리거 및 UI 표시 | 트레이스(LineTrace), 서버 실행 구현 |
 | **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 | UI
-| **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance` |
+| **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance`, `MySQL` |
 
 
 ---  
