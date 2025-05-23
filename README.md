@@ -28,12 +28,12 @@
 ## 주요 기능 및 기술적 구현 (Key Features & Implementation)
 | 기능명 | 설명 및 구현 방식 | 관련 기술 |
 |--------|-----------------|------------|
-| **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환, 동시 소환 및 교체 가능 | `APlayerController::Possess()` | `APlayerController::UnPossess()`
-| **액션 시스템** | Unreal GAS를 모티브로 한 일반 공격, 스킬, 궁극기 등의 모듈화된 액션 클래스 | `CActionBase` 상속 | 타겟팅 시스템
-| **멀티플레이** | 서버-클라이언트 동기화, RPC, Replicate 사용 | `NetMulticast`, `RepNotify` |
-| **상호작용** | 주변 오브젝트와 상호작용 가능, 입력 시 트리거 및 UI 표시 | 트레이스(LineTrace), 서버 실행 구현 |
-| **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 | UE4 미니맵 시스템 | UI
-| **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `GameInstance`, `MySQL` |
+| **멀티플레이** | 서버-클라이언트 동기화, RPC, Replicate 사용 | `Unreal RPC`<br>`Replication`<br>`RepNotify` |
+| **캐릭터 교체 시스템** | 플레이어가 3명의 캐릭터를 소환, 동시 소환 및 교체 가능 | `Delegate` 기반 콜백 | 
+| **액션 시스템** | Unreal GAS를 모티브로 한 일반 공격, 스킬, 궁극기 등의 모듈화된 액션 클래스 | 기반 클래스 상속<br>데이터 에셋 사용<br>우선순위 큐 - 자동 타겟팅 시스템 |
+| **상호작용** | 주변 오브젝트와 상호작용 가능, 입력 시 트리거 및 UI 표시 | `트레이스(SphereTrace)`<br> 서버 실행 구현 - 치팅방지<br> 인터페이스 |
+| **미니맵 및 UI** | `SceneCaptureComponent2D`를 활용하여 실시간 미니맵 렌더링 및 UI | UE4 `SceneCaptureComponent2D` - depth, color |
+| **로그인 시스템** | Flask 서버와 MySQL 연동을 통한 로그인 인증 | `HTTP Post`, `MySQL`, `Flask` |
 
 
 ---  
