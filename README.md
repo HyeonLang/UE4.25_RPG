@@ -278,7 +278,9 @@ if (CanStart())
 ## 4. 전투 시스템 (Combat System)
 ### 🎯 목표
 - 원작 `명조` 처럼 난이도 감소를 위해 적절한 타켓팅 시스템을 구현.
-- 
+- 캐릭터가 액션 시스템으로 공격 액션을 가지도록 함.
+- 콤보 시스템으로 같은 입력으로 캐릭터 각각의 액션이 연속하여 실행.  
+  
 ![전투_압축](https://github.com/user-attachments/assets/3a110907-bb21-4877-94cb-2a7aa97a9c75)  
 ### 🛠 전투의 흐름
 - 명조와 동일하게 **타겟팅**에 따라 액션 방향의 우선 순위를 실행할 수 있도록 함.
@@ -349,6 +351,10 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 
 ## 5. 상호작용 시스템 (Interaction System)
+### 🎯 목표
+- 캐릭터의 상호작용은 복제되면 안되므로 서버에서 작업이 이루어짐.
+- 같은 키입력으로 객체에 따라 다른 상호작용이 이루어져야 함.  
+  
 ### 🛠 동작 방식
 - 캐릭터의 `InteractionComponent`에서 담당
 - `UCInteractionInterface` 인터페이스를 상속받아 `Interact()` 함수 구현
@@ -373,6 +379,12 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 &nbsp;
 
 ## 6. 적 AI 시스템 (Enemy AI System)
+### 🎯 목표
+- 적은 대기-이동-공격의 사이클을 가지고 드롭 아이템을 가짐.
+- 리스폰은 적이 모두 죽었을 시 특정한 자리에서 일정 시간을 두고 생성되어야 함.
+- 적을 모두 처치시 잠금된 리워드(예: 보물상자)가 있다면 잠금이 풀림.
+- 멀티플레이시 적의 행동 및 생성이 모든 클라이언트에 동일하게 보임.  
+   
 ### 🛠 언리얼 AI 및 리스폰 기능
 - `EnemyCharacter` 클래스로 구성, `NPCActionComponent`에서 공격 실행  
 - `AIController` 및 `Behavior Tree`를 활용하여 AI 상태 관리
@@ -398,6 +410,10 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 
 ## 7. 미니맵 및 UI 시스템
+### 🎯 목표
+- 미니맵 및 UI는 플레이어에게 게임의 정확한 정보를 실시간으로 전달.
+- UI는 디자인 적 요소가 많이 들어감. 따라서 쉬운 개발이 필요.
+ 
 ### 🛠 실시간 미니맵, UI와 인벤토리의 동적 로딩
 - `WB_MainHUD`에서 스킬, 체력, 캐릭터 교체 UI 관리
   ![UI](https://github.com/user-attachments/assets/58f4cf52-ff42-4120-984f-9dd1442b553b)
@@ -439,7 +455,7 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
   ![ActionDataAsset](https://github.com/user-attachments/assets/21b8c75a-6cac-4fc8-a7f3-eb76c096a1ce)
 
 
-### 목적과 이유
+### 💡 구현과 목적
 - 공통적으로 사용하는 대량의 데이터를 다루는 경우. (ex:아이템 정보)
  - 데이터 테이블의 사용이 데이터 사용, 수정에 용이.
 - 전용으로 사용되는 데이터 집합의 경우. (ex:`Action`)
@@ -450,6 +466,11 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 
 
 ## 9. DB를 활용한 로그인 및 게임 참여 시스템
+### 🎯 목표
+- 빠르고 정확한 DB와의 통신으로 로그인 정보를 주고 받음.
+- 가져오는 클라이언트들의 정보를 누구의 정보인지 구분하여 각 클라이언트에 넘겨줌.
+- 데이터가 꼬이지 않도록 중복 방지 및 인증.  
+  
 ### 🛠 DB 시스템을 활용한 로그인 인증
 - `Flask` 서버와 `MySQL`을 활용하여 HTTP `POST` 방식으로 유저 데이터 인증  [*#DB 이슈*](#db-이슈-간헐적-접속-실패)
 - `GameInstance`에 `DBManager`를 생성하여 DB연결 및 요청, 응답과 유저 데이터 관리
