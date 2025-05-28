@@ -439,6 +439,10 @@ bool UCActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 &nbsp;
 
 ## 8. 데이터 및 에셋 관리
+### 🎯 목표
+- 많은 양의 데이터들을 추가, 삭제, 변경이 용이하도록 관리.
+- 공통적인 데이터는 묶고 필요한 데이터는 찾아다닐 필요 없이 격리해 관리.
+ 
 ### 🛠 데이터 테이블을 통한 관리
 - 캐릭터의 `GameAblitySystem`의 **AttributeSet을 위한 Attribute(HP 등의 수치)** 데이터 테이블
   - `AbliltySystemComponent` 내의 `AttributeSet`에 사용
